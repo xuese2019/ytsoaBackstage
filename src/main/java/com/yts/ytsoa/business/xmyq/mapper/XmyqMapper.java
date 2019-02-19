@@ -25,9 +25,10 @@ public interface XmyqMapper {
      * @throws SQLException
      */
     @Insert({
-            "insert into " + Tables.XMYQ_TABLE + "(uuid,yqly,txsj,txr,xmmc,xmkssj,xmcjr,shr,ywzt)" + "values(replace(uuid(), '-', ''),#{xmyqModel.yqly} ,#{xmyqModel.txsj},#{xmyqModel.txr}" +
+            "insert into " + Tables.XMYQ_TABLE + "(uuid,yqly,txsj,txr,xmmc,xmkssj,xmxcjssj,xmcjr,shr,ywzt)" + "values(replace(uuid(), '-', ''),#{xmyqModel.yqly} ,#{xmyqModel.txsj},#{xmyqModel.txr}" +
                     ",#{xmyqModel.xmmc}" +
                     ",#{xmyqModel.xmkssj}" +
+                    ",#{xmyqModel.xmxcjssj}" +
                     ",#{xmyqModel.xmcjr}" +
                     ",#{xmyqModel.shr}" +
                     ",#{xmyqModel.ywzt})"

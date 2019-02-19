@@ -1,6 +1,7 @@
 package com.yts.ytsoa.business.ycsq.mapper;
 
 import com.yts.ytsoa.business.ycsq.mapper.sql.YcsqSql;
+import com.yts.ytsoa.business.ycsq.model.ResultModel;
 import com.yts.ytsoa.business.ycsq.model.YcsqModel;
 import com.yts.ytsoa.utils.Tables;
 import org.apache.ibatis.annotations.*;
@@ -14,9 +15,8 @@ public interface YcsqMapper {
     List<YcsqModel> findAll(@Param("ycsqModel") YcsqModel ycsqModel) throws SQLException;
 
     @Insert({
-            "insert into " + Tables.YCSQ_TABLE + "(uuid,sqbh,ghrq,sqr,shr,sqrq,ycsy,cphgsd,cph,cfgls,cfsj,fhsj,ghr,fhgls,shjg,shyj,bz) " + " values (replace(uuid(), '-', '')," +
+            "insert into " + Tables.YCSQ_TABLE + "(uuid,ghrq,sqr,shr,sqrq,ycsy,cphgsd,cph,cfgls,cfsj,fhsj,ghr,fhgls,shjg,shyj,bz) " + " values (replace(uuid(), '-', '')," +
 
-                    "#{ycsqModel.sqbh}," +
                     "#{ycsqModel.ghrq}," +
                     "#{ycsqModel.sqr}," +
                     "#{ycsqModel.shr}," +
@@ -46,4 +46,7 @@ public interface YcsqMapper {
 
     @UpdateProvider(type = YcsqSql.class, method = "update")
     int update(@Param("model") YcsqModel model) throws SQLException;
+
+    @SelectProvider(type = YcsqSql.class, method = "findByShjl")
+    List<ResultModel> findByShjl(@Param("prentid") String prentid) throws SQLException;
 }

@@ -9,7 +9,7 @@ public class GzrzSql {
     public String find(@Param("model") GzrzModel model) {
         return new SQL() {
             {
-                SELECT("a.name as tjr,x.tjsj,x.rzlx,x.gznr,x.yxgs,x.trgxmsj,x.xmmc");
+                SELECT("a.name as tjr,x.tjsj,x.rzlx,x.gznr,x.yxgs,x.trgxmsj,x.xmmc,x.sfcc,x.ccdd");
                 FROM(Tables.GZRZ_TABLE + " x ");
                 LEFT_OUTER_JOIN("account_table a ON x.tjr = a.uuid");
                 ORDER_BY("x.tjsj Desc");
@@ -52,6 +52,7 @@ public class GzrzSql {
                 VALUES("rzlx", "#{model.rzlx}");
                 VALUES("xmmc", "#{model.xmmc}");
                 VALUES("yxgs", "#{model.yxgs}");
+                VALUES("ccdd", "#{model.ccdd}");
             }
         }.toString();
     }

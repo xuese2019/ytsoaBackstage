@@ -1,9 +1,11 @@
 package com.yts.ytsoa.business.gdgl.mapper;
 
+import com.yts.ytsoa.business.bggl.model.BgglModel;
 import com.yts.ytsoa.business.gdgl.mapper.GdglSql.GdglSql;
 import com.yts.ytsoa.business.gdgl.model.GdglModel;
 import com.yts.ytsoa.business.gdgl.query.GdglQueryModel;
 import com.yts.ytsoa.business.gdgl.result.ResultModel;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.utils.Tables;
 import org.apache.ibatis.annotations.*;
 
@@ -44,4 +46,18 @@ public interface GdglMapper {
 
     @UpdateProvider(type = GdglSql.class, method = "updatejyzt")
     int updatejyzt(@Param("model") GdglModel model);
+
+    /**
+     * 二级联动查询
+     *
+     * @param parentid
+     * @return
+     */
+    @Select({
+            "SELECT * FROM xmzmc_table x where x.parentid=#{parentid}"
+    })
+    List<XmzmcModel> findByUuid(@Param("parentid") String parentid) throws SQLException;
+
+    @SelectProvider(type = GdglSql.class, method = "findBgByUuid")
+    List<BgglModel> findBgByUuid(@Param("uuid") String uuid);
 }

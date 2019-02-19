@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.yzsq.service;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.xmcy.model.XmcyModel;
+import com.yts.ytsoa.business.yzsq.model.ResultsModel;
 import com.yts.ytsoa.business.yzsq.model.YzsqModel;
 import com.yts.ytsoa.business.yzsq.result.result;
 import com.yts.ytsoa.utils.ResponseResult;
@@ -65,5 +66,7 @@ public interface YzsqService {
     /**
      * 用章审核
      */
-    ResponseResult<XmshModel> yzsh(XmshModel model) throws Exception;
+    ResponseResult<XmshModel> yzsh(XmshModel model, String fsr) throws Exception;
+
+    ResponseResult<List<ResultsModel>> findByShjl(String prentid) throws Exception;
 }

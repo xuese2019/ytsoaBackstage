@@ -19,6 +19,9 @@ public class PjsqSql {
                     pjsqModel.setKpbh("%" + pjsqModel.getKpbh() + "%");
                     WHERE("a.kpbh like #{pjsqModel.kpbh}");
                 }
+                if (pjsqModel.getShjg() != 0) {
+                    WHERE("a.shjg=#{pjsqModel.shjg}");
+                }
             }
         }.toString();
     }
@@ -44,6 +47,7 @@ public class PjsqSql {
                 VALUES("xmfzr", "#{model.xmfzr}");
                 VALUES("xmmc", "#{model.xmmc}");
                 VALUES("kprq", "#{model.kprq}");
+                VALUES("shjg", "#{model.shjg}");
             }
         }.toString();
     }
@@ -56,21 +60,31 @@ public class PjsqSql {
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     WHERE("xmmc like concat('%',#{model.xmmc},'%')");
                 }
-                if (model.getShzt() != 0) {
-                    WHERE("shzt=1");
+                if (model.getShjg() != 0) {
+                    WHERE("shjg=#{model.shjg}");
                 }
             }
         }.toString();
     }
 
-    public String update(@Param("model") PjsqModel model) {
+    public String updateByShjg(@Param("model") PjsqModel model) {
         return new SQL() {
             {
                 UPDATE(Tables.PJSQ_TABLE);
-                if (model.getShzt() != 0) {
-                    SET("shzt=#{model.shzt}");
+                if (model.getShjg() != 0) {
+                    SET("shjg=#{model.shjg}");
                 }
                 WHERE("uuid=#{model.uuid}");
+            }
+        }.toString();
+    }
+
+    public String findByShjl(@Param("prentid") String prentid) {
+        return new SQL() {
+            {
+                SELECT("y.kpbh,a.name,s.shyj,s.shjg");
+                FROM("shjl_table s JOIN pjsq_table y ON y.uuid=s.prentid join account_table a on a.uuid=s.shr");
+                WHERE("s.prentid=#{prentid}");
             }
         }.toString();
     }

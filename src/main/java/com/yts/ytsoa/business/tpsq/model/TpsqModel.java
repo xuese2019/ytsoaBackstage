@@ -105,11 +105,13 @@ public class TpsqModel {
     @ApiModelProperty(value = "项目负责人", name = "xmfzr", dataType = "String")
     private String xmfzr;
 
-    @ApiModelProperty(value = "审核状态,1不同意2同意", name = "shzt", dataType = "int")
-    private int shzt;
+    @ApiModelProperty(value = "审核状态,1不同意2同意", name = "shjg", dataType = "int")
+    private int shjg;
 
     /**
      * 多表联查返回的数据
      */
     private String name;
+    @ApiModelProperty(value = "审核人", name = "shr", dataType = "String")
+    private String shr;
 }

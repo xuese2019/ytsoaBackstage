@@ -5,7 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.GlobalExceptionHandler;
 import com.yts.ytsoa.business.gdgl.service.GdglService;
 import com.yts.ytsoa.business.jygl.model.JyglModel;
+import com.yts.ytsoa.business.jygl.model.ResultModel;
 import com.yts.ytsoa.business.jygl.service.JyglService;
+import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.sys.shiro.JWTUtils;
 import com.yts.ytsoa.utils.ResponseResult;
 import com.yts.ytsoa.utils.poi.ExcelModelExportUtils;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Api(value = "借阅管理", description = "借阅管理接口")
 @RestController
@@ -59,11 +62,12 @@ public class JyglController {
 
     @ApiOperation(value = "根据id进行修改")
     @RequestMapping(value = "/updById", method = RequestMethod.PUT)
-    public ResponseResult<JyglModel> updById(@RequestBody JyglModel jyglModel, BindingResult result) throws Exception {
+    public ResponseResult<JyglModel> updById(@RequestBody JyglModel jyglModel, BindingResult result, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
         if (result.hasErrors()) {
             return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage());
         }
-        return jyglService.updById(jyglModel);
+        return jyglService.updById(jyglModel, accid);
     }
 
     @ApiOperation(value = "excel导出")
@@ -72,7 +76,6 @@ public class JyglController {
                       HttpServletResponse response) throws Exception {
         ResponseResult<String> result = jyglService.excel(fileModel + "JyglModel.xls", dowPath, jyglModel);
         if (result.isSuccess()) {
-//            调用下载
             new ExcelModelExportUtils().download2(dowPath, result.getData(), response);
         } else {
             new GlobalExceptionHandler().res(response, "下载失败");
@@ -91,5 +94,27 @@ public class JyglController {
             return jyglService.add(model);
         }
         return new ResponseResult<>(false, "借阅失败");
+    }
+
+    @ApiOperation(value = "借阅审核")
+    @RequestMapping(value = "/jysh", method = RequestMethod.PUT)
+    public ResponseResult<XmshModel> update(@RequestBody XmshModel model, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
+        if (model != null) {
+            model.setShr(accid);
+            return jyglService.update(model);
+        }
+        return new ResponseResult<>(false, "审核失败");
+    }
+
+    @ApiOperation(value = "审核记录")
+    @RequestMapping(value = "/findByShjl/{prentid}", method = RequestMethod.GET)
+    public ResponseResult<List<ResultModel>> findByShjl(@PathVariable("prentid") String prentid) throws Exception {
+        ResponseResult<List<ResultModel>> result = jyglService.findByShjl(prentid);
+        if (result != null) {
+            return new ResponseResult<>(true, "查询成功", result.getData());
+        } else {
+            return new ResponseResult<>(false, "没有审核记录");
+        }
     }
 }

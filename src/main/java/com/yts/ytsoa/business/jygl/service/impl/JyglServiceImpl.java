@@ -3,10 +3,13 @@ package com.yts.ytsoa.business.jygl.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.gdgl.mapper.GdglMapper;
-import com.yts.ytsoa.business.gdgl.model.GdglModel;
 import com.yts.ytsoa.business.jygl.mapper.JyglMapper;
 import com.yts.ytsoa.business.jygl.model.JyglModel;
+import com.yts.ytsoa.business.jygl.model.ResultModel;
 import com.yts.ytsoa.business.jygl.service.JyglService;
+import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
+import com.yts.ytsoa.business.shjl.model.XmshModel;
+import com.yts.ytsoa.utils.GetUuid;
 import com.yts.ytsoa.utils.ResponseResult;
 import com.yts.ytsoa.utils.poi.ExcelModelExportUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,8 @@ public class JyglServiceImpl implements JyglService {
     private JyglMapper jyglMapper;
     @Autowired
     private GdglMapper gdglMapper;
+    @Autowired
+    private XmshMapper xmshMapper;
 
     /**
      * 条件分页查询
@@ -75,7 +80,10 @@ public class JyglServiceImpl implements JyglService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<JyglModel> updById(JyglModel jyglModel) throws Exception {
+    public ResponseResult<JyglModel> updById(JyglModel jyglModel, String accid) throws Exception {
+        jyglModel.setGhr(accid);
+        jyglModel.setGhrq(new Date());
+        jyglModel.setJyzt(2);
         int result = jyglMapper.updById(jyglModel);
         if (result > 0) {
             return new ResponseResult<>(true, "修改成功");
@@ -125,15 +133,39 @@ public class JyglServiceImpl implements JyglService {
     @Override
     public ResponseResult<JyglModel> add(JyglModel model) throws Exception {
         model.setJyrq(new Date());
-        model.setJyzt(2);
-        int add = jyglMapper.add(model);
-        if (add != 0) {
-            GdglModel model1 = jyglMapper.findGdglByGdId(model.getDgid());
-            model1.setJyzt(2);
-            model1.setUuid(model.getDgid());
-            gdglMapper.updById(model1);
+        int result = jyglMapper.add(model);
+        if (result != 0) {
+            return new ResponseResult<>(true, "借阅成功");
         }
-        return new ResponseResult<>(true, "借阅成功");
+        return new ResponseResult<>(false, "借阅失败");
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public ResponseResult<XmshModel> update(XmshModel model) throws Exception {
+        String uuid = GetUuid.getUUID();
+        model.setUuid(uuid);
+        model.setShsj(new Date());
+        int result = xmshMapper.add(model);
+        if (result != 0) {
+            JyglModel jyglModel = new JyglModel();
+            jyglModel.setUuid(model.getPrentid());
+            jyglModel.setShjg(model.getShjg());
+            jyglMapper.update(jyglModel);
+            return new ResponseResult<>(true, "审核成功");
+        } else {
+            return new ResponseResult<>(false, "审核失败");
+        }
+    }
+
+    @Override
+    public ResponseResult<List<ResultModel>> findByShjl(String prentid) throws Exception {
+        List<ResultModel> list = jyglMapper.findByShjl(prentid);
+        if (list.size() > 0) {
+            return new ResponseResult<>(true, "查询成功", list);
+        } else {
+            return new ResponseResult<>(false, "无审核记录");
+        }
     }
 }
 

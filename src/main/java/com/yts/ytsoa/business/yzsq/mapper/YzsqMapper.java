@@ -2,6 +2,7 @@ package com.yts.ytsoa.business.yzsq.mapper;
 
 import com.yts.ytsoa.business.xmcy.model.XmcyModel;
 import com.yts.ytsoa.business.yzsq.mapper.YzsqSql.YzsqSql;
+import com.yts.ytsoa.business.yzsq.model.ResultsModel;
 import com.yts.ytsoa.business.yzsq.model.YzsqModel;
 import com.yts.ytsoa.business.yzsq.result.result;
 import com.yts.ytsoa.utils.Tables;
@@ -35,6 +36,9 @@ public interface YzsqMapper {
     @UpdateProvider(type = YzsqSql.class, method = "update")
     int update(@Param("model") YzsqModel model) throws SQLException;
 
+    @UpdateProvider(type = YzsqSql.class, method = "updateByShjg")
+    int updateByShjg(@Param("model") YzsqModel model) throws SQLException;
+
     @Select({
             "select * from " + Tables.YZSQ_TABLE + " where uuid=#{uuid}"
     })
@@ -66,4 +70,7 @@ public interface YzsqMapper {
 
     @UpdateProvider(type = YzsqSql.class, method = "yzsh")
     int yzsh(@Param("model") YzsqModel model);
+
+    @SelectProvider(type = YzsqSql.class, method = "findByShjl")
+    List<ResultsModel> findByShjl(@Param("prentid") String prentid) throws SQLException;
 }

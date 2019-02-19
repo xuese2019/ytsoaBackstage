@@ -6,15 +6,15 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 public class XmwpSql {
-    public String xmjlsh(@Param("model") XmwpModel model) {
+    public String updateYwzt(@Param("model") XmwpModel model) {
         return new SQL() {
             {
                 UPDATE(Tables.XMWP_TABLE);
-                if (model.getBz() != null && !model.getBz().isEmpty()) {
-                    SET("bz=#{model.bz}");
-                }
                 if (model.getYwzt() != 0) {
                     SET("ywzt=#{model.ywzt}");
+                }
+                if (model.getXmshzt() != 0) {
+                    SET("xmshzt=#{model.xmshzt}");
                 }
                 WHERE("uuid=#{model.uuid}");
             }
@@ -25,9 +25,9 @@ public class XmwpSql {
         return new SQL() {
             {
                 SELECT("x.*");
-                FROM(Tables.XMWP_TABLE);
+                FROM(Tables.XMWP_TABLE + " x");
                 if (uuid != null && !uuid.isEmpty()) {
-                    WHERE("uuid=#{uuid}");
+                    WHERE("x.uuid=#{uuid}");
                 }
             }
         }.toString();

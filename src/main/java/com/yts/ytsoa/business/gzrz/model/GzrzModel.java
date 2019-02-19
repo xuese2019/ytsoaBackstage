@@ -24,6 +24,11 @@ public class GzrzModel {
     @ApiModelProperty(value = "投入该项目时间", name = "trgxmsj", dataType = "double")
     @NotNull(message = "投入该项目的时间不能为空")
     private Double trgxmsj;
+    /**
+     * 是否出差
+     * 0：不出差
+     * 1:出差
+     */
     @ApiModelProperty(value = "是否出差", name = "sfcc", dataType = "int")
     private Integer sfcc;
     @ApiModelProperty(value = "工作内容", name = "gznr", dataType = "String")
@@ -52,5 +57,9 @@ public class GzrzModel {
      */
     @ApiModelProperty(value = "项目名称", name = "xmmc", dataType = "String")
     private String xmmc;
-
+    /**
+     * 出差地点
+     */
+    @ApiModelProperty(value = "出差地点", name = "ccdd", dataType = "String")
+    private String ccdd;
 }

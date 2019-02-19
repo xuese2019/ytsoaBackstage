@@ -15,10 +15,10 @@ public class XmyqSql {
                     xmyqModel.setXmmc("%" + xmyqModel.getXmmc() + "%");
                     WHERE("a.xmmc like #{xmyqModel.xmmc}");
                 }
-                if (xmyqModel.getXmjssj() != null && xmyqModel.getXtdqsj() != null) {
+              /*  if (xmyqModel.getXmxcjssj() != null && xmyqModel.getXtdqsj() != null) {
                     WHERE("#{xmyqModel.xtdqsj} > #{xmyqModel.xmjssj}");
                     WHERE("a.xmzt=1");
-                }
+                }*/
             }
         }.toString();
     }

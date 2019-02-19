@@ -60,7 +60,7 @@ public class BgglModel implements Serializable {
     /**
      * 审核结果
      */
-    @ApiModelProperty(value = "状态（1未审核/2已审核）", name = "shjg", dataType = "int")
+    @ApiModelProperty(value = "状态（1未审核/2已审核/3项目经理审核4/部门经理审核/5质控部审核6合伙人审核7未通过）", name = "shjg", dataType = "int")
     private int shjg;
     /**
      * 项目性质
@@ -75,22 +75,22 @@ public class BgglModel implements Serializable {
     /**
      * 项目经理复核
      */
-    @ApiModelProperty(value = "项目经理复核", name = "xmjlfh", dataType = "int")
+    @ApiModelProperty(value = "1未审/2已审项目经理复核", name = "xmjlfh", dataType = "int")
     private int xmjlfh;
     /**
      * 部门经理复核
      */
-    @ApiModelProperty(value = "部门经理复核", name = "bmjlfh", dataType = "int")
+    @ApiModelProperty(value = "1未审/2已审部门经理复核", name = "bmjlfh", dataType = "int")
     private int bmjlfh;
     /**
      * 质控部复核
      */
-    @ApiModelProperty(value = "部门经理复核", name = "bmjlfh", dataType = "int")
+    @ApiModelProperty(value = "1未审/2已审部门经理复核", name = "bmjlfh", dataType = "int")
     private int zkbfh;
     /**
      * 项目合伙人复核
      */
-    @ApiModelProperty(value = "项目合伙人复核", name = "xmhhrfh", dataType = "int")
+    @ApiModelProperty(value = "1未审/2已审项目合伙人复核", name = "xmhhrfh", dataType = "int")
     private int xmhhrfh;
     /**
      * 报告防伪编号前缀
@@ -168,7 +168,7 @@ public class BgglModel implements Serializable {
     /**
      * 项目id
      */
-    @ApiModelProperty(value = "项目id", name = "xmid", dataType = "String")
+    @ApiModelProperty(value = "项目子名称id", name = "xmzmcid", dataType = "String")
     private String xmid;
 
     /*@ApiModelProperty(value = "报告类型", name = "model")
@@ -184,5 +184,4 @@ public class BgglModel implements Serializable {
      */
     @ApiModelProperty(value = "完成状态", name = "wczt", dataType = "int")
     private int wczt;
-
 }

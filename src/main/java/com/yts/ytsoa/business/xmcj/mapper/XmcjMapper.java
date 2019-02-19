@@ -2,6 +2,7 @@ package com.yts.ytsoa.business.xmcj.mapper;
 
 import com.yts.ytsoa.business.xmcj.mapper.sql.XmcjSql;
 import com.yts.ytsoa.business.xmcj.model.XmcjModel;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.utils.Tables;
 import org.apache.ibatis.annotations.*;
 
@@ -23,12 +24,34 @@ public interface XmcjMapper {
 
     @SelectProvider(type = XmcjSql.class, method = "findById")
     @Results(id = "xmcjMap", value = {
-            @Result(property = "cjbm", column = "zzjgmc"),
-            @Result(property = "xmfzr", column = "cjr")
+            @Result(id = true, property = "uuid", column = "uuid"),
+            @Result(property = "cjbm", column = "cjbm", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.zzjg.mapper.ZzjgMapper.getZzjgmcById")),
+            @Result(property = "ghr", column = "ghr", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
+            @Result(property = "wpr", column = "wpr", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
+            @Result(property = "xmfzr", column = "xmfzr", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
+            @Result(property = "xmzmcModels", column = "uuid", javaType = List.class,
+                    many = @Many(select = "com.yts.ytsoa.business.xmcj.mapper.XmcjMapper.findByParentid"))
     })
     List<XmcjModel> findById(@Param("uuid") String uuid) throws SQLException;
 
     @UpdateProvider(type = XmcjSql.class, method = "updateById")
     int updateById(@Param("xmcjModel") XmcjModel xmcjModel) throws SQLException;
 
+    @InsertProvider(type = XmcjSql.class, method = "insertXmzmc")
+    int insertXmzmc(@Param("model") XmzmcModel model);
+
+    @SelectProvider(type = XmcjSql.class, method = "findXmzmc")
+    List<XmzmcModel> findXmzmc(@Param("model") XmzmcModel model) throws SQLException;
+
+    @Select({
+            "select * from " + Tables.XMZMC_TABLE + " where parentid = #{parentid}"
+    })
+    List<XmzmcModel> findByParentid(@Param("parentid") String parentid) throws SQLException;
+
+    /*@SelectProvider(type = XmcjSql.class,method = "findXmzmcByParentid")
+    List<ResultModel> findXmzmcByParentid(@Param("model") XmzmcModel model);*/
 }

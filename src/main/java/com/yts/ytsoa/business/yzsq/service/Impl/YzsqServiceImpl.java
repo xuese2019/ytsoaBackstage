@@ -7,7 +7,10 @@ import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.xmcy.model.XmcyModel;
 import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
+import com.yts.ytsoa.business.xxgl.service.XxglService;
+import com.yts.ytsoa.business.xxgl.utils.XxglUtils;
 import com.yts.ytsoa.business.yzsq.mapper.YzsqMapper;
+import com.yts.ytsoa.business.yzsq.model.ResultsModel;
 import com.yts.ytsoa.business.yzsq.model.YzsqModel;
 import com.yts.ytsoa.business.yzsq.result.result;
 import com.yts.ytsoa.business.yzsq.service.YzsqService;
@@ -34,6 +37,9 @@ public class YzsqServiceImpl implements YzsqService {
     @Autowired
     private XmshMapper xmshMapper;
 
+    @Autowired
+    private XxglService xxglService;
+
     /**
      * 添加
      *
@@ -47,6 +53,7 @@ public class YzsqServiceImpl implements YzsqService {
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         String s1 = s.format(System.currentTimeMillis());
         model.setSsnf(s1);
+        model.setShjg(1);
         int result = yzsqMapper.addYzsq(model);
         XmwpModel model1 = xmwpMapper.findById(model.getXmid());
         int ywzt = model1.getYwzt();
@@ -146,7 +153,7 @@ public class YzsqServiceImpl implements YzsqService {
      * @param uuid
      * @return
      */
-    @Transactional(rollbackFor = Exception.class)
+
     @Override
     public ResponseResult<YzsqModel> findById(String uuid) throws Exception {
         YzsqModel result = yzsqMapper.findById(uuid);
@@ -181,16 +188,27 @@ public class YzsqServiceImpl implements YzsqService {
     }
 
     @Override
-    public ResponseResult<XmshModel> yzsh(XmshModel model) throws Exception {
+    public ResponseResult<XmshModel> yzsh(XmshModel model, String fsr) throws Exception {
         model.setShsj(new Date());
         int result = xmshMapper.add(model);
         if (result != 0) {
             YzsqModel yzsqModel = new YzsqModel();
             yzsqModel.setUuid(model.getPrentid());
-            yzsqModel.setShzt(model.getShjg());
-            yzsqMapper.update(yzsqModel);
+            yzsqModel.setShjg(model.getShjg());
+            yzsqMapper.updateByShjg(yzsqModel);
+            xxglService.save(new XxglUtils().setXx(2, "用章审核成功：" + model.getShsj(), model.getShyj(), fsr, yzsqModel.getSqr()));
             return new ResponseResult<>(true, "审核成功");
         }
         return new ResponseResult<>(false, "审核失败");
+    }
+
+    @Override
+    public ResponseResult<List<ResultsModel>> findByShjl(String prentid) throws Exception {
+        List<ResultsModel> list = yzsqMapper.findByShjl(prentid);
+        if (list.size() > 0) {
+            return new ResponseResult<>(true, "查询成功", list);
+        } else {
+            return new ResponseResult<>(false, "无审核记录");
+        }
     }
 }

@@ -21,6 +21,8 @@ public class YzsqSql {
                 VALUES("shzt", "#{model.shzt}");
                 VALUES("xmid", "#{model.xmid}");
                 VALUES("xmmc", "#{model.xmmc}");
+                VALUES("yzfs", "#{model.yzfs}");
+                VALUES("shjg", "#{model.shjg}");
             }
         }.toString();
     }
@@ -36,9 +38,15 @@ public class YzsqSql {
                 if (model.getXmid() != null && !model.getXmid().isEmpty()) {
                     WHERE("xmid=#{model.xmid}");
                 }
+                if (model.getYzfs() != 0) {
+                    WHERE("yzfs=#{model.yzfs}");
+                }
                 if (model.getWjmc() != null && !model.getWjmc().isEmpty()) {
                     model.setWjmc("%" + model.getWjmc() + "%");
                     WHERE("wjmc like concat ('%',#{model.wjmc},'%')");
+                }
+                if (model.getShjg() != 0) {
+                    WHERE("shjg=#{model.shjg}");
                 }
             }
         }.toString();
@@ -57,8 +65,11 @@ public class YzsqSql {
                 if (model.getSqrq() != null) {
                     SET("sqrq=#{model.sqrq}");
                 }
-                if (model.getShzt() != 0) {
-                    SET("shzt={model.shzt}");
+                if (model.getShjg() != 0) {
+                    SET("shjg=#{model.shjg}");
+                }
+                if (model.getYzfs() != 0) {
+                    SET("yzfs=#{model.yzfs}");
                 }
                 WHERE("uuid=#{model.uuid}");
             }
@@ -84,8 +95,30 @@ public class YzsqSql {
         return new SQL() {
             {
                 UPDATE(Tables.YZSQ_TABLE);
-                if (model.getShzt() != 0) {
-                    SET("shzt=#{model.shzt}");
+                if (model.getShjg() != 0) {
+                    SET("shjg=#{model.shjg}");
+                }
+                WHERE("uuid=#{model.uuid}");
+            }
+        }.toString();
+    }
+
+    public String findByShjl(@Param("prentid") String prentid) {
+        return new SQL() {
+            {
+                SELECT("y.wjmc,a.name,s.shyj,s.shjg");
+                FROM("shjl_table s JOIN yzsq_table y ON y.uuid=s.prentid join account_table a on a.uuid=s.shr");
+                WHERE("s.prentid=#{prentid}");
+            }
+        }.toString();
+    }
+
+    public String updateByShjg(@Param("model") YzsqModel model) {
+        return new SQL() {
+            {
+                UPDATE(Tables.YZSQ_TABLE);
+                if (model.getShjg() != 0) {
+                    SET("shjg=#{model.shjg}");
                 }
                 WHERE("uuid=#{model.uuid}");
             }

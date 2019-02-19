@@ -6,42 +6,64 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 public class JyglSql {
-    public String findAllSql(@Param("JyglModel") JyglModel jyglModel) {
+    public String findAllSql(@Param("model") JyglModel jyglModel) {
         return new SQL() {
             {
-                SELECT("j.*,a.name");
-                FROM("jygl_table j join account_table a on a.uuid=j.jyr");
+                SELECT("j.uuid,j.dgjybh,d.damc,j.jyrq,a.name AS 'jyr',j.ghrq,a1.name as'ghr',j.shjg");
+                FROM("jygl_table j LEFT JOIN account_table a on a.uuid=j.jyr LEFT JOIN dggd_table d on d.gdsqbh_hz=j.dgjybh LEFT JOIN account_table a1 ON j.ghr=a1.uuid");
                 if (jyglModel.getDamc() != null && !jyglModel.getDamc().isEmpty()) {
                     jyglModel.setDamc("%" + jyglModel.getDamc() + "%");
-                    WHERE("j.damc like #{jyglModel.damc}");
+                    WHERE("j.damc like #{model.damc}");
                 }
                 if (jyglModel.getXmmc() != null && !jyglModel.getXmmc().isEmpty()) {
                     jyglModel.setXmmc("%" + jyglModel.getXmmc() + "%");
-                    WHERE("j.xmmc like #{jyglModel.xmmc}");
+                    WHERE("j.xmmc like #{model.xmmc}");
                 }
                 if (jyglModel.getDgjybh() != null && !jyglModel.getDgjybh().isEmpty()) {
                     jyglModel.setDgjybh("%" + jyglModel.getDgjybh() + "%");
-                    WHERE("j.dgjybh like #{jyglModel.dgjybh}");
+                    WHERE("j.dgjybh like #{model.dgjybh}");
+                }
+                if (jyglModel.getShjg() != 0) {
+                    WHERE("j.shjg=#{model.shjg}");
+                }
+                if (jyglModel.getJyzt() != 0) {
+                    WHERE("j.jyzt=#{model.jyzt}");
+                }
+                if (jyglModel.getGhr() != null && !jyglModel.getGhr().isEmpty()) {
+                    WHERE("ghr=#{model.ghr}");
                 }
             }
 
         }.toString();
     }
 
-    public String updateByIdSql(@Param("JyglModel") JyglModel jyglModel) {
+    public String updateByIdSql(@Param("model") JyglModel jyglModel) {
         return new SQL() {
             {
                 UPDATE("jygl_table");
+
                 if (jyglModel.getDamc() != null && !jyglModel.getDamc().isEmpty()) {
-                    SET("damc=#{JyglModel.damc}");
+                    SET("damc=#{model.damc}");
                 }
                 if (jyglModel.getJyrq() != null) {
-                    SET("jyrq=#{JyglModel.jyrq}");
+                    SET("jyrq=#{model.jyrq}");
                 }
-                if (jyglModel.getJyr() != null && !jyglModel.getJyr().isEmpty()) {
-                    SET("damc=#{JyglModel.damc}");
+                if (jyglModel.getGhr() != null && !jyglModel.getGhr().isEmpty()) {
+                    SET("ghr=#{model.ghr}");
                 }
-
+                if (jyglModel.getGhrq() != null) {
+                    SET("ghrq=#{model.ghrq}");
+                }
+                if (jyglModel.getBz() != null && !jyglModel.getBz().isEmpty()) {
+                    SET("bz=#{model.bz}");
+                }
+                if (jyglModel.getShjg() != 0) {
+                    SET("shjg=#{model.shjg}");
+                }
+                if (jyglModel.getJyzt() != 0) {
+                    SET("jyzt=#{model.jyzt}");
+                }
+                WHERE("uuid=#{model.uuid}");
             }
         }.toString();
     }
@@ -94,6 +116,31 @@ public class JyglSql {
                 if (model.getDgjybh() != null && !model.getDgjybh().isEmpty()) {
                     VALUES("dgjybh", "#{model.dgjybh}");
                 }
+                if (model.getShjg() != 0) {
+                    VALUES("shjg", "#{model.shjg}");
+                }
+            }
+        }.toString();
+    }
+
+    public String update(@Param("model") JyglModel model) {
+        return new SQL() {
+            {
+                UPDATE(Tables.JYGL_TABLE);
+                if (model.getShjg() != 0) {
+                    SET("shjg=#{model.shjg}");
+                }
+                WHERE("uuid=#{model.uuid}");
+            }
+        }.toString();
+    }
+
+    public String findByShjl(@Param("prentid") String prentid) {
+        return new SQL() {
+            {
+                SELECT("j.dgjybh,a.name AS'shr',s.shyj,s.shjg");
+                FROM("shjl_table s JOIN jygl_table j ON j.uuid=s.prentid JOIN account_table a ON a.uuid=s.shr");
+                WHERE("s.prentid=#{prentid}");
             }
         }.toString();
     }

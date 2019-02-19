@@ -2,6 +2,7 @@ package com.yts.ytsoa.business.gdgl.service.Impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yts.ytsoa.business.bggl.model.BgglModel;
 import com.yts.ytsoa.business.gdgl.mapper.GdglMapper;
 import com.yts.ytsoa.business.gdgl.model.GdglModel;
 import com.yts.ytsoa.business.gdgl.query.GdglQueryModel;
@@ -9,6 +10,7 @@ import com.yts.ytsoa.business.gdgl.result.ResultModel;
 import com.yts.ytsoa.business.gdgl.service.GdglService;
 import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.utils.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +103,7 @@ public class GdglServiceImpl implements GdglService {
             GdglModel gdglModel = new GdglModel();
             gdglModel.setUuid(model.getPrentid());
             gdglModel.setStatus(model.getShjg());
+            gdglModel.setWczt(3);
             gdglMapper.update(gdglModel);
             return new ResponseResult<>(true, "审核成功");
         }
@@ -112,6 +115,24 @@ public class GdglServiceImpl implements GdglService {
     public ResponseResult<List<GdglModel>> findByDamc(GdglModel model) throws Exception {
         List<GdglModel> list = gdglMapper.findByDamc(model);
         if (list.size() > 0) {
+            return new ResponseResult<>(true, "查询成功", list);
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
+    @Override
+    public ResponseResult<List<XmzmcModel>> findByUuid(String uuid) throws Exception {
+        List<XmzmcModel> list = gdglMapper.findByUuid(uuid);
+        if (list.size() != 0) {
+            return new ResponseResult<>(true, "查询成功", list);
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
+    @Override
+    public ResponseResult<List<BgglModel>> findBgByUuid(String uuid) throws Exception {
+        List<BgglModel> list = gdglMapper.findBgByUuid(uuid);
+        if (list.size() != 0) {
             return new ResponseResult<>(true, "查询成功", list);
         }
         return new ResponseResult<>(false, "查无信息");

@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.xmcj.controller;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.GlobalExceptionHandler;
 import com.yts.ytsoa.business.xmcj.model.XmcjModel;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.business.xmcj.service.XmcjService;
 import com.yts.ytsoa.business.xmcy.service.XmcyService;
 import com.yts.ytsoa.sys.shiro.JWTUtils;
@@ -80,6 +81,16 @@ public class XmcjController {
         }
         xmcjModel.setYwzt(1);
         String accId = JWTUtils.getAccId(request);
-        return xmcjService.updateById(xmcjModel, accId);
+        xmcjModel.setXmfzr(accId);
+        return xmcjService.updateById(xmcjModel);
+    }
+
+    @ApiOperation(value = "根据项目委派的uuid查询项目子名称")
+    @RequestMapping(value = "/findXmzmc", method = RequestMethod.GET)
+    public ResponseResult<List<XmzmcModel>> findXmzmc(@RequestBody XmzmcModel model) throws Exception {
+        if (model != null) {
+            return xmcjService.findXmzmc(model);
+        }
+        return new ResponseResult<>(false, "缺少查询参数，查询失败");
     }
 }

@@ -5,45 +5,7 @@ import com.yts.ytsoa.utils.Tables;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
-import java.util.List;
-import java.util.StringJoiner;
-
 public class BgglSql {
-
-    public String addBgglpl(@Param("models") List<BgglModel> models) {
-        StringJoiner sj = new StringJoiner("");
-        models.forEach(k -> {
-            String s = new SQL() {
-                {
-                    INSERT_INTO(Tables.BGGL_TABLE);
-                    VALUES("uuid", "replace(uuid(), '-', '')");
-                    VALUES("xmmc", "#{models.xmmc}");
-                    VALUES("bgzbr", "#{models.bgzbr}");
-                    VALUES("bgmc", "#{models.bgmc}");
-                    VALUES("sqf", "#{models.sqf}");
-                    VALUES("bgrq", "#{models.bgrq}");
-                    VALUES("qzzs1", "#{models.qzzs1}");
-                    VALUES("qzzs2", "#{models.qzzs2}");
-                    VALUES("bglx", "#{models.bglx}");
-                    VALUES("bgbh", "#{models.bgbh}");
-                    VALUES("bgfwbh_qz", "#{models.bgfwbhQz}");
-                    VALUES("bgfwbh_hz", "#{models.bgfwbhHz}");
-                    VALUES("bgcs", "#{models.bgcs}");
-                    VALUES("zcze", "#{models.zcze}");
-                    VALUES("fzze", "#{models.fzze}");
-                    VALUES("srlr", "#{models.srlr}");
-                    VALUES("lrze", "#{models.lrze}");
-                    VALUES("jlr", "#{models.jlr}");
-                    VALUES("xgcs", "#{models.xgcs}");
-                    VALUES("xmid", "#{models.xmid}");
-                    VALUES("shjg", "1");
-                }
-            }.toString();
-            sj.add(s + ";");
-        });
-        return sj.toString().substring(0, sj.toString().length() - 1);
-    }
-
     public String addBggl(@Param("model") BgglModel model) {
         return new SQL() {
             {
@@ -67,8 +29,9 @@ public class BgglSql {
                 VALUES("lrze", "#{model.lrze}");
                 VALUES("jlr", "#{model.jlr}");
                 VALUES("xgcs", "#{model.xgcs}");
+                VALUES("xgyy", "#{model.xgyy}");
                 VALUES("xmid", "#{model.xmid}");
-                VALUES("shjg", "1");
+                VALUES("shjg", "#{model.shjg}");
             }
         }.toString();
     }
@@ -97,22 +60,21 @@ public class BgglSql {
     public String find(@Param("model") BgglModel model) {
         return new SQL() {
             {
-                SELECT("*");
-                FROM(Tables.BGGL_TABLE);
+                SELECT("b.*");
+                FROM(Tables.BGGL_TABLE + " b");
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
-                    WHERE("xmmc like concat ('%',#{model.xmmc},'%')");
+                    WHERE("b.xmmc like concat ('%',#{model.xmmc},'%')");
                 }
                 if (model.getSqf() != null && !model.getSqf().isEmpty()) {
-                    WHERE("sqf=#{model.sqf}");
+                    WHERE("b.sqf=#{model.sqf}");
                 }
                 if (model.getXmid() != null && !model.getXmid().isEmpty()) {
-                    WHERE("xmid=#{model.xmid}");
+                    WHERE("b.xmid=#{model.xmid}");
                 }
                 if (model.getShjg() != 0) {
-                    WHERE("shjg=1");
+                    WHERE("b.shjg=1");
                 }
             }
         }.toString();
     }
-
 }

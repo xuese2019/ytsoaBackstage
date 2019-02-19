@@ -42,10 +42,9 @@ public class XmshModel implements Serializable {
     /**
      * 1:未审核
      * 2：已审核
-     * 审核结果
+     * 3:审核未通过
      */
-
-    @ApiModelProperty(value = "审核结果", name = "shjg", dataType = "int")
+    @ApiModelProperty(value = "1未审2已审3审核未通过", name = "shjg", dataType = "int")
     private int shjg;
     /**
      * 审核时间
@@ -66,4 +65,5 @@ public class XmshModel implements Serializable {
      */
     @ApiModelProperty(value = "姓名", name = "name", dataType = "String")
     private String name;
+
 }

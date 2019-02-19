@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.pjsq.controller;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.GlobalExceptionHandler;
 import com.yts.ytsoa.business.pjsq.model.PjsqModel;
+import com.yts.ytsoa.business.pjsq.model.ResPjsqModel;
 import com.yts.ytsoa.business.pjsq.service.PjsqService;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.sys.shiro.JWTUtils;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Api(value = "票据申请", description = "票据申请接口")
 @RestController
@@ -77,7 +79,7 @@ public class PjsqController {
         String accId = JWTUtils.getAccId(request);
         if (model != null) {
             model.setShr(accId);
-            return pjsqService.shjl(model);
+            return pjsqService.pjsh(model);
         }
         return new ResponseResult<>(false, "审核失败");
     }
@@ -86,5 +88,16 @@ public class PjsqController {
     @RequestMapping(value = "/findById/{uuid}", method = RequestMethod.GET)
     public ResponseResult<PjsqModel> findById(@PathVariable(value = "uuid") String uuid) throws Exception {
         return pjsqService.findById(uuid);
+    }
+
+    @ApiOperation(value = "审核记录")
+    @RequestMapping(value = "/findByShjl/{prentid}", method = RequestMethod.GET)
+    public ResponseResult<List<ResPjsqModel>> findByShjl(@PathVariable("prentid") String prentid) throws Exception {
+        ResponseResult<List<ResPjsqModel>> result = pjsqService.findByShjl(prentid);
+        if (result != null) {
+            return new ResponseResult<>(true, "查询成功", result.getData());
+        } else {
+            return new ResponseResult<>(false, "没有审核记录");
+        }
     }
 }

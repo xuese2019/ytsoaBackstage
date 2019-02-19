@@ -23,7 +23,7 @@ public class BgshjlModel {
     private String shrid;
     @ApiModelProperty(value = "审核意见", name = "shyj", dataType = "String")
     private String shyj;
-    @ApiModelProperty(value = "是否同意", name = "tof", dataType = "int")
+    @ApiModelProperty(value = "是否同意1不同意2同意", name = "tof", dataType = "int")
     private int tof;
     @ApiModelProperty(value = "顺序号", name = "sxh", dataType = "int")
     private int sxh;

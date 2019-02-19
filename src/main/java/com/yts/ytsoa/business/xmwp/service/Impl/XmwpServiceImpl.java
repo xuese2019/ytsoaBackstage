@@ -2,15 +2,18 @@ package com.yts.ytsoa.business.xmwp.service.Impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yts.ytsoa.business.Xmshlc.mapper.XmshlcMapper;
 import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
+import com.yts.ytsoa.business.shrsz.mapper.ShrszMapper;
 import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
+import com.yts.ytsoa.business.xmwp.model.ResultModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.business.xmwp.service.XmwpService;
+import com.yts.ytsoa.business.xxgl.model.XxglModel;
 import com.yts.ytsoa.business.xxgl.service.XxglService;
 import com.yts.ytsoa.business.xxgl.utils.XxglUtils;
-import com.yts.ytsoa.sys.shiro.JWTUtils;
-import com.yts.ytsoa.utils.GetUuid;
+import com.yts.ytsoa.business.zzjg.mapper.ZzjgMapper;
 import com.yts.ytsoa.utils.ResponseResult;
 import com.yts.ytsoa.utils.poi.ExcelModelExportUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,30 +36,30 @@ public class XmwpServiceImpl implements XmwpService {
     private XxglService xxglService;
     @Autowired
     private XmshMapper xmshMapper;
+    @Autowired
+    private ZzjgMapper zzjgMapper;
+    @Autowired
+    private XmshlcMapper xmshlcMapper;
+
+    @Autowired
+    private ShrszMapper shrszMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<XmwpModel> addXmwp(XmwpModel model, String fsr) throws Exception {
+    public ResponseResult<XmwpModel> addXmwp(XmwpModel model) throws Exception {
         model.setWpdscsj(new Timestamp(System.currentTimeMillis()));
         model.setYwzt(1);
         xmwpMapper.addXmwp(model);
 //        给承接人发送通知
-        xxglService.save(new XxglUtils().setXx(2, "需要承接项目：" + model.getXmmc(), null, fsr, model.getXmfzr()));
+        XxglModel all = new XxglUtils().setXx(2, "需要承接项目：" + model.getXmmc(), null, model.getWpr(), "all");
+        xxglService.save(all);
         return new ResponseResult<>(true, "添加成功");
     }
 
-    //    @Override
-//    public ResponseResult<List<XmwpModel>> find(XmwpModel model) throws Exception {
-//        List<XmwpModel> result = xmwpMapper.find(model);
-//        if (result.size() > 0) {
-//            return new ResponseResult<>(true, "查询成功", result);
-//        }
-//        return new ResponseResult<>(false, "查询失败", null);
-//    }
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<XmwpModel> delById(String uuid) throws Exception {
-        XmwpModel model = xmwpMapper.findById(uuid);
+        XmwpModel model = xmwpMapper.findXmByUuid(uuid);
         if (model != null && model.getYwzt() < 2) {
             xmwpMapper.delById(uuid);
             return new ResponseResult<>(true, "删除成功");
@@ -75,26 +77,70 @@ public class XmwpServiceImpl implements XmwpService {
         return new ResponseResult<>(false, "修改失败");
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<XmwpModel> findById(String uuid) {
-        XmwpModel result = xmwpMapper.findById(uuid);
+    public ResponseResult<ResultModel> findById(String uuid) {
+        ResultModel result = xmwpMapper.findById(uuid);
         if (result != null) {
             return new ResponseResult<>(true, "查询成功", result);
         }
         return new ResponseResult<>(false, "查无信息");
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<PageInfo<XmwpModel>> findByXmmc(int pageNow, int pageSize, XmwpModel model, String accId) throws Exception {
-        PageHelper.startPage(pageNow, pageSize);
-        List<XmwpModel> list = xmwpMapper.findByXmmc(model);
-        PageInfo<XmwpModel> page = new PageInfo<>(list);
-        if (page.getSize() > 0) {
-            return new ResponseResult<>(true, "查询成功", page);
+        if (model != null) {
+            Integer lx = xmshlcMapper.shlx(accId);
+            if (lx != null) {
+                switch (lx) {
+                    case 2:
+                        String zzjgid = zzjgMapper.findZzjgid(accId);
+                        model.setCjbm(zzjgid);
+                        model.setYwzt(3);
+                        PageHelper.startPage(pageNow, pageSize);
+                        List<XmwpModel> list1 = xmwpMapper.findByXmmc(model);
+                        PageInfo<XmwpModel> page1 = new PageInfo<>(list1);
+                        if (page1.getSize() > 0) {
+                            return new ResponseResult<>(true, "查询成功", page1);
+                        }
+                        return new ResponseResult<>(false, "查无信息");
+                    case 3:
+                        model.setYwzt(4);
+                        PageHelper.startPage(pageNow, pageSize);
+                        List<XmwpModel> list2 = xmwpMapper.findByXmmc(model);
+                        PageInfo<XmwpModel> page2 = new PageInfo<>(list2);
+                        if (page2.getSize() > 0) {
+                            return new ResponseResult<>(true, "查询成功", page2);
+                        }
+                        return new ResponseResult<>(false, "查无信息");
+                    case 4:
+                        model.setYwzt(5);
+                        PageHelper.startPage(pageNow, pageSize);
+                        List<XmwpModel> list3 = xmwpMapper.findByXmmc(model);
+                        PageInfo<XmwpModel> page3 = new PageInfo<>(list3);
+                        if (page3.getSize() > 0) {
+                            return new ResponseResult<>(true, "查询成功", page3);
+                        }
+                        return new ResponseResult<>(false, "查无信息");
+                    default:
+                        PageHelper.startPage(pageNow, pageSize);
+                        List<XmwpModel> list = xmwpMapper.findByXmmc(model);
+                        PageInfo<XmwpModel> page = new PageInfo<>(list);
+                        if (page.getSize() > 0) {
+                            return new ResponseResult<>(true, "查询成功", page);
+                        }
+                        return new ResponseResult<>(false, "查无信息");
+                }
+            } else {
+                PageHelper.startPage(pageNow, pageSize);
+                List<XmwpModel> list = xmwpMapper.findByXmmc(model);
+                PageInfo<XmwpModel> page = new PageInfo<>(list);
+                if (page.getSize() > 0) {
+                    return new ResponseResult<>(true, "查询成功", page);
+                }
+                return new ResponseResult<>(false, "查无信息");
+            }
         }
-        return new ResponseResult<>(false, "查无数据");
+        return new ResponseResult<>(false, "查无信息");
     }
 
     @Override
@@ -131,23 +177,97 @@ public class XmwpServiceImpl implements XmwpService {
         return new ResponseResult<>(false, "查无信息");
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<XmwpModel> xmsh(XmwpModel model, HttpServletRequest request) throws Exception {
-        String accid = JWTUtils.getAccId(request);
-        XmwpModel xmwpModel = xmwpMapper.findYwzt(model.getUuid());
-        model.setYwzt(xmwpModel.getYwzt() + 1);
-        int result = xmwpMapper.xmjlsh(model);
-        if (result > 0) {
-            XmshModel xmshModel = new XmshModel();
-            String uuid = GetUuid.getUUID();
-            xmshModel.setShr(accid);
-            xmshModel.setUuid(uuid);
-            xmshModel.setShsj(new Date());
-            xmshModel.setShjg(model.getYwzt());
-            xmshModel.setPrentid(model.getUuid());
-            xmshMapper.add(xmshModel);
-            return new ResponseResult<>(true, "项目经理审核成功");
+    public ResponseResult<XmshModel> xmsh(XmshModel model, String accid) throws Exception {
+        Integer shlx = xmshlcMapper.shlx(accid);
+        if (shlx != null) {
+            switch (shlx) {
+                case 2:
+                    model.setShr(accid);
+                    model.setShsj(new Date());
+                    int result1 = xmshMapper.add(model);
+                    if (result1 != 0) {
+                        if (model.getShjg() == 2) {
+                            XmwpModel xmwpModel = new XmwpModel();
+                            xmwpModel.setUuid(model.getPrentid());
+                            xmwpModel.setYwzt(3);
+                            xmwpMapper.updateYwzt(xmwpModel);
+                        }
+                    }
+                    return new ResponseResult<>(true, "审核成功");
+                case 3:
+                    model.setShr(accid);
+                    model.setShsj(new Date());
+                    int result2 = xmshMapper.add(model);
+                    if (result2 != 0) {
+                        int hhrsh = xmwpMapper.hhrsh(model.getPrentid());
+                        if (hhrsh == 1) {
+                            if (model.getShjg() == 2) {
+                                XmwpModel xmwpModel1 = new XmwpModel();
+                                xmwpModel1.setUuid(model.getPrentid());
+                                xmwpModel1.setYwzt(5);
+                                xmwpMapper.updateYwzt(xmwpModel1);
+                            }
+                        } else {
+                            if (model.getShjg() == 2) {
+                                XmwpModel xmwpModel1 = new XmwpModel();
+                                xmwpModel1.setUuid(model.getPrentid());
+                                xmwpModel1.setYwzt(6);
+                                xmwpMapper.updateYwzt(xmwpModel1);
+                            }
+                        }
+                    }
+                    return new ResponseResult<>(true, "审核成功");
+                case 4:
+                    model.setShr(accid);
+                    model.setShsj(new Date());
+                    int result3 = xmshMapper.add(model);
+                    if (result3 != 0) {
+                        if (model.getShjg() == 2) {
+                            XmwpModel xmwpModel2 = new XmwpModel();
+                            xmwpModel2.setYwzt(6);
+                            xmwpModel2.setUuid(model.getPrentid());
+                            xmwpMapper.updateYwzt(xmwpModel2);
+                        }
+                        return new ResponseResult<>(true, "审核通过");
+                    }
+                    return new ResponseResult<>(true, "审核未通过");
+                default:
+                    return new ResponseResult<>(false, "审核失败");
+            }
+        } else {
+            String xmfzr = xmwpMapper.findXmfzr(model.getPrentid());
+            if (xmfzr.equals(accid)) {
+                model.setShr(accid);
+                model.setShsj(new Date());
+                int result = xmshMapper.add(model);
+                if (result != 0) {
+                    XmwpModel xmwpModel = new XmwpModel();
+                    xmwpModel.setUuid(model.getPrentid());
+                    xmwpModel.setYwzt(3);
+                    xmwpMapper.updateYwzt(xmwpModel);
+                }
+                return new ResponseResult<>(true, "审核成功");
+            }
+            return new ResponseResult<>(true, "审核失败，非项目负责人不可审核");
         }
-        return new ResponseResult<>(false, "项目经理审核失败");
     }
+
+    @Override
+    public ResponseResult<PageInfo<XmwpModel>> findByXmyq(int pageNow, int pageSize, XmwpModel model, String accId) throws Exception {
+      /*  long s = model.getXmxcjssj().getTime();
+        long dd = System.currentTimeMillis();*/
+        /* if (s == dd) {*/
+        PageHelper.startPage(pageNow, pageSize);
+        List<XmwpModel> list = xmwpMapper.findByXmyq(model);
+        PageInfo<XmwpModel> page = new PageInfo<>(list);
+        if (page.getSize() > 0) {
+            return new ResponseResult<>(true, "查询成功", page);
+       /*     }
+            return new ResponseResult<>(true, "项目需要延期");*/
+        }
+        return new ResponseResult<>(false, "查询失败");
+    }
+
 }

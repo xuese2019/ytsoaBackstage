@@ -69,11 +69,8 @@ public class XmwpglSql {
     public String findByXmmc(@Param("model") XmwpModel model) {
         return new SQL() {
             {
-                SELECT("x.*,CONCAT(zj.zzjgmc,'/',z.zzjgmc) as zzjgmc,a.name as cjr");
+                SELECT("x.*");
                 FROM(Tables.XMWP_TABLE + " x");
-                LEFT_OUTER_JOIN("account_table a ON x.xmfzr = a.uuid");
-                LEFT_OUTER_JOIN("zzjg_table z on z.uuid = x.cjbm");
-                LEFT_OUTER_JOIN("zzjg_table zj on zj.uuid = z.zzjgfj");
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     WHERE("x.xmmc like concat('%',#{model.xmmc},'%')");
                 }
@@ -92,12 +89,58 @@ public class XmwpglSql {
                 if (model.getShr() != null && !model.getShr().isEmpty()) {
                     WHERE("x.shr=#{model.shr}");
                 }
-                if (model.getUuid() != null && !model.getUuid().isEmpty()) {
+                /*if (model.getUuid() != null && !model.getUuid().isEmpty()) {
                     WHERE("x.uuid = #{model.uuid}");
+                }*/
+                if (model.getCjbm() != null && !model.getCjbm().isEmpty()) {
+                    WHERE("x.cjbm=#{model.cjbm}");
+                }
+                if (model.getXmxcjssj() != null) {
+                    WHERE("xmxcjssj=#{model.xmxcjssj}");
+                }
+                if (model.getShr() != null && !model.getShr().isEmpty()) {
+                    WHERE("shr=#{model.shr}");
                 }
             }
         }.toString();
     }
+
+    public String findByXmyq(@Param("model") XmwpModel model) {
+        return new SQL() {
+            {
+                SELECT("x.*");
+                FROM(Tables.XMWP_TABLE + " x");
+                if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
+                    WHERE("x.xmmc like concat('%',#{model.xmmc},'%')");
+                }
+                if (model.getYwzt() > 0) {
+                    WHERE("x.ywzt = #{model.ywzt}");
+                }
+                if (model.getXmfzr() != null && !model.getXmfzr().isEmpty()) {
+                    WHERE("x.xmfzr=#{model.xmfzr}");
+                }
+                if (model.getWpr() != null && !model.getWpr().isEmpty()) {
+                    WHERE("x.wpr=#{model.wpr}");
+                }
+                if (model.getXmshzt() != 0) {
+                    WHERE("x.xmshzt=#{model.xmshzt}");
+                }
+                if (model.getShr() != null && !model.getShr().isEmpty()) {
+                    WHERE("x.shr=#{model.shr}");
+                }
+                if (model.getCjbm() != null && !model.getCjbm().isEmpty()) {
+                    WHERE("x.cjbm=#{model.cjbm}");
+                }
+                if (model.getXmxcjssj() != null) {
+                    WHERE("xmxcjssj=#{model.xmxcjssj}");
+                }
+                if (model.getShr() != null && !model.getShr().isEmpty()) {
+                    WHERE("shr=#{model.shr}");
+                }
+            }
+        }.toString();
+    }
+
 
     public String update(@Param("model") XmwpModel model) {
         return new SQL() {

@@ -4,7 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
+import com.yts.ytsoa.business.xxgl.service.XxglService;
+import com.yts.ytsoa.business.xxgl.utils.XxglUtils;
 import com.yts.ytsoa.business.ycsq.mapper.YcsqMapper;
+import com.yts.ytsoa.business.ycsq.model.ResultModel;
 import com.yts.ytsoa.business.ycsq.model.YcsqModel;
 import com.yts.ytsoa.business.ycsq.service.YcsqService;
 import com.yts.ytsoa.utils.GetUuid;
@@ -26,6 +29,8 @@ public class YcsqServiceImpl implements YcsqService {
     private YcsqMapper ycsqMapper;
     @Autowired
     private XmshMapper xmshMapper;
+    @Autowired
+    private XxglService xxglService;
 
     @Override
     public ResponseResult<PageInfo<YcsqModel>> findAll(int pageNow, int pageSize, YcsqModel ycsqModel) throws Exception {
@@ -73,6 +78,17 @@ public class YcsqServiceImpl implements YcsqService {
         }
     }
 
+    @Override
+    public ResponseResult<List<ResultModel>> findByShjl(String prentid) throws Exception {
+        List<ResultModel> list = ycsqMapper.findByShjl(prentid);
+        if (list.size() > 0) {
+            return new ResponseResult<>(true, "查询成功", list);
+        } else {
+            return new ResponseResult<>(false, "无审核记录");
+        }
+    }
+
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<YcsqModel> updById(YcsqModel ycsqModel) throws Exception {
@@ -84,8 +100,7 @@ public class YcsqServiceImpl implements YcsqService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<XmshModel> update(XmshModel model) throws Exception {
-
+    public ResponseResult<XmshModel> update(XmshModel model, String fsr) throws Exception {
         String uuid = GetUuid.getUUID();
         model.setUuid(uuid);
         model.setShsj(new Date());
@@ -95,8 +110,11 @@ public class YcsqServiceImpl implements YcsqService {
             ycsqModel.setUuid(model.getPrentid());
             ycsqModel.setShjg(model.getShjg());
             ycsqMapper.update(ycsqModel);
+            xxglService.save(new XxglUtils().setXx(2, "用车审核成功：" + model.getShsj(), model.getShyj(), fsr, ycsqModel.getSqr()));
             return new ResponseResult<>(true, "审核成功");
         }
         return new ResponseResult<>(false, "审核失败");
     }
+
+
 }

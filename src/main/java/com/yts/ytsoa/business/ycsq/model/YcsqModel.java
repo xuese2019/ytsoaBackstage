@@ -111,6 +111,8 @@ public class YcsqModel implements Serializable {
     private String shyj;
     /**
      * 审核结果
+     * 1:未审核
+     * 2:已审核
      */
     @ApiModelProperty(value = "审核结果", name = "shjg", dataType = "int")
     private int shjg;

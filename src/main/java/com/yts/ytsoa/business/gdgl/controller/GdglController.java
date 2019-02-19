@@ -1,11 +1,13 @@
 package com.yts.ytsoa.business.gdgl.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.yts.ytsoa.business.bggl.model.BgglModel;
 import com.yts.ytsoa.business.gdgl.model.GdglModel;
 import com.yts.ytsoa.business.gdgl.query.GdglQueryModel;
 import com.yts.ytsoa.business.gdgl.result.ResultModel;
 import com.yts.ytsoa.business.gdgl.service.GdglService;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.sys.shiro.JWTUtils;
 import com.yts.ytsoa.utils.ResponseResult;
 import com.yts.ytsoa.utils.yamlutils.YamlPageUtils;
@@ -72,5 +74,23 @@ public class GdglController {
     @RequestMapping(value = "/findByDamc", method = RequestMethod.GET)
     public ResponseResult<List<GdglModel>> findByDamc(@RequestBody GdglModel model) throws Exception {
         return gdglService.findByDamc(model);
+    }
+
+    @ApiOperation(value = "二级联动查询,参数：项目子名称表uuid")
+    @RequestMapping(value = "/findByUuid/{uuid}", method = RequestMethod.GET)
+    public ResponseResult<List<XmzmcModel>> findByUuid(@PathVariable("parentid") String parentid) throws Exception {
+        if (parentid != null) {
+            return gdglService.findByUuid(parentid);
+        }
+        return new ResponseResult<>(false, "参数缺失，查询失败");
+    }
+
+    @ApiOperation(value = "查询该项目下的所有已审核但未归档的报告，参数：uuid")
+    @RequestMapping(value = "/findBgByUuid/{uuid}", method = RequestMethod.GET)
+    public ResponseResult<List<BgglModel>> findBgByUuid(@PathVariable(value = "uuid") String uuid) throws Exception {
+        if (uuid != null && !uuid.isEmpty()) {
+            return gdglService.findBgByUuid(uuid);
+        }
+        return new ResponseResult<>(false, "查询失败，参数缺失");
     }
 }

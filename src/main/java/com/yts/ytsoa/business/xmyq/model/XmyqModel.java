@@ -67,9 +67,9 @@ public class XmyqModel {
     /**
      * 项目结束时间
      */
-    @ApiModelProperty(value = "项目结束时间", name = "xmjssj", dataType = "Date")
+    @ApiModelProperty(value = "项目结束时间", name = "xmxcjssj", dataType = "Date")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date xmjssj;
+    private Date xmxcjssj;
     @ApiModelProperty(value = "系统当前时间", name = "xtdqsj", dataType = "Date")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date xtdqsj;

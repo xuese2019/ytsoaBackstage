@@ -2,6 +2,7 @@ package com.yts.ytsoa.business.xmyq.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
 import com.yts.ytsoa.business.xmyq.mapper.XmyqMapper;
 import com.yts.ytsoa.business.xmyq.model.XmyqModel;
 import com.yts.ytsoa.business.xmyq.service.XmyqService;
@@ -19,6 +20,8 @@ import java.util.List;
 public class XmyqServiceImpl implements XmyqService {
     @Autowired
     private XmyqMapper xmyqMapper;
+    @Autowired
+    private XmwpMapper xmwpMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -31,10 +34,18 @@ public class XmyqServiceImpl implements XmyqService {
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<PageInfo<XmyqModel>> findAll(int pageNow, int pageSize, XmyqModel xmyqModel) throws Exception {
         PageHelper.startPage(pageNow, pageSize);
+        /*  XmwpModel xmwpModel = new XmwpModel();*/
+      /*  List<XmwpModel> result = xmwpMapper.findByXmmc(xmwpModel);
+        if (result.size() > 0) {
+            xmyqModel.setXmxcjssj(xmwpModel.getXmxcjssj());
+            xmyqModel.setXmmc(xmwpModel.getXmmc());
+            xmyqModel.setXmkssj(xmwpModel.getXmkssj());
+            xmyqModel.setXmcjr(xmwpModel.getShr());
+            xmyqModel.setXmzt();
+        }*/
         List<XmyqModel> list = xmyqMapper.findAll(xmyqModel);
         PageInfo<XmyqModel> page = new PageInfo<>(list);
         if (page.getSize() > 0) {

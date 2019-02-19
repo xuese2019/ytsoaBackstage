@@ -3,11 +3,15 @@ package com.yts.ytsoa;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yts.ytsoa.utils.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -33,23 +37,31 @@ public class GlobalExceptionHandler {
     public void exception(HttpServletRequest request,
                           HttpServletResponse response,
                           Exception exception) throws Exception {
-        exception.printStackTrace();
+//        exception.printStackTrace();
 //        log.debug("ERROR::::：" + exception.getLocalizedMessage() + "::::::" + new Date());
 //        log.debug("ERROR::::：" + exception.getCause() + "::::::" + new Date());
 //        log.debug("ERROR::::：" + Arrays.toString(exception.getSuppressed()) + "::::::" + new Date());
 //        log.debug("ERROR::::：" + exception.getMessage() + "::::::" + new Date());
 //        log.debug("ERROR::::：" + Arrays.toString(exception.getStackTrace()) + "::::::" + new Date());
-//        //        权限不足
-//        if ((exception instanceof UnauthorizedException) || (exception instanceof AuthorizationException)) {
-//            res(response, "权限不足");
-//            return;
-//        }
-////        文件不存在
-//        if (exception instanceof FileNotFoundException) {
-//            res(response, "文件不存在");
-//            return;
-//        }
-//        res(response, "未定义的的其它错误");
+        //        权限不足
+        if ((exception instanceof UnauthorizedException) || (exception instanceof AuthorizationException)) {
+            res(response, "权限不足");
+            exception.printStackTrace();
+            return;
+        }
+//        文件不存在
+        if (exception instanceof FileNotFoundException) {
+            res(response, "文件不存在");
+            exception.printStackTrace();
+            return;
+        }
+        if (exception instanceof HttpMessageNotReadableException) {
+            res(response, "参数序列化异常，请仔细对比参数的类型");
+            exception.printStackTrace();
+            return;
+        }
+        res(response, "未定义的的其它错误");
+        exception.printStackTrace();
     }
 
 

@@ -28,11 +28,11 @@ spring:
   ## 数据库配置
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-#    driverClassName: com.mysql.cj.jdbc.Driver
+    #    driverClassName: com.mysql.cj.jdbc.Driver
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.1.222:3306/ytsoa?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
-    username: root
-    password: root
+    url: jdbc:mysql://${backup.databaseHost}:3306/${backup.databaseName}?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&allowMultiQueries=true
+    username: ${backup.username}
+    password: ${backup.password}
     ##  Hikari 连接池配置 ------ 详细配置请访问：https://github.com/brettwooldridge/HikariCP
     ## 最小空闲连接数量
     hikari:
@@ -90,3 +90,12 @@ file:
   up-path: D://
   #  允许的上传类型,多个类型用‘,’隔开
   up-prefix: jpg,png,doc,docx,xls,xlsx,zip,7z,rar
+  #  备份地址
+  back-path: D://
+#  数据库连接设置
+backup:
+  mysqldump: C:\Program Files\MySQL\MySQL Server 5.7\bin
+  databaseName: ytsoa
+  databaseHost: 192.168.1.222
+  username: root
+  password: root

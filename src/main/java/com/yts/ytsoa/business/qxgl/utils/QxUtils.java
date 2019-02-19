@@ -138,6 +138,9 @@ public class QxUtils {
         list.add(new QxglModel("ccc", "知识库下载", "zskDownload", "cc", "2", "", "", null));
 
         list.add(new QxglModel("d", "系统管理", "xtgl", "0", "1", "treeview", "fa fa-sticky-note-o", null));
+        list.add(new QxglModel("da", "项目审核相关设置", "xmshxgsz", "d", "1", "treeview", "fa fa-sticky-note-o", null));
+        list.add(new QxglModel("db", "报告审核相关设置", "bgshxgsz", "d", "1", "treeview", "fa fa-sticky-note-o", null));
+        list.add(new QxglModel("dc", "审核相关设置", "shxgsz", "d", "1", "treeview", "fa fa-sticky-note-o", null));
 
         return list;
     }

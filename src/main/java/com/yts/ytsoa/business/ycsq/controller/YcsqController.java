@@ -2,6 +2,7 @@ package com.yts.ytsoa.business.ycsq.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
+import com.yts.ytsoa.business.ycsq.model.ResultModel;
 import com.yts.ytsoa.business.ycsq.model.YcsqModel;
 import com.yts.ytsoa.business.ycsq.service.YcsqService;
 import com.yts.ytsoa.sys.shiro.JWTUtils;
@@ -65,6 +66,17 @@ public class YcsqController {
         return new ResponseResult<>(result.isSuccess(), result.getMessage(), result.getData() != null ? result.getData().get(0) : null);
     }
 
+    @ApiOperation(value = "审核记录")
+    @RequestMapping(value = "/findByShjl/{prentid}", method = RequestMethod.GET)
+    public ResponseResult<List<ResultModel>> findByShjl(@PathVariable("prentid") String prentid) throws Exception {
+        ResponseResult<List<ResultModel>> result = ycsqService.findByShjl(prentid);
+        if (result != null) {
+            return new ResponseResult<>(true, "查询成功", result.getData());
+        } else {
+            return new ResponseResult<>(false, "没有审核记录");
+        }
+    }
+
     @ApiOperation(value = "根据id修改")
     @RequestMapping(value = "/updById", method = RequestMethod.PUT)
     public ResponseResult<YcsqModel> updById(@RequestBody YcsqModel ycsqModel, BindingResult result) throws Exception {
@@ -76,12 +88,13 @@ public class YcsqController {
 
     @ApiOperation(value = "用车审核")
     @RequestMapping(value = "/ycsh", method = RequestMethod.POST)
-    public ResponseResult<XmshModel> update(@RequestBody XmshModel model, HttpServletRequest request) throws Exception {
+    public ResponseResult<XmshModel> update(@RequestBody XmshModel model, HttpServletRequest request, String fsr) throws Exception {
         String accid = JWTUtils.getAccId(request);
         if (model != null) {
             model.setShr(accid);
-            return ycsqService.update(model);
+            return ycsqService.update(model, fsr);
         }
         return new ResponseResult<>(false, "审核失败");
     }
+
 }

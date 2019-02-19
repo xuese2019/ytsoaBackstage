@@ -4,7 +4,7 @@ package com.yts.ytsoa.business.jygl.mapper;
 import com.yts.ytsoa.business.gdgl.model.GdglModel;
 import com.yts.ytsoa.business.jygl.mapper.sql.JyglSql;
 import com.yts.ytsoa.business.jygl.model.JyglModel;
-import com.yts.ytsoa.utils.Tables;
+import com.yts.ytsoa.business.jygl.model.ResultModel;
 import org.apache.ibatis.annotations.*;
 
 import java.sql.SQLException;
@@ -21,14 +21,15 @@ public interface JyglMapper {
      * @throws SQLException
      */
     @SelectProvider(type = JyglSql.class, method = "findAllSql")
-    List<JyglModel> findAll(@Param("JyglModel") JyglModel jyglModel) throws SQLException;
+    List<JyglModel> findAll(@Param("model") JyglModel jyglModel) throws SQLException;
 
     @Select({
-            "select * from " + Tables.JYGL_TABLE + " where uuid = #{uuid}"
+            "select j.uuid,j.dgjybh,d.damc,j.jyrq,a.name as 'jyr'  from jygl_table j join dggd_table d on d.gdsqbh_hz=j.dgjybh join account_table a on a.uuid=j.jyr where j.uuid = #{uuid}"
     })
     /**
      * 根据uuid进行查询
      */
+
     JyglModel findById(@Param("uuid") String uuid) throws SQLException;
 
     /**
@@ -39,7 +40,7 @@ public interface JyglMapper {
      * @throws SQLException
      */
     @UpdateProvider(type = JyglSql.class, method = "updateByIdSql")
-    int updById(@Param("JyglModel") JyglModel jyglModel) throws SQLException;
+    int updById(@Param("model") JyglModel jyglModel) throws SQLException;
 
     /**
      * 添加
@@ -58,4 +59,10 @@ public interface JyglMapper {
                     "where j.dgid=#{dgid}"
     })
     GdglModel findGdglByGdId(@Param("dgid") String dgid) throws SQLException;
+
+    @UpdateProvider(type = JyglSql.class, method = "update")
+    int update(@Param("model") JyglModel model) throws SQLException;
+
+    @SelectProvider(type = JyglSql.class, method = "findByShjl")
+    List<ResultModel> findByShjl(@Param("prentid") String prentid) throws SQLException;
 }

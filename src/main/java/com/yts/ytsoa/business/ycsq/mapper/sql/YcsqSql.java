@@ -27,6 +27,9 @@ public class YcsqSql {
                     ycsqModel.setSqr("%" + ycsqModel.getSqr() + "%");
                     WHERE("y.sqr like #{ycsqModel.sqr}");
                 }
+                if (ycsqModel.getShjg() != 0) {
+                    WHERE("y.shjg=#{ycsqModel.shjg}");
+                }
             }
         }.toString();
     }
@@ -53,6 +56,10 @@ public class YcsqSql {
                 if (ycsqModel.getShjg() != 0 && !ycsqModel.getBz().isEmpty()) {
                     SET("shjg=#{ycsqModel.shjg}");
                 }
+                if (ycsqModel.getCfgls() != null && !ycsqModel.getCfgls().isEmpty()) {
+                    SET("cfgls=#{ycsqModel.cfgls}");
+                }
+                WHERE("uuid=#{ycsqModel.uuid}");
             }
         }.toString();
     }
@@ -65,6 +72,16 @@ public class YcsqSql {
                     SET("shjg=#{model.shjg}");
                 }
                 WHERE("uuid=#{model.uuid}");
+            }
+        }.toString();
+    }
+
+    public String findByShjl(@Param("prentid") String prentid) {
+        return new SQL() {
+            {
+                SELECT("y.cphgsd,y.cph,a.name,s.shyj,s.shjg");
+                FROM("shjl_table s JOIN ycsq_table y ON y.uuid=s.prentid join account_table a on a.uuid=s.shr");
+                WHERE("s.prentid=#{prentid}");
             }
         }.toString();
     }

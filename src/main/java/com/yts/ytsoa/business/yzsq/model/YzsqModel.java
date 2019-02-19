@@ -48,7 +48,7 @@ public class YzsqModel {
      * 2：已审核
      */
     @ApiModelProperty(value = "审核状态", name = "shzt", dataType = "Integer")
-    private Integer shzt;
+    private Integer shjg;
 
     @ApiModelProperty(value = "项目id", name = "xmid", dataType = "String")
     private String xmid;
@@ -57,4 +57,11 @@ public class YzsqModel {
      */
     @ApiModelProperty(value = "项目名称", name = "xmmc", dataType = "String")
     private String xmmc;
+    /**
+     * 用章份数
+     */
+    @ApiModelProperty(value = "用章份数", name = "yzfs", dataType = "int")
+    private int yzfs;
+    @ApiModelProperty(value = "审核状态", name = "shzt", dataType = "int")
+    private int shzt;
 }

@@ -2,6 +2,7 @@ package com.yts.ytsoa.business.xmwp.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +14,9 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @Data
@@ -86,8 +89,6 @@ public class XmwpModel implements Serializable {
     private String xmfl;
     @ApiModelProperty(value = "审核人", name = "shr", dataType = "String")
     private String shr;
-    @ApiModelProperty(value = "项目子名称", name = "xmzmc", dataType = "String")
-    private String xmzmc;
     /**
      * 低1，中2，高3
      */
@@ -123,5 +124,11 @@ public class XmwpModel implements Serializable {
 
     @ApiModelProperty(value = "(1已审2未审)项目审核状态", name = "xmshzt", dataType = "int")
     private int xmshzt;
+    /*项目子名称*/
+    private List<XmzmcModel> xmzmcModels = new ArrayList<>();
 
+    @ApiModelProperty(value = "合伙人审核1是2否", name = "hhrsh", dataType = "int")
+    private int hhrsh;
+    @ApiModelProperty(value = "质控部审核1是2否", name = "zkbsh", dataType = "int")
+    private int zkbsh;
 }

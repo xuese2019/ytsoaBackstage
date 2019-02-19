@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.tpsq.mapper.TpsqMapper;
+import com.yts.ytsoa.business.tpsq.model.ResultTpsqModel;
 import com.yts.ytsoa.business.tpsq.model.TpsqModel;
 import com.yts.ytsoa.business.tpsq.service.TpsqService;
 import com.yts.ytsoa.utils.ResponseResult;
@@ -26,13 +27,12 @@ public class TpsqServiceImpl implements TpsqService {
     public ResponseResult<TpsqModel> add(TpsqModel tpsqModel) throws Exception {
         int result = tpsqMapper.add(tpsqModel);
         if (result != 0) {
-            return new ResponseResult<>(true, "添加成功", null);
+            return new ResponseResult<>(true, "添加成功");
         } else {
-            return new ResponseResult<>(false, "添加失败", null);
+            return new ResponseResult<>(false, "添加失败");
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<PageInfo<TpsqModel>> findAll(int pageNow, int pageSize, TpsqModel tpsqModel) throws Exception {
         PageHelper.startPage(pageNow, pageSize);
@@ -53,7 +53,7 @@ public class TpsqServiceImpl implements TpsqService {
             if (model.getShjg() > 1) {
                 TpsqModel model1 = new TpsqModel();
                 model1.setUuid(model.getPrentid());
-                model1.setShzt(2);
+                model1.setShjg(2);
                 tpsqMapper.update(model1);
             }
             return new ResponseResult<>(true, "审核成功");
@@ -71,5 +71,15 @@ public class TpsqServiceImpl implements TpsqService {
             }
         }
         return new ResponseResult<>(false, "查无信息");
+    }
+
+    @Override
+    public ResponseResult<List<ResultTpsqModel>> findByShjl(String prentid) throws Exception {
+        List<ResultTpsqModel> list = tpsqMapper.findByShjl(prentid);
+        if (list.size() > 0) {
+            return new ResponseResult<>(true, "查询成功", list);
+        } else {
+            return new ResponseResult<>(false, "无审核记录");
+        }
     }
 }

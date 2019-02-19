@@ -13,4 +13,8 @@ public interface XmshService {
 
     ResponseResult<List<XmshModel>> findShjl(String prentid) throws Exception;
 
+    ResponseResult<XmshModel> jysh(XmshModel model, String accid) throws Exception;
+
+    ResponseResult<XmshModel> bgsh(XmshModel model, String accid) throws Exception;
+
 }

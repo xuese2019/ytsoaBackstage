@@ -147,4 +147,21 @@ public class Tables implements Serializable {
      * 报告审核记录
      */
     public static final String BGSHJL_TABLE = "bgshjl_table";
+    /**
+     * 审核人设置表
+     */
+    public static final String SHRSZ_TABLE = "shrsz_table";
+
+    /**
+     * 项目子名称表
+     */
+    public static final String XMZMC_TABLE = "xmzmc_table";
+    /**
+     * 报告审核人设置表
+     */
+    public static final String BGSHR_TABLE = "bgshr_table";
+    /**
+     * 审核人
+     */
+    public static final String SHRS_TABLE = "shrs_table";
 }

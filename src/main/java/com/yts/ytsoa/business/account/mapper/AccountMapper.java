@@ -63,4 +63,9 @@ public interface AccountMapper {
     })
     AccountModel getAdminByAccount(@Param("model") AdminModel model) throws SQLException;
 
+    @Select({
+            "select a.name from " + Tables.ACCOUNT_TABLE + " a where a.uuid = #{uuid}"
+    })
+    String getByUuid(@Param("uuid") String uuid) throws SQLException;
+
 }

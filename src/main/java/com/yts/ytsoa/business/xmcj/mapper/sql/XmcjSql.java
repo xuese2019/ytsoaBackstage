@@ -1,6 +1,7 @@
 package com.yts.ytsoa.business.xmcj.mapper.sql;
 
 import com.yts.ytsoa.business.xmcj.model.XmcjModel;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.utils.Tables;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
@@ -42,9 +43,9 @@ public class XmcjSql {
         return new SQL() {
             {
                 UPDATE("xmwp_table");
-                if (xmcjModel.getXmzmc() != null && !xmcjModel.getXmzmc().isEmpty()) {
-                    SET("xmzmc=#{xmcjModel.xmzmc}");
-                }
+//                if (xmcjModel.getXmzmc() != null && !xmcjModel.getXmzmc().isEmpty()) {
+//                    SET("xmzmc=#{xmcjModel.xmzmc}");
+//                }
                 if (xmcjModel.getYwzt() != 0) {
                     SET("ywzt=#{xmcjModel.ywzt}");
                 }
@@ -96,4 +97,40 @@ public class XmcjSql {
             }
         }.toString();
     }
+
+    public String insertXmzmc(@Param("model") XmzmcModel model) {
+        return new SQL() {
+            {
+                INSERT_INTO(Tables.XMZMC_TABLE);
+                VALUES("uuid", "replace(uuid(),'-','')");
+                VALUES("xmzmc", "#{model.xmzmc}");
+                VALUES("parentid", "#{model.parentid}");
+            }
+        }.toString();
+    }
+
+    public String findXmzmc(@Param("model") XmzmcModel model) {
+        return new SQL() {
+            {
+                SELECT("x.*");
+                FROM(Tables.XMZMC_TABLE + " x");
+                WHERE("x.parentid=#{model.parentid}");
+            }
+        }.toString();
+    }
+
+    /*public String findXmzmcByParentid(@Param("model") XmzmcModel model) {
+        return new SQL() {
+            {
+                SELECT("t.*,x.wtf,x.bsjdw");
+                FROM("xmwp_table x join xmzmc_table t on x.uuid=t.parentid");
+                if (model.getParentid() != null && !model.getParentid().isEmpty()) {
+                    WHERE("t.parentid=#{model.parentid}");
+                }
+                if (model.getXmzmc() != null && !model.getXmzmc().isEmpty()) {
+                    WHERE("t.xmzmc like concat('%',#{model.xmzmc},'%')");
+                }
+            }
+        }.toString();
+    }*/
 }

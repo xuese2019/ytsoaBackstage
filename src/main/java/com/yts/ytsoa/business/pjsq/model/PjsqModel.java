@@ -124,10 +124,12 @@ public class PjsqModel {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date kprq;
 
-    @ApiModelProperty(value = "审核状态，1未审核2已审核", name = "shzt", dataType = "int")
-    private int shzt;
+    @ApiModelProperty(value = "审核状态，1未审核2已审核3：审核没通过", name = "shjg", dataType = "int")
+    private int shjg;
     /**
      * 多表联查返回的字段
      */
     private String name;
+
+
 }

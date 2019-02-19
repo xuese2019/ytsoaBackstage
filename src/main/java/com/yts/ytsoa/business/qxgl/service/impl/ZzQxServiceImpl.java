@@ -1,5 +1,6 @@
 package com.yts.ytsoa.business.qxgl.service.impl;
 
+import com.yts.ytsoa.business.qxgl.mapper.QxglMapper;
 import com.yts.ytsoa.business.qxgl.mapper.ZzQxMapper;
 import com.yts.ytsoa.business.qxgl.model.QxglModel;
 import com.yts.ytsoa.business.qxgl.model.ZzQxModel;
@@ -22,6 +23,8 @@ public class ZzQxServiceImpl implements ZzQxService {
 
     @Autowired
     private ZzQxMapper mapper;
+    @Autowired
+    private QxglMapper qxglMapper;
 
     @Override
     public ResponseResult<List<ZzQxModel>> findByZzid(String zzid) throws Exception {
@@ -34,9 +37,17 @@ public class ZzQxServiceImpl implements ZzQxService {
 
     @Override
     public ResponseResult<List<QxglModel>> findByZzid2(String zzid) throws Exception {
-        List<QxglModel> list = mapper.findByZzid2(zzid);
-        if (list.size() > 0) {
-            List<QxglModel> qxglModels = buildByRecursiveMenu(list);
+        List<QxglModel> all = qxglMapper.findAll();
+        List<ZzQxModel> list = mapper.findByZzid(zzid);
+        if (all.size() > 0) {
+            all.forEach(k -> {
+                list.forEach(j -> {
+                    if (k.getUuid().equals(j.getQxid())) {
+                        k.setIcoi("1");
+                    }
+                });
+            });
+            List<QxglModel> qxglModels = buildByRecursiveMenu(all);
             return new ResponseResult<>(true, "成功", qxglModels);
         }
         return new ResponseResult<>(false, "未查询到记录");

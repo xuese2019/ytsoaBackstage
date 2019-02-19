@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.pjsq.mapper.PjsqMapper;
 import com.yts.ytsoa.business.pjsq.model.PjsqModel;
+import com.yts.ytsoa.business.pjsq.model.ResPjsqModel;
 import com.yts.ytsoa.business.pjsq.service.PjsqService;
 import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -31,7 +33,7 @@ public class PjsqServiceImpl implements PjsqService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<PjsqModel> add(PjsqModel pjsqModel) throws Exception {
-        pjsqModel.setShzt(1);
+        pjsqModel.setShjg(1);
         int list = pjsqMapper.add(pjsqModel);
         if (list != 0) {
             return new ResponseResult<>(true, "添加成功", null);
@@ -81,7 +83,6 @@ public class PjsqServiceImpl implements PjsqService {
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<PageInfo<PjsqModel>> find(int pageNow, int pageSize, PjsqModel model) throws Exception {
         PageHelper.startPage(pageNow, pageSize);
@@ -95,15 +96,14 @@ public class PjsqServiceImpl implements PjsqService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<XmshModel> shjl(XmshModel model) throws Exception {
+    public ResponseResult<XmshModel> pjsh(XmshModel model) throws Exception {
+        model.setShsj(new Date());
         int result = xmshMapper.add(model);
         if (result != 0) {
-            if (model.getShjg() > 2) {
-                PjsqModel model1 = new PjsqModel();
-                model1.setUuid(model.getUuid());
-                model1.setShzt(model.getShjg());
-                pjsqMapper.update(model1);
-            }
+            PjsqModel pjsqModel = new PjsqModel();
+            pjsqModel.setUuid(model.getUuid());
+            pjsqModel.setShjg(model.getShjg());
+            pjsqMapper.update(pjsqModel);
             return new ResponseResult<>(true, "审核成功");
         }
         return new ResponseResult<>(false, "审核失败");
@@ -121,4 +121,13 @@ public class PjsqServiceImpl implements PjsqService {
         return new ResponseResult<>(false, "查无信息");
     }
 
+    @Override
+    public ResponseResult<List<ResPjsqModel>> findByShjl(String prentid) throws Exception {
+        List<ResPjsqModel> list = pjsqMapper.findByShjl(prentid);
+        if (list.size() > 0) {
+            return new ResponseResult<>(true, "查询成功", list);
+        } else {
+            return new ResponseResult<>(false, "无审核记录");
+        }
+    }
 }

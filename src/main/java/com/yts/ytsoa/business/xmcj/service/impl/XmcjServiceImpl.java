@@ -4,12 +4,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.xmcj.mapper.XmcjMapper;
 import com.yts.ytsoa.business.xmcj.model.XmcjModel;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.business.xmcj.service.XmcjService;
 import com.yts.ytsoa.business.xmcy.mapper.XmcyMapper;
 import com.yts.ytsoa.business.xmcy.model.XmcyModel;
 import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
-import com.yts.ytsoa.business.xmwp.model.XmwpModel;
-import com.yts.ytsoa.business.xxgl.model.XxglModel;
 import com.yts.ytsoa.business.xxgl.service.XxglService;
 import com.yts.ytsoa.business.xxgl.utils.XxglUtils;
 import com.yts.ytsoa.utils.GetUuid;
@@ -97,7 +96,7 @@ public class XmcjServiceImpl implements XmcjService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<XmcjModel> updateById(XmcjModel xmcjModel, String fsr) throws Exception {
+    public ResponseResult<XmcjModel> updateById(XmcjModel xmcjModel) throws Exception {
         xmcjModel.setYwzt(2);
         List<XmcyModel> list = new ArrayList<>();
         String yglb = xmcjModel.getYglb();
@@ -114,15 +113,45 @@ public class XmcjServiceImpl implements XmcjService {
             xmcyMapper.saves(list);
         }
         xmcjMapper.updateById(xmcjModel);
-        XmwpModel byId1 = xmwpMapper.findById(xmcjModel.getUuid());
-        if (byId1 == null || byId1.getWpr() == null || byId1.getWpr().isEmpty()) {
-            return new ResponseResult<>(false, "缺失委派人");
-        }
-        ResponseResult<XxglModel> save = xxglService.save(new XxglUtils().setXx(1, "已承接项目：" + byId1.getXmmc(), null, fsr, byId1.getWpr()));
-        if (save.isSuccess()) {
-            return new ResponseResult<>(true, "成功");
-        } else {
-            return new ResponseResult<>(save.isSuccess(), save.getMessage());
-        }
+        xmcjModel.getXmzmcModels().forEach(k -> {
+            k.setParentid(xmcjModel.getUuid());
+            xmcjMapper.insertXmzmc(k);
+        });
+//            if (xmcjModel.getXmzmc() != null) {
+//                String s = xmcjModel.getXmzmc();
+//                String[] s1 = s.split(",");
+//                for (int i = 0; i < s1.length; i++) {
+//                    XmzmcModel xmzmcModel = new XmzmcModel();
+//                    String uuid1 = GetUuid.getUUID();
+//                    xmzmcModel.setUuid(uuid1);
+//                    xmzmcModel.setParentid(xmcjModel.getUuid());
+//                    xmzmcModel.setXmzmc(s1[i]);
+//                    xmcjMapper.insertXmzmc(xmzmcModel);
+//                }
+//            }
+        xxglService.save(new XxglUtils().setXx(1, "已承接项目：" + xmcjModel.getXmmc(), null, xmcjModel.getXmfzr(), xmcjModel.getWpr()));
+        return new ResponseResult<>(true, "成功");
     }
+
+    @Override
+    public ResponseResult<List<XmzmcModel>> findXmzmc(XmzmcModel model) throws Exception {
+        if (model != null) {
+            List<XmzmcModel> result = xmcjMapper.findXmzmc(model);
+            if (result != null) {
+                return new ResponseResult<>(true, "查询成功", result);
+            }
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
+    /*@Override
+    public ResponseResult<List<ResultModel>> findXmzmcByParentid(XmzmcModel model) throws Exception {
+        if (model != null) {
+            List<ResultModel> list = xmcjMapper.findXmzmcByParentid(model);
+            if (list.size() != 0) {
+                return new ResponseResult<>(true, "查询成功", list);
+            }
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }*/
 }

@@ -1,10 +1,12 @@
 package com.yts.ytsoa.business.gdgl.service;
 
 import com.github.pagehelper.PageInfo;
+import com.yts.ytsoa.business.bggl.model.BgglModel;
 import com.yts.ytsoa.business.gdgl.model.GdglModel;
 import com.yts.ytsoa.business.gdgl.query.GdglQueryModel;
 import com.yts.ytsoa.business.gdgl.result.ResultModel;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.utils.ResponseResult;
 
 import java.util.List;
@@ -45,4 +47,8 @@ public interface GdglService {
     ResponseResult<XmshModel> update(XmshModel model) throws Exception;
 
     ResponseResult<List<GdglModel>> findByDamc(GdglModel model) throws Exception;
+
+    ResponseResult<List<XmzmcModel>> findByUuid(String parentid) throws Exception;
+
+    ResponseResult<List<BgglModel>> findBgByUuid(String uuid) throws Exception;
 }

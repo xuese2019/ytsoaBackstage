@@ -1,9 +1,10 @@
 package com.yts.ytsoa.business.bggl.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.yts.ytsoa.business.bggl.model.Bggl2Model;
 import com.yts.ytsoa.business.bggl.model.BgglModel;
+import com.yts.ytsoa.business.bggl.model.BgglsModel;
 import com.yts.ytsoa.business.bggl.service.BgglService;
+import com.yts.ytsoa.business.bgshjl.service.BgshjlService;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.sys.shiro.JWTUtils;
 import com.yts.ytsoa.utils.ResponseResult;
@@ -27,21 +28,8 @@ public class BgglController {
     @Autowired
     private BgglService bgglService;
 
-    /**
-     * 添加一条报告
-     *
-     * @param model
-     * @return
-     * @throws Exception
-     */
-    /*@ApiOperation(value = "申请报告")
-    @RequestMapping(value = "/addBggl", method = RequestMethod.POST)
-    public ResponseResult<BgglModel> addBggl(@RequestBody BgglModel model) throws Exception {
-        if (model != null) {
-            return bgglService.addBggl(model);
-        }
-        return new ResponseResult<>(false, "申请失败");
-    }*/
+    @Autowired
+    private BgshjlService bgshjlService;
 
     /**
      * 分页查询带条件
@@ -53,9 +41,10 @@ public class BgglController {
      */
     @ApiOperation(value = "分页查询带条件")
     @RequestMapping(value = "/find/{pageNow}", method = RequestMethod.POST)
-    public ResponseResult<PageInfo<BgglModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody BgglModel model, String fsr) throws Exception {
+    public ResponseResult<PageInfo<BgglModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody BgglModel model, String fsr, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
         if (model != null) {
-            return bgglService.find(pageNow, yamlPageUtils.getPageSize(), model, fsr);
+            return bgglService.find(pageNow, yamlPageUtils.getPageSize(), model, fsr, accid);
         }
         return new ResponseResult<>(false, "查无信息");
     }
@@ -91,14 +80,14 @@ public class BgglController {
 
     @ApiOperation(value = "根据id查询该条记录")
     @RequestMapping(value = "/findById/{uuid}", method = RequestMethod.GET)
-    public ResponseResult<Bggl2Model> findById(@PathVariable("uuid") String uuid) throws Exception {
+    public ResponseResult<BgglsModel> findById(@PathVariable("uuid") String uuid) throws Exception {
         if (uuid != null && !uuid.isEmpty()) {
             return bgglService.findById(uuid);
         }
         return new ResponseResult<>(false, "查无信息");
     }
 
-    @ApiOperation(value = "批量/申请报告")
+    @ApiOperation(value = "添加申请报告")
     @RequestMapping(value = "/addBggl", method = RequestMethod.POST)
     public ResponseResult<BgglModel> addBggl(@RequestBody BgglModel model) throws Exception {
         if (model != null) {

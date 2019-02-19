@@ -85,6 +85,8 @@ public class JyglModel implements Serializable {
 
     /**
      * 借阅状态
+     * 1:未借阅
+     * 2：已借阅
      */
     @ApiModelProperty(value = "借阅状态", name = "jyzt", dataType = "int")
     private int jyzt;
@@ -95,4 +97,11 @@ public class JyglModel implements Serializable {
     private String dgid;
     @ApiModelProperty(value = "借阅人名称", name = "name", dataType = "String")
     private String name;
+    /**
+     * 审核结果
+     * 1：不同意
+     * 2：同意
+     */
+    @ApiModelProperty(value = "审核结果", name = "shjg", dataType = "int")
+    private int shjg;
 }

@@ -55,7 +55,6 @@ public class ZzjgServiceImpl implements ZzjgService {
         return new ResponseResult<>(true, "成功");
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<List<ZzjgModel>> findAll() throws Exception {
         List<ZzjgModel> list = mapper.findAll();

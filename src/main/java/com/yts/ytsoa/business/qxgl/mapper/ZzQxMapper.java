@@ -24,6 +24,11 @@ public interface ZzQxMapper {
     List<ZzQxModel> findByZzid(@Param("zzid") String zzid) throws SQLException;
 
     @Select({
+            "select * from " + Tables.ZZ_QX_TABLE + " order by qxid"
+    })
+    List<ZzQxModel> findAll() throws SQLException;
+
+    @Select({
             "SELECT"
                     + " q.uuid,"
                     + " q.qxmc,"

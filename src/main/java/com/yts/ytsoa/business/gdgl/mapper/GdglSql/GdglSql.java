@@ -36,13 +36,7 @@ public class GdglSql {
         }.toString();
     }
 
-    /**
-     * 查询所有
-     *
-     * @param model
-     * @return
-     */
-    public String find(@Param("model") GdglModel model) {
+    /*public String find(@Param("model") GdglModel model) {
         return new SQL() {
             {
                 SELECT("*");
@@ -50,10 +44,6 @@ public class GdglSql {
                 if (model.getXmid() != null) {
                     WHERE("a.xmid=#{model.xmid}");
                 }
-                if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
-                    WHERE("a.xmmc=#{model.xmmc}");
-                }
-
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     model.setXmmc("%" + model.getXmmc() + "%");
                     WHERE("a.xmmc like #{model.xmmc}");
@@ -76,8 +66,16 @@ public class GdglSql {
                 if (model.getJyzt() != 0 && !model.getXmid().isEmpty()) {
                     WHERE("jyzt=#{model.jyzt}");
                 }
-
+                if (model.getBgbh() != null && !model.getBgbh().isEmpty()) {
+                    WHERE("bgbh=#{model.bgbh}");
+                }
             }
+        }.toString();
+    }*/
+
+    public String find() {
+        return new SQL() {
+
         }.toString();
     }
 
@@ -86,7 +84,6 @@ public class GdglSql {
             {
                 SELECT("g.gdsqbh_hz,g.damc,g.ssnf,x.bsjdw,x.cjbm,g.bgcs,g.dgcs");
                 FROM(Tables.XMWP_TABLE + " x join " + Tables.DGGD_TABLE + " g on x.xmmc =g.xmmc ");
-
                 if (model.getGdsqbh_hz() != null) {
                     WHERE("g.gdsqbh_hz=#{model.gdsqbh_hz}");
                 }
@@ -127,9 +124,6 @@ public class GdglSql {
                 if (gdglModel.getJyzt() != 0 && !gdglModel.getDamc().isEmpty()) {
                     SET("jyzt=#{gdglModel.jyzt}");
                 }
-                if (gdglModel.getWczt() != 0) {
-                    SET("wczt=9");
-                }
                 WHERE("uuid = #{gdglModel.uuid}");
             }
         }.toString();
@@ -141,6 +135,9 @@ public class GdglSql {
                 UPDATE(Tables.DGGD_TABLE);
                 if (model.getStatus() != 0) {
                     SET("zt=#{model.status}");
+                }
+                if (model.getWczt() != 0) {
+                    SET("wczt=#{model.wczt}");
                 }
                 WHERE("uuid=#{model.uuid}");
             }
@@ -156,9 +153,8 @@ public class GdglSql {
                     WHERE("damc like concat ('%',#{model.damc},'%')");
                 }
                 if (model.getJyzt() != 0) {
-                    WHERE("jyzt=#{mdoel.jyzt}");
+                    WHERE("jyzt=#{model.jyzt}");
                 }
-                WHERE("zt=2");
             }
         }.toString();
     }
@@ -170,7 +166,20 @@ public class GdglSql {
                 if (model.getJyzt() != 0) {
                     SET("jyzt=#{model.jyzt}");
                 }
-                WHERE("gdsqbh_hz=#{mdoel.gdsqbh_hz}");
+                WHERE("uuid=#{model.uuid}");
+            }
+        }.toString();
+    }
+
+    public String findBgByUuid(@Param("uuid") String uuid) {
+        return new SQL() {
+            {
+                SELECT("b.*");
+                FROM(Tables.XMZMC_TABLE + " x join xmwp_table x1 on x.parentid=x1.uuid join bggl_table b on b.xmid=x.uuid");
+                if (uuid != null && !uuid.isEmpty()) {
+                    WHERE("x1.uuid=#{uuid}");
+                }
+                WHERE("b.shjg>6");
             }
         }.toString();
     }

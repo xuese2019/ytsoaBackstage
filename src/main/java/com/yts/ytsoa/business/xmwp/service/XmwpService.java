@@ -2,10 +2,9 @@ package com.yts.ytsoa.business.xmwp.service;
 
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
+import com.yts.ytsoa.business.xmwp.model.ResultModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.ResponseResult;
-
-import javax.servlet.http.HttpServletRequest;
 
 public interface XmwpService {
     /**
@@ -15,16 +14,7 @@ public interface XmwpService {
      * @return
      * @throws Exception
      */
-    ResponseResult<XmwpModel> addXmwp(XmwpModel model, String fsr) throws Exception;
-
-    /**
-     * 条件查询，默认搜索全部
-     *
-     * @param model
-     * @return
-     * @throws Exception
-     */
-//    ResponseResult<List<XmwpModel>> find(XmwpModel model) throws Exception;
+    ResponseResult<XmwpModel> addXmwp(XmwpModel model) throws Exception;
 
     /**
      * 根据uuid删除一条信息
@@ -51,7 +41,7 @@ public interface XmwpService {
      * @return
      * @throws Exception
      */
-    ResponseResult<XmwpModel> findById(String uuid) throws Exception;
+    ResponseResult<ResultModel> findById(String uuid) throws Exception;
 
     /**
      * 分页，条件查询，默认查询所有项目名称
@@ -72,14 +62,14 @@ public interface XmwpService {
      */
     ResponseResult<String> findXmfzr(String uuid) throws Exception;
 
-
     /**
-     * 项目经理审核
+     * 项目审核
      *
      * @param model
      * @return
      * @throws Exception
      */
-    ResponseResult<XmwpModel> xmsh(XmwpModel model, HttpServletRequest request) throws Exception;
+    ResponseResult<XmshModel> xmsh(XmshModel model, String accid) throws Exception;
 
+    ResponseResult<PageInfo<XmwpModel>> findByXmyq(int pageNow, int pageSize, XmwpModel model, String accId) throws Exception;
 }
