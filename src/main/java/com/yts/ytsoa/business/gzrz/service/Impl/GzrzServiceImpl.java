@@ -36,6 +36,7 @@ public class GzrzServiceImpl implements GzrzService {
 
     @Override
     public ResponseResult<GzrzModel> addGzrz(GzrzModel model) {
+
         if (model != null) {
             int result = mapper.addGzrz(model);
             if (result != 0) {

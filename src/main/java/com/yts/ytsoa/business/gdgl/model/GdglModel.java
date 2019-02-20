@@ -80,8 +80,8 @@ public class GdglModel implements Serializable {
     @ApiModelProperty(value = "附件个数", name = "fjgs", dataType = "Integer")
     private Integer fjgs;
 
-    @ApiModelProperty(value = "状态", name = "status", dataType = "Integer")
-    private Integer status;
+    @ApiModelProperty(value = "状态", name = "shjg", dataType = "Integer")
+    private Integer shjg;
 
     @ApiModelProperty(value = "审核意见", name = "shyj", dataType = "String")
     private String shyj;
@@ -113,4 +113,5 @@ public class GdglModel implements Serializable {
      */
     @ApiModelProperty(value = "完成状态", name = "wczt", dataType = "int")
     private int wczt;
+
 }

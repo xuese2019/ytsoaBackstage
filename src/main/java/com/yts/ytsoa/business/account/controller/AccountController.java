@@ -218,4 +218,12 @@ public class AccountController {
         }
     }
 
+    @ApiOperation(value = "根据id修改")
+    @RequestMapping(value = "/updById", method = RequestMethod.PUT)
+    public ResponseResult<AccountModel> updById(@RequestBody AccountModel model, BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage());
+        }
+        return service.updById(model);
+    }
 }

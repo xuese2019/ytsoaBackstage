@@ -42,8 +42,9 @@ public class XmcjController {
     @ApiOperation(value = "分页条件查询")
     @RequestMapping(value = "/page/{pageNow}", method = RequestMethod.POST)
     public ResponseResult<PageInfo<XmcjModel>> findAll(@PathVariable("pageNow") int pageNow,
-                                                       @RequestBody XmcjModel xmcjModel) throws Exception {
-        return xmcjService.findAll(pageNow, yamlPageUtils.getPageSize(), xmcjModel);
+                                                       @RequestBody XmcjModel xmcjModel, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
+        return xmcjService.findAll(pageNow, yamlPageUtils.getPageSize(), xmcjModel, accid);
     }
 
     @ApiOperation(value = "根据id删除")
@@ -82,7 +83,7 @@ public class XmcjController {
         xmcjModel.setYwzt(1);
         String accId = JWTUtils.getAccId(request);
         xmcjModel.setXmfzr(accId);
-        return xmcjService.updateById(xmcjModel);
+        return xmcjService.updateById(xmcjModel, accId);
     }
 
     @ApiOperation(value = "根据项目委派的uuid查询项目子名称")

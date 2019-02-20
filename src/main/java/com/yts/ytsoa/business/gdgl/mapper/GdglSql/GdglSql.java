@@ -36,7 +36,7 @@ public class GdglSql {
         }.toString();
     }
 
-    /*public String find(@Param("model") GdglModel model) {
+    public String find(@Param("model") GdglModel model) {
         return new SQL() {
             {
                 SELECT("*");
@@ -71,13 +71,13 @@ public class GdglSql {
                 }
             }
         }.toString();
-    }*/
+    }
 
-    public String find() {
+/*    public String find() {
         return new SQL() {
 
         }.toString();
-    }
+    }*/
 
     public String findGdsh(@Param("model") GdglQueryModel model) {
         return new SQL() {
@@ -133,8 +133,8 @@ public class GdglSql {
         return new SQL() {
             {
                 UPDATE(Tables.DGGD_TABLE);
-                if (model.getStatus() != 0) {
-                    SET("zt=#{model.status}");
+                if ((model.getShjg() == 1) || (model.getShjg() == 3)) {
+                    WHERE("t.shjg=1 or t.shjg=3");
                 }
                 if (model.getWczt() != 0) {
                     SET("wczt=#{model.wczt}");
@@ -175,11 +175,21 @@ public class GdglSql {
         return new SQL() {
             {
                 SELECT("b.*");
-                FROM(Tables.XMZMC_TABLE + " x join xmwp_table x1 on x.parentid=x1.uuid join bggl_table b on b.xmid=x.uuid");
+                FROM("bggl_table b join xmzmc_table x on x.uuid=b.xmid");
                 if (uuid != null && !uuid.isEmpty()) {
-                    WHERE("x1.uuid=#{uuid}");
+                    WHERE("x.uuid=#{uuid}");
                 }
                 WHERE("b.shjg>6");
+            }
+        }.toString();
+    }
+
+    public String findByShjl(@Param("prentid") String prentid) {
+        return new SQL() {
+            {
+                SELECT("j.bgbh,a.name AS'shr',s.shyj,s.shjg");
+                FROM("shjl_table s JOIN dggd_table j ON j.uuid=s.prentid JOIN account_table a ON a.uuid=s.shr");
+                WHERE("s.prentid=#{prentid}");
             }
         }.toString();
     }

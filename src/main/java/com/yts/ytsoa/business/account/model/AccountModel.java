@@ -225,4 +225,6 @@ public class AccountModel implements Serializable {
      */
     @ApiModelProperty(value = "是否完善信息", name = "wsxx", dataType = "int")
     private int wsxx = 0;
+    @ApiModelProperty(value = "职级", name = "zj", dataType = "double")
+    private double zj;
 }

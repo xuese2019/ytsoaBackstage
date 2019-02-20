@@ -47,33 +47,6 @@ public class XmcyServiceImpl implements XmcyService {
         return new ResponseResult<>(false, "成功");
     }
 
-   /* @Override
-    public ResponseResult<XmcyModel> addXmcy(XmcyModel model) throws Exception {
-        List<XmcyModel> list = new ArrayList<>();
-        String uuid = GetUuid.getUUID();
-        String s[]=model.getName().split("},");
-        for (int i = 0; i < s.length; i++) {
-            if (s[i] != null && !s[i].isEmpty()) {
-                XmcyModel xmcyModel = new XmcyModel();
-                xmcyModel.setName(model.getName());
-                xmcyModel.setXmid(model.getXmid());
-                xmcyModel.setUuid(uuid);
-                xmcyModel.setYgid(model.getYgid());
-                xmcyModel.setGtnl(model.getGtnl());
-                xmcyModel.setGzxl(model.getGzxl());
-                xmcyModel.setZrxjtdjs(model.getZrxjtdjs());
-                xmcyModel.setZyjsnl(model.getZyjsnl());
-                xmcyModel.setPy(model.getPy());
-                list.add(xmcyModel);
-            }
-            if (list.size() > 0) {
-                xmcyMapper.addXmcyPl(list);
-                return new ResponseResult<>(true, "添加成功");
-            }
-        }
-        return new ResponseResult<>(false, "添加失败");
-    }*/
-
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<PageInfo<XmcyModel>> find(int pageNow, int pageSize, XmcyModel model) throws Exception {

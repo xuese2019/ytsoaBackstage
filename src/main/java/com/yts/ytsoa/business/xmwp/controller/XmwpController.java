@@ -61,11 +61,10 @@ public class XmwpController {
         return xmwpService.findById(uuid);
     }
 
-    @ApiOperation(value = "项目管理条件查询，分页")
+    @ApiOperation(value = "项目审核页面条件查询，分页")
     @RequestMapping(value = "/findByXmmc/{pageNow}", method = RequestMethod.POST)
     public ResponseResult<PageInfo<XmwpModel>> findByXmmc(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
         String accId = JWTUtils.getAccId(request);
-        /*  model.setXmfzr(accId);*/
         return xmwpService.findByXmmc(pageNow, yamlPageUtils.getPageSize(), model, accId);
     }
 
@@ -102,5 +101,9 @@ public class XmwpController {
         return new ResponseResult<>(false, "缺失参数，审核失败");
     }
 
-
+    @ApiOperation(value = "项目管理，委派管理页面，分页条件查询")
+    @RequestMapping(value = "/find/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<PageInfo<XmwpModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model) throws Exception {
+        return xmwpService.find(pageNow, yamlPageUtils.getPageSize(), model);
+    }
 }

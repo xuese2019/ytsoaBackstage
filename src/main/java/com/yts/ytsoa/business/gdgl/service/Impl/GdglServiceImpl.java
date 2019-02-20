@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.bggl.model.BgglModel;
 import com.yts.ytsoa.business.gdgl.mapper.GdglMapper;
 import com.yts.ytsoa.business.gdgl.model.GdglModel;
+import com.yts.ytsoa.business.gdgl.model.GdglResultModel;
 import com.yts.ytsoa.business.gdgl.query.GdglQueryModel;
 import com.yts.ytsoa.business.gdgl.result.ResultModel;
 import com.yts.ytsoa.business.gdgl.service.GdglService;
@@ -102,7 +103,7 @@ public class GdglServiceImpl implements GdglService {
         if (result != 0) {
             GdglModel gdglModel = new GdglModel();
             gdglModel.setUuid(model.getPrentid());
-            gdglModel.setStatus(model.getShjg());
+            gdglModel.setShjg(model.getShjg());
             gdglModel.setWczt(3);
             gdglMapper.update(gdglModel);
             return new ResponseResult<>(true, "审核成功");
@@ -133,8 +134,23 @@ public class GdglServiceImpl implements GdglService {
     public ResponseResult<List<BgglModel>> findBgByUuid(String uuid) throws Exception {
         List<BgglModel> list = gdglMapper.findBgByUuid(uuid);
         if (list.size() != 0) {
-            return new ResponseResult<>(true, "查询成功", list);
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getShjg() > 6) {
+                    return new ResponseResult<>(true, "查询成功", list);
+                }
+                return new ResponseResult<>(false, "查无信息，报告未审核通过");
+            }
         }
         return new ResponseResult<>(false, "查无信息");
+    }
+
+    @Override
+    public ResponseResult<List<GdglResultModel>> findByShjl(String prentid) throws Exception {
+        List<GdglResultModel> list = gdglMapper.findByShjl(prentid);
+        if (list.size() > 0) {
+            return new ResponseResult<>(true, "查询成功", list);
+        } else {
+            return new ResponseResult<>(false, "无审核记录");
+        }
     }
 }

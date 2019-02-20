@@ -38,7 +38,8 @@ public class XmcjServiceImpl implements XmcjService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<PageInfo<XmcjModel>> findAll(int pageNow, int pageSize, XmcjModel xmcjModel) throws Exception {
+    public ResponseResult<PageInfo<XmcjModel>> findAll(int pageNow, int pageSize, XmcjModel xmcjModel, String accid) throws Exception {
+        xmcjModel.setXmfzr(accid);
         PageHelper.startPage(pageNow, pageSize);
         List<XmcjModel> list = xmcjMapper.findAll(xmcjModel);
         PageInfo<XmcjModel> page = new PageInfo<>(list);
@@ -96,7 +97,7 @@ public class XmcjServiceImpl implements XmcjService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<XmcjModel> updateById(XmcjModel xmcjModel) throws Exception {
+    public ResponseResult<XmcjModel> updateById(XmcjModel xmcjModel, String accid) throws Exception {
         xmcjModel.setYwzt(2);
         List<XmcyModel> list = new ArrayList<>();
         String yglb = xmcjModel.getYglb();
@@ -117,21 +118,10 @@ public class XmcjServiceImpl implements XmcjService {
             k.setParentid(xmcjModel.getUuid());
             xmcjMapper.insertXmzmc(k);
         });
-//            if (xmcjModel.getXmzmc() != null) {
-//                String s = xmcjModel.getXmzmc();
-//                String[] s1 = s.split(",");
-//                for (int i = 0; i < s1.length; i++) {
-//                    XmzmcModel xmzmcModel = new XmzmcModel();
-//                    String uuid1 = GetUuid.getUUID();
-//                    xmzmcModel.setUuid(uuid1);
-//                    xmzmcModel.setParentid(xmcjModel.getUuid());
-//                    xmzmcModel.setXmzmc(s1[i]);
-//                    xmcjMapper.insertXmzmc(xmzmcModel);
-//                }
-//            }
         xxglService.save(new XxglUtils().setXx(1, "已承接项目：" + xmcjModel.getXmmc(), null, xmcjModel.getXmfzr(), xmcjModel.getWpr()));
         return new ResponseResult<>(true, "成功");
     }
+    /**/
 
     @Override
     public ResponseResult<List<XmzmcModel>> findXmzmc(XmzmcModel model) throws Exception {

@@ -39,9 +39,27 @@ public class BgglController {
      * @return
      * @throws Exception
      */
-    @ApiOperation(value = "分页查询带条件")
+    @ApiOperation(value = "报告审核，分页查询带条件")
     @RequestMapping(value = "/find/{pageNow}", method = RequestMethod.POST)
     public ResponseResult<PageInfo<BgglModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody BgglModel model, String fsr, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
+        if (model != null) {
+            return bgglService.find(pageNow, yamlPageUtils.getPageSize(), model, fsr, accid);
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
+    /**
+     * 报告管理分页查询带条件
+     *
+     * @param pageNow
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "报告管理，分页查询带条件")
+    @RequestMapping(value = "/findBggl/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<PageInfo<BgglModel>> findBggl(@PathVariable("pageNow") int pageNow, @RequestBody BgglModel model, String fsr, HttpServletRequest request) throws Exception {
         String accid = JWTUtils.getAccId(request);
         if (model != null) {
             return bgglService.find(pageNow, yamlPageUtils.getPageSize(), model, fsr, accid);

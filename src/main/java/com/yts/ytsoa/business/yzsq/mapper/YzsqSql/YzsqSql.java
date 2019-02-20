@@ -45,8 +45,8 @@ public class YzsqSql {
                     model.setWjmc("%" + model.getWjmc() + "%");
                     WHERE("wjmc like concat ('%',#{model.wjmc},'%')");
                 }
-                if (model.getShjg() != 0) {
-                    WHERE("shjg=#{model.shjg}");
+                if ((model.getShjg() == 1) || (model.getShjg() == 3)) {
+                    WHERE("t.shjg=1 or t.shjg=3");
                 }
             }
         }.toString();

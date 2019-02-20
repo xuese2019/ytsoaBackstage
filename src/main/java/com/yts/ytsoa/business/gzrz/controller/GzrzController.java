@@ -46,7 +46,7 @@ public class GzrzController {
         String dqsj = s.format(date);
         if (response != null) {
             for (int i = 0; i < response.getData().size(); i++) {
-                if (accId.equals(response.getData())) {
+                if (accId.equals(response.getData().get(i).getYgid())) {
                     model.setTjr(accId);
                     model.setTjsj(new Date());
                     return gzrzService.addGzrz(model);

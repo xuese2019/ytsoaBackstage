@@ -66,6 +66,18 @@ spring:
   #    是否启用aop
   aop:
     auto: true
+  #  配置email
+  mail:
+    host: smtp.qq.com
+    username: xuesemofa@vip.qq.com
+    password: dowahhazzapqbcja
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
 #banner 启动动画文件
 # 启动动画文件编码
 banner:

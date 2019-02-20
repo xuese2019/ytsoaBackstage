@@ -48,6 +48,17 @@ public class BgglServiceImpl implements BgglService {
     @Autowired
     private BgshrMapper bgshrMapper;
 
+    /**
+     * 用于报告审核，分页查询带条件
+     *
+     * @param pageNow
+     * @param pageSize
+     * @param model
+     * @param fsr
+     * @param accid
+     * @return
+     * @throws Exception
+     */
     @Override
     public ResponseResult<PageInfo<BgglModel>> find(int pageNow, int pageSize, BgglModel model, String fsr, String accid) throws Exception {
         //查询报告审核人表
@@ -184,5 +195,72 @@ public class BgglServiceImpl implements BgglService {
             bgglMapper.addBggl(model);
             return new ResponseResult<>(true, "报告出具成功");
         }
+    }
+
+    /**
+     * 用于报告管理，分页查询带条件
+     *
+     * @param pageNow
+     * @param pageSize
+     * @param model
+     * @param fsr
+     * @param accid
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ResponseResult<PageInfo<BgglModel>> bggl(int pageNow, int pageSize, BgglModel model, String fsr, String accid) throws Exception {
+        //查询报告审核人表
+        BgshrModel bgshrModel = bgshrMapper.find();
+        //根据报告的的xmid查出该项目的详细信息
+        XmwpModel xmwpModel = bgglMapper.findByXmid(model.getXmid());
+        if (xmwpModel != null) {
+            if (xmwpModel.getXmfzr().equals(accid)) {
+                model.setBgzbr(accid);
+                PageHelper.startPage(pageNow, pageSize);
+                List<BgglModel> list = bgglMapper.find(model);
+                PageInfo<BgglModel> page = new PageInfo<>(list);
+                model.setGdyxq(model.getGdyxq() - 1);
+                bgglMapper.update(model);
+                if (model.getGdyxq() < 1) {
+                    xxglService.save(new XxglUtils().setXx(7, "归档有效期不足1天：" + model.getXmmc(), model.getBgbh(), fsr, xmwpModel.getXmfzr()));
+                    return new ResponseResult<>(true, "查询成功", page);
+                }
+                return new ResponseResult<>(false, "查无信息");
+            } else if (accid.equals(bgshrModel.getBmjlid())) {
+                PageHelper.startPage(pageNow, pageSize);
+                List<BgglModel> list = bgglMapper.find(model);
+                PageInfo<BgglModel> page = new PageInfo<>(list);
+                if (page.getSize() > 0) {
+                    return new ResponseResult<>(true, "查询成功", page);
+                }
+                return new ResponseResult<>(false, "查无信息");
+            } else if (accid.equals(bgshrModel.getZkbid())) {
+                PageHelper.startPage(pageNow, pageSize);
+                List<BgglModel> list = bgglMapper.find(model);
+                PageInfo<BgglModel> page = new PageInfo<>(list);
+                if (page.getSize() > 0) {
+                    return new ResponseResult<>(true, "查询成功", page);
+                }
+                return new ResponseResult<>(false, "查无信息");
+            } else if (accid.equals(bgshrModel.getHhrid())) {
+                PageHelper.startPage(pageNow, pageSize);
+                List<BgglModel> list = bgglMapper.find(model);
+                PageInfo<BgglModel> page = new PageInfo<>(list);
+                if (page.getSize() > 0) {
+                    return new ResponseResult<>(true, "查询成功", page);
+                }
+                return new ResponseResult<>(false, "查无信息");
+            }
+        } else {
+            PageHelper.startPage(pageNow, pageSize);
+            List<BgglModel> list = bgglMapper.find(model);
+            PageInfo<BgglModel> page = new PageInfo<>(list);
+            if (page.getSize() > 0) {
+                return new ResponseResult<>(true, "查询成功", page);
+            }
+            return new ResponseResult<>(false, "查无信息");
+        }
+        return new ResponseResult<>(false, "查无信息");
     }
 }

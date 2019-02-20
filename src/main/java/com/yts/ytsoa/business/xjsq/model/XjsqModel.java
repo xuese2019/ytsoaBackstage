@@ -52,9 +52,21 @@ public class XjsqModel {
     private String ssnf;
     /**
      * 是否同意
-     * 1同意
-     * 2不同意
+     * 1未审核
+     * 2已审核
+     * 3审核未通过
+     * 4部门经理审核
+     * 5所长审核
      */
-    @ApiModelProperty(value = "（1/2）是否同意", name = "sfty", dataType = "int")
-    private int sfty;
+    @ApiModelProperty(value = "（1/2）是否同意", name = "shjg", dataType = "int")
+    private int shjg;
+    @ApiModelProperty(value = "签到时间", name = "qdsj", dataType = "Date")
+    private Date qdsj;
+    @ApiModelProperty(value = "签退时间", name = "qtsj", dataType = "Date")
+    private Date qtsj;
+    @ApiModelProperty(value = "签到地点", name = "qddd", dataType = "String")
+    private String qddd;
+    @ApiModelProperty(value = "签退地点", name = "qtdd", dataType = "String")
+    private String qtdd;
+
 }

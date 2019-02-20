@@ -58,7 +58,7 @@ public class XxglServiceImpl implements XxglService {
                     entity.setFsr(fsr);
                     entity.setJsr(list.get(i).getUuid());
                     entity.setTytFlag(uuid);
-                    entity.setXxlx(6);
+                    entity.setXxlx(model.getXxlx() == 0 ? 6 : model.getXxlx());
                     xxglModels.add(entity);
                 }
             } else {

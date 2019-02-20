@@ -1,6 +1,5 @@
 package com.yts.ytsoa.business.tpsq.mapper.sql;
 
-import com.yts.ytsoa.business.pjsq.model.PjsqModel;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.tpsq.model.TpsqModel;
 import com.yts.ytsoa.utils.Tables;
@@ -16,8 +15,8 @@ public class TpsqSql {
                 if (model.getBh() != null && !model.getBh().isEmpty()) {
                     WHERE("t.bh like concat('%',#{model.bh},'%')");
                 }
-                if (model.getShjg() != 0) {
-                    WHERE("t.shjg=#{model.shjg}");
+                if ((model.getShjg() == 1) || (model.getShjg() == 3)) {
+                    WHERE("t.shjg=1 or t.shjg=3");
                 }
             }
         }.toString();
@@ -37,7 +36,7 @@ public class TpsqSql {
         }.toString();
     }
 
-    public String update(@Param("model") PjsqModel model) {
+    public String update(@Param("model") TpsqModel model) {
         return new SQL() {
             {
                 UPDATE(Tables.TPSQ_TABLE);
@@ -76,7 +75,7 @@ public class TpsqSql {
     public String findByShjl(@Param("prentid") String prentid) {
         return new SQL() {
             {
-                SELECT("y.bh,a.name as 'shr',s.shyj,s.shjg");
+                SELECT("y.kpbh,a.name as 'shr',s.shyj,s.shjg");
                 FROM("shjl_table s JOIN tpsq_table y ON y.uuid=s.prentid join account_table a on a.uuid=s.shr");
                 WHERE("s.prentid=#{prentid}");
             }

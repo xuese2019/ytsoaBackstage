@@ -127,7 +127,7 @@ public class XmcySql {
         }.toString();
     }
 
-    public String findXmcyNotInXm(@Param("xmid") String xmid) {
+    public String findXmcy(@Param("xmid") String xmid) {
         return new SQL() {
             {
                 SELECT("x.ygid");

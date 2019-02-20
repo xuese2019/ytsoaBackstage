@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.gdgl.controller;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.bggl.model.BgglModel;
 import com.yts.ytsoa.business.gdgl.model.GdglModel;
+import com.yts.ytsoa.business.gdgl.model.GdglResultModel;
 import com.yts.ytsoa.business.gdgl.query.GdglQueryModel;
 import com.yts.ytsoa.business.gdgl.result.ResultModel;
 import com.yts.ytsoa.business.gdgl.service.GdglService;
@@ -92,5 +93,17 @@ public class GdglController {
             return gdglService.findBgByUuid(uuid);
         }
         return new ResponseResult<>(false, "查询失败，参数缺失");
+    }
+
+
+    @ApiOperation(value = "审核记录")
+    @RequestMapping(value = "/findByShjl/{prentid}", method = RequestMethod.GET)
+    public ResponseResult<List<GdglResultModel>> findByShjl(@PathVariable("prentid") String prentid) throws Exception {
+        ResponseResult<List<GdglResultModel>> result = gdglService.findByShjl(prentid);
+        if (result != null) {
+            return new ResponseResult<>(true, "查询成功", result.getData());
+        } else {
+            return new ResponseResult<>(false, "没有审核记录");
+        }
     }
 }

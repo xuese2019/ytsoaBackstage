@@ -120,4 +120,16 @@ public class AccountSql {
             }
         }.toString();
     }
+
+    public String updById(@Param("model") AccountModel model) {
+        return new SQL() {
+            {
+                UPDATE("account_table");
+                if (model.getBm() != null && !model.getBm().isEmpty()) {
+                    SET("bm=#{model.bm}");
+                }
+                WHERE("uuid = #{model.uuid}");
+            }
+        }.toString();
+    }
 }

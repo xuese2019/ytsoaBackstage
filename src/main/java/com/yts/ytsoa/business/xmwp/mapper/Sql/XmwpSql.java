@@ -13,9 +13,6 @@ public class XmwpSql {
                 if (model.getYwzt() != 0) {
                     SET("ywzt=#{model.ywzt}");
                 }
-                if (model.getXmshzt() != 0) {
-                    SET("xmshzt=#{model.xmshzt}");
-                }
                 WHERE("uuid=#{model.uuid}");
             }
         }.toString();

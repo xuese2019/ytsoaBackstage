@@ -21,7 +21,7 @@ public interface TpsqMapper {
     int tpsh(@Param("model") XmshModel model) throws SQLException;
 
     @UpdateProvider(type = TpsqSql.class, method = "update")
-    int update(@Param("model") TpsqModel model);
+    int update(@Param("model") TpsqModel model) throws SQLException;
 
     @Select({
             "select * from tpsq_table  where  uuid=#{uuid}"

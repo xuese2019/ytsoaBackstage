@@ -43,7 +43,7 @@ public interface XmcyMapper {
     @InsertProvider(type = XmcySql.class, method = "insertXmcy")
     int insertXmcy(@Param("model") XmcyModel model) throws SQLException;
 
-    @SelectProvider(type = XmcySql.class, method = "findXmcyNotInXm")
+    @SelectProvider(type = XmcySql.class, method = "findXmcy")
     List<XmcyModel> findYgid(@Param("xmid") String xmid) throws SQLException;
 
     @InsertProvider(type = XmcySql.class, method = "insertRgglTable")

@@ -39,4 +39,6 @@ public interface AccountService {
     ResponseResult<List<AccountModel>> findByAccount(AccountModel model) throws Exception;
 
     ResponseResult<AccountModel> getAdminByAccount(AdminModel model) throws Exception;
+
+    ResponseResult<AccountModel> updById(AccountModel model) throws Exception;
 }

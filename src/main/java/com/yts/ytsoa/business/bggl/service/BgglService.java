@@ -43,4 +43,17 @@ public interface BgglService {
      * @throws Exception
      */
     ResponseResult<XmshModel> update(XmshModel model) throws Exception;
+
+    /**
+     * 用于报告管理
+     *
+     * @param pageNow
+     * @param pageSize
+     * @param model
+     * @param fsr
+     * @param accid
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<PageInfo<BgglModel>> bggl(int pageNow, int pageSize, BgglModel model, String fsr, String accid) throws Exception;
 }

@@ -23,8 +23,8 @@ public class JyglSql {
                     jyglModel.setDgjybh("%" + jyglModel.getDgjybh() + "%");
                     WHERE("j.dgjybh like #{model.dgjybh}");
                 }
-                if (jyglModel.getShjg() != 0) {
-                    WHERE("j.shjg=#{model.shjg}");
+                if ((jyglModel.getShjg() == 1) || (jyglModel.getShjg() == 3)) {
+                    WHERE("t.shjg=1 or t.shjg=3");
                 }
                 if (jyglModel.getJyzt() != 0) {
                     WHERE("j.jyzt=#{model.jyzt}");

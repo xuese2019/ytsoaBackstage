@@ -61,6 +61,7 @@ public class AccountServiceImpl implements AccountService {
 //                完善资料
             case 2:
                 model.setWsxx(1);
+                model.setPassword(null);
                 break;
             default:
                 break;
@@ -130,5 +131,13 @@ public class AccountServiceImpl implements AccountService {
         } else {
             return new ResponseResult<>(false, "未查询到记录", null);
         }
+    }
+
+    @Override
+    public ResponseResult<AccountModel> updById(AccountModel model) throws Exception {
+        int result = mapper.updById(model);
+        if (result > 0) {
+            return new ResponseResult<>(true, "修改成功");
+        } else return new ResponseResult<>(false, "修改失败");
     }
 }

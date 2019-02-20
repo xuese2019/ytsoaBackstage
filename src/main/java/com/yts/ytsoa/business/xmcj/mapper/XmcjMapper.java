@@ -54,4 +54,9 @@ public interface XmcjMapper {
 
     /*@SelectProvider(type = XmcjSql.class,method = "findXmzmcByParentid")
     List<ResultModel> findXmzmcByParentid(@Param("model") XmzmcModel model);*/
+
+    @Select({
+            "SELECT a.bm FROM account_table a join zzjg_table z on a.bm=z.uuid where a.uuid=#{uuid}"
+    })
+    String findBmByUuid(@Param("uuid") String uuid);
 }

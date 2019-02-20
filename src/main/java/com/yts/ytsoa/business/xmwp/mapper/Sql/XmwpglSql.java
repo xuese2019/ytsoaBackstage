@@ -101,6 +101,9 @@ public class XmwpglSql {
                 if (model.getShr() != null && !model.getShr().isEmpty()) {
                     WHERE("shr=#{model.shr}");
                 }
+                if (model.getXmfzr() != null && !model.getXmfzr().isEmpty()) {
+                    WHERE("x.xmfzr=#{model.xmfzr}");
+                }
             }
         }.toString();
     }

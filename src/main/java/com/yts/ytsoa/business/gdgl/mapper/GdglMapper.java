@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.gdgl.mapper;
 import com.yts.ytsoa.business.bggl.model.BgglModel;
 import com.yts.ytsoa.business.gdgl.mapper.GdglSql.GdglSql;
 import com.yts.ytsoa.business.gdgl.model.GdglModel;
+import com.yts.ytsoa.business.gdgl.model.GdglResultModel;
 import com.yts.ytsoa.business.gdgl.query.GdglQueryModel;
 import com.yts.ytsoa.business.gdgl.result.ResultModel;
 import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
@@ -60,4 +61,8 @@ public interface GdglMapper {
 
     @SelectProvider(type = GdglSql.class, method = "findBgByUuid")
     List<BgglModel> findBgByUuid(@Param("uuid") String uuid);
+
+
+    @SelectProvider(type = GdglSql.class, method = "findByShjl")
+    List<GdglResultModel> findByShjl(@Param("prentid") String prentid) throws SQLException;
 }

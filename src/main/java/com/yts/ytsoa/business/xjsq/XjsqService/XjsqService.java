@@ -5,6 +5,7 @@ import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.xjsq.model.XjsqModel;
 import com.yts.ytsoa.utils.ResponseResult;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 
 public interface XjsqService {
@@ -36,5 +37,5 @@ public interface XjsqService {
      */
     ResponseResult<XjsqModel> findById(String uuid) throws SQLException;
 
-    ResponseResult<XmshModel> xjsh(XmshModel model) throws Exception;
+    ResponseResult<XmshModel> xjsh(XmshModel model, HttpServletRequest request) throws Exception;
 }

@@ -2,6 +2,7 @@ package com.yts.ytsoa.business.tpsq.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.tpsq.mapper.TpsqMapper;
 import com.yts.ytsoa.business.tpsq.model.ResultTpsqModel;
@@ -21,6 +22,8 @@ import java.util.List;
 public class TpsqServiceImpl implements TpsqService {
     @Autowired
     private TpsqMapper tpsqMapper;
+    @Autowired
+    private XmshMapper xmshMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -45,23 +48,20 @@ public class TpsqServiceImpl implements TpsqService {
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<XmshModel> tpsh(XmshModel model) throws Exception {
-        int result = tpsqMapper.tpsh(model);
+        int result = xmshMapper.add(model);
         if (result != 0) {
-            if (model.getShjg() > 1) {
-                TpsqModel model1 = new TpsqModel();
-                model1.setUuid(model.getPrentid());
-                model1.setShjg(2);
-                tpsqMapper.update(model1);
-            }
+            TpsqModel tpsqModel = new TpsqModel();
+            tpsqModel.setUuid(model.getPrentid());
+            tpsqModel.setShjg(2);
+            tpsqMapper.update(tpsqModel);
             return new ResponseResult<>(true, "审核成功");
         }
         return new ResponseResult<>(false, "审核失败");
     }
 
-    @Transactional(rollbackFor = Exception.class)
+
     @Override
     public ResponseResult<TpsqModel> findById(String uuid) throws Exception {
         if (uuid != null && !uuid.isEmpty()) {

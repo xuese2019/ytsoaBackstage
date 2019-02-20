@@ -23,8 +23,8 @@ public interface AccountMapper {
      * @throws SQLException
      */
     @Insert({
-            "insert into " + Tables.ACCOUNT_TABLE + " (uuid,gzdw,account,password,bm,zwlx,ygzt,rzrq,zzrq,zjxs,bz,scdl,lx,wsxx) " +
-                    " values (replace(uuid(), '-', ''),#{model.gzdw},#{model.account},#{model.password},#{model.bm},#{model.zwlx}," +
+            "insert into " + Tables.ACCOUNT_TABLE + " (uuid,zj,gzdw,account,password,bm,zwlx,ygzt,rzrq,zzrq,zjxs,bz,scdl,lx,wsxx) " +
+                    " values (replace(uuid(), '-', ''),#{model.zj},#{model.gzdw},#{model.account},#{model.password},#{model.bm},#{model.zwlx}," +
                     "#{model.ygzt},#{model.rzrq},#{model.zzrq},#{model.zjxs},#{model.bz},0,0,0)"
     })
     void add(@Param("model") AccountModel model) throws SQLException;
@@ -68,4 +68,6 @@ public interface AccountMapper {
     })
     String getByUuid(@Param("uuid") String uuid) throws SQLException;
 
+    @UpdateProvider(type = AccountSql.class, method = "updById")
+    int updById(@Param("model") AccountModel model) throws SQLException;
 }

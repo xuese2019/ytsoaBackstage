@@ -164,4 +164,8 @@ public class Tables implements Serializable {
      * 审核人
      */
     public static final String SHRS_TABLE = "shrs_table";
+    /**
+     * 事务所动态
+     */
+    public static final String SWSDT_TABLE = "swsdt_table";
 }

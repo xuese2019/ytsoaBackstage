@@ -9,7 +9,7 @@ public class YcsqSql {
     public String findAllSql(@Param("ycsqModel") YcsqModel ycsqModel) {
         return new SQL() {
             {
-                SELECT("y.uuid,a.name AS 'sqr',y.ycsy,y.cphgsd,y.cph,y.cfgls,y.cfsj,y.fhsj,y.sjfhsj,y.fhgls");
+                SELECT("y.uuid,a.name AS 'sqr',y.ycsy,y.cphgsd,y.cph,y.cfgls,y.shjg,y.cfsj,y.fhsj,y.sjfhsj,y.fhgls");
                 FROM("ycsq_table AS y");
                 LEFT_OUTER_JOIN("account_table a  ON y.sqr = a.uuid");
                 if (ycsqModel.getSqrq() != null) {
@@ -27,8 +27,8 @@ public class YcsqSql {
                     ycsqModel.setSqr("%" + ycsqModel.getSqr() + "%");
                     WHERE("y.sqr like #{ycsqModel.sqr}");
                 }
-                if (ycsqModel.getShjg() != 0) {
-                    WHERE("y.shjg=#{ycsqModel.shjg}");
+                if ((ycsqModel.getShjg() == 1) || (ycsqModel.getShjg() == 3)) {
+                    WHERE("t.shjg=1 or t.shjg=3");
                 }
             }
         }.toString();

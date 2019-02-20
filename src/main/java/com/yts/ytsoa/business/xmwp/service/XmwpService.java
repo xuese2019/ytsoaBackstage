@@ -63,7 +63,7 @@ public interface XmwpService {
     ResponseResult<String> findXmfzr(String uuid) throws Exception;
 
     /**
-     * 项目审核
+     * 项目审核,只用于项目审核
      *
      * @param model
      * @return
@@ -72,4 +72,15 @@ public interface XmwpService {
     ResponseResult<XmshModel> xmsh(XmshModel model, String accid) throws Exception;
 
     ResponseResult<PageInfo<XmwpModel>> findByXmyq(int pageNow, int pageSize, XmwpModel model, String accId) throws Exception;
+
+    /**
+     * 用于项目委派管理，承接管理
+     *
+     * @param pageNow
+     * @param pageSize
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<PageInfo<XmwpModel>> find(int pageNow, int pageSize, XmwpModel model) throws Exception;
 }
