@@ -6,7 +6,6 @@ import com.yts.ytsoa.business.account.model.AccountModel;
 import com.yts.ytsoa.business.account.model.AdminModel;
 import com.yts.ytsoa.business.account.model.PwdModel;
 import com.yts.ytsoa.business.account.model.interfaces.AccountAdd;
-import com.yts.ytsoa.business.account.model.interfaces.AccountGrzl;
 import com.yts.ytsoa.business.account.service.AccountService;
 import com.yts.ytsoa.sys.shiro.JWTUtils;
 import com.yts.ytsoa.utils.ResponseResult;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -112,9 +110,9 @@ public class AccountController {
     @RequestMapping(value = "/account", method = RequestMethod.POST)
     public ResponseResult<AccountModel> add(@Validated(value = AccountAdd.class) @RequestBody AccountModel model,
                                             BindingResult result) throws Exception {
-        if (result.hasErrors()) {
+       /* if (result.hasErrors()) {
             return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage(), null);
-        }
+        }*/
         if (model.getUuid() == null || model.getUuid().isEmpty()) {
             //对密码进行 md5 加密
             String md5Password = DigestUtils.md5DigestAsHex(model.getPassword().getBytes(StandardCharsets.UTF_8));
@@ -135,12 +133,12 @@ public class AccountController {
 
     @ApiOperation(value = "根据员工id完善个人资料")
     @RequestMapping(value = "/grzl", method = RequestMethod.PUT)
-    public ResponseResult<AccountModel> updateById(@Validated(value = AccountGrzl.class) @RequestBody AccountModel model,
+    public ResponseResult<AccountModel> updateById(@RequestBody AccountModel model,
                                                    BindingResult result,
                                                    HttpServletRequest request) throws Exception {
-        if (result.hasErrors()) {
+        /*if (result.hasErrors()) {
             return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage());
-        }
+        }*/
         if (model.getUuid() == null || model.getUuid().isEmpty()) {
             String accId = JWTUtils.getAccId(request);
             model.setUuid(accId);
@@ -150,22 +148,22 @@ public class AccountController {
 
     @ApiOperation(value = "根据员工id修改")
     @RequestMapping(value = "/account", method = RequestMethod.PUT)
-    public ResponseResult<AccountModel> updateById2(@Validated(value = AccountAdd.class) @RequestBody AccountModel model,
+    public ResponseResult<AccountModel> updateById2(@RequestBody AccountModel model,
                                                     BindingResult result) throws Exception {
-        if (result.hasErrors()) {
+        /*if (result.hasErrors()) {
             return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage());
-        }
+        }*/
         return service.updateById(model, 0);
     }
 
     @ApiOperation(value = "当前登陆人修改密码")
     @RequestMapping(value = "/updatePwd", method = RequestMethod.PUT)
-    public ResponseResult<String> updateByAccount(@Valid @RequestBody PwdModel model,
+    public ResponseResult<String> updateByAccount(@RequestBody PwdModel model,
                                                   BindingResult result,
                                                   HttpServletRequest request) throws Exception {
-        if (result.hasErrors()) {
+        /*if (result.hasErrors()) {
             return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage(), null);
-        }
+        }*/
 
         String accId = JWTUtils.getAccId(request);
         AccountModel model1 = new AccountModel();
@@ -221,9 +219,9 @@ public class AccountController {
     @ApiOperation(value = "根据id修改")
     @RequestMapping(value = "/updById", method = RequestMethod.PUT)
     public ResponseResult<AccountModel> updById(@RequestBody AccountModel model, BindingResult result) throws Exception {
-        if (result.hasErrors()) {
+        /*if (result.hasErrors()) {
             return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage());
-        }
+        }*/
         return service.updById(model);
     }
 }

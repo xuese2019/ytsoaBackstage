@@ -32,16 +32,6 @@ public class Tables implements Serializable {
     public static final String YWLX_TABLE = " ywlx_table ";
 
     /**
-     * 组织机构
-     */
-    public static final String ZZJG_TABLE = " zzjg_table ";
-
-    /**
-     * 组织权限
-     */
-    public static final String ZZ_QX_TABLE = " zz_qx_table ";
-
-    /**
      * 项目表
      */
     public static final String XMWP_TABLE = " xmwp_table ";
@@ -167,5 +157,17 @@ public class Tables implements Serializable {
     /**
      * 事务所动态
      */
-    public static final String SWSDT_TABLE = "swsdt_table";
+    public static final String SWSDT_TABLE = " swsdt_table";
+    /**
+     * 所长职务
+     */
+    public static final String SZZW_TABLE = " szzw_table";
+    /**
+     * 所长
+     */
+    public static final String SZ_TABLE = " suozhang_table";
+    /**
+     * 权限关系表
+     */
+    public static final String QXFY_TABLE = " qxfy_table ";
 }

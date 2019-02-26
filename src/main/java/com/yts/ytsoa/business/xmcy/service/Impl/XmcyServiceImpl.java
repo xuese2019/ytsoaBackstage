@@ -72,7 +72,7 @@ public class XmcyServiceImpl implements XmcyService {
     }
 
 
-    @Transactional(rollbackFor = Exception.class)
+    /*@Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<PageInfo<resultModel>> rgtj(int pageNow, int pageSize, resultModel model) throws Exception {
         PageHelper.startPage(pageNow, pageSize);
@@ -83,7 +83,7 @@ public class XmcyServiceImpl implements XmcyService {
             return new ResponseResult<>(true, "查询成功", page);
         }
         return new ResponseResult<>(false, "查无信息");
-    }
+    }*/
 
 
     @Transactional(rollbackFor = Exception.class)

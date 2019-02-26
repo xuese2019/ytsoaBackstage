@@ -46,7 +46,7 @@ public class YzsqSql {
                     WHERE("wjmc like concat ('%',#{model.wjmc},'%')");
                 }
                 if ((model.getShjg() == 1) || (model.getShjg() == 3)) {
-                    WHERE("t.shjg=1 or t.shjg=3");
+                    WHERE("shjg=1 or shjg=3");
                 }
             }
         }.toString();
@@ -106,7 +106,7 @@ public class YzsqSql {
     public String findByShjl(@Param("prentid") String prentid) {
         return new SQL() {
             {
-                SELECT("y.wjmc,a.name,s.shyj,s.shjg");
+                SELECT("y.wjmc,a.name as shr,s.shyj,s.shjg");
                 FROM("shjl_table s JOIN yzsq_table y ON y.uuid=s.prentid join account_table a on a.uuid=s.shr");
                 WHERE("s.prentid=#{prentid}");
             }

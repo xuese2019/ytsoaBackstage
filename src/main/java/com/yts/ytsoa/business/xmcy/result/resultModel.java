@@ -19,8 +19,8 @@ public class resultModel {
     private String uuid;
     @ApiModelProperty(value = "员工姓名", name = "name", dataType = "String")
     private String name;
-    @ApiModelProperty(value = "职业技术能力", name = "zyjsnl", dataType = "int")
-    private int zyjsnl;
+    @ApiModelProperty(value = "职业技术能力", name = "zyjsnl", dataType = "String")
+    private String zyjsnl;
     @ApiModelProperty(value = "工作效率", name = "gzxl", dataType = "String")
     private String gzxl;
     @ApiModelProperty(value = "沟通能力", name = "gtnl", dataType = "String")

@@ -4,6 +4,7 @@ package com.yts.ytsoa.business.bggl.mapper;
 import com.yts.ytsoa.business.bggl.mapper.BgglSql.BgglSql;
 import com.yts.ytsoa.business.bggl.model.BgglModel;
 import com.yts.ytsoa.business.bggl.model.BgglsModel;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.Tables;
 import org.apache.ibatis.annotations.*;
@@ -16,27 +17,14 @@ public interface BgglMapper {
     @InsertProvider(type = BgglSql.class, method = "addBggl")
     int addBggl(@Param("model") BgglModel model) throws SQLException;
 
-/*    @InsertProvider(type = BgglSql.class, method = "addBgglpl")
-    int addBgglPl(@Param("models") List<BgglModel> models) throws SQLException;*/
-
-
     @Select({
             "select bgbhsjs from " + Tables.BGGL_TABLE + " where bgbhsjs=#{bgbhsjs}"
     })
     int findByBgbhsjs(@Param("bgbhsjs") int bgbhsjs);
 
     @SelectProvider(type = BgglSql.class, method = "find")
-    @Results(id = "bgglMap", value = {
-            @Result(property = "uuid", column = "uuid", javaType = String.class),
-            @Result(property = "xmzmc", column = "xmzmc", javaType = String.class,
-                    one = @One(select = ""))
-    })
     List<BgglModel> find(@Param("model") BgglModel model) throws SQLException;
 
-    @Select({
-            "select count(1) from bggl_table where bglx=#{bglx}"
-    })
-    int countByBglx(@Param("bglx") int bglx);
 
     @Select({
             "SELECT  MAX(bgbhsjs) from bggl_table b where b.bglx=#{bglx}"
@@ -62,30 +50,10 @@ public interface BgglMapper {
     Integer limit(@Param("bglx") int bglx);
 
     @Select({
-            "select bg.uuid,bg.bgbh,bg.xmmc,sh.shr,sh.shyj,sh.shjg from bggl_table  bg join shjl_table sh  ON bg.uuid=sh.prentid " +
+            "select bg.uuid,bg.bgbh,bg.xmmc,sh.shr,sh.shyj,sh.shjg from bggl_table bg join shjl_table sh  ON bg.uuid=sh.prentid " +
                     "where bg.uuid=#{uuid}"
     })
     List<BgglsModel> findById(@Param("uuid") String uuid) throws SQLException;
-
-    @Update({
-            "update bggl_table set xmjlfh=#{model.xmjlfh} where uuid=#{model.uuid}"
-    })
-    int xmjlfh(@Param("model") BgglModel model);
-
-    @Update({
-            "update bggl_table set bmjlfh=#{model.bmjlfh} where uuid=#{model.uuid}"
-    })
-    int bmjlfh(@Param("model") BgglModel model);
-
-    @Update({
-            "update bggl_table set zkbfh=#{model.zkbfh} where uuid=#{model.uuid}"
-    })
-    int zkbfh(@Param("model") BgglModel model);
-
-    @Update({
-            "update bggl_table set xmhhrfh=#{model.xmhhrfh} where uuid=#{model.uuid}"
-    })
-    int xmhhrfh(@Param("model") BgglModel model);
 
     /**
      * 根据报告的xmid 查询该项目的信息
@@ -109,4 +77,18 @@ public interface BgglMapper {
             "SELECT b.* FROM xmwp_table x join xmzmc_table xm on x.uuid=xm.parentid join bggl_table b on b.xmid= xm.uuid where x.uuid=#{uuid}"
     })
     List<BgglModel> findBgsByUuid(@Param("uuid") String uuid);
+
+    /**
+     * 根据报告的xmid查出子名称
+     *
+     * @param parentid
+     * @return
+     */
+    @Select({
+            "select xmzmc from xmzmc_table where parentid=#{parentid}"
+    })
+    XmzmcModel findByParentid(@Param("parentid") String parentid);
+
+    @SelectProvider(type = BgglSql.class, method = "findBgByXmid")
+    List<BgglModel> findBgByXmid(@Param("uuid") String uuid, @Param("bgzbr") String bgzbr);
 }

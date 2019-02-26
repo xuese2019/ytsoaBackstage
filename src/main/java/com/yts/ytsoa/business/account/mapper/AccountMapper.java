@@ -23,9 +23,9 @@ public interface AccountMapper {
      * @throws SQLException
      */
     @Insert({
-            "insert into " + Tables.ACCOUNT_TABLE + " (uuid,zj,gzdw,account,password,bm,zwlx,ygzt,rzrq,zzrq,zjxs,bz,scdl,lx,wsxx) " +
+            "insert into " + Tables.ACCOUNT_TABLE + " (uuid,zj,gzdw,account,password,bm,zwlx,ygzt,rzrq,zzrq,zjxs,bz,scdl,lx,wsxx,bmzw) " +
                     " values (replace(uuid(), '-', ''),#{model.zj},#{model.gzdw},#{model.account},#{model.password},#{model.bm},#{model.zwlx}," +
-                    "#{model.ygzt},#{model.rzrq},#{model.zzrq},#{model.zjxs},#{model.bz},0,0,0)"
+                    "#{model.ygzt},#{model.rzrq},#{model.zzrq},#{model.zjxs},#{model.bz},0,0,0,#{model.bmzw})"
     })
     void add(@Param("model") AccountModel model) throws SQLException;
 
@@ -43,13 +43,15 @@ public interface AccountMapper {
 
     @SelectProvider(type = AccountSql.class, method = "findAllSql")
     @Results(id = "accountMap", value = {
-            @Result(property = "bm", column = "zzjgmc")
+            @Result(property = "bm", column = "bmmc"),
+            @Result(property = "bmzw", column = "zwmc")
     })
     List<AccountModel> findAll(@Param("model") AccountModel model) throws SQLException;
 
     @Select({
             "select * from " + Tables.ACCOUNT_TABLE + " where account = #{account}"
     })
+//    @ResultMap(value = "accountMap")
     List<AccountModel> findByAccount(@Param("account") String account) throws SQLException;
 
     @Select({
@@ -70,4 +72,15 @@ public interface AccountMapper {
 
     @UpdateProvider(type = AccountSql.class, method = "updById")
     int updById(@Param("model") AccountModel model) throws SQLException;
+
+    @Select(
+            "select a.name from account_table a where a.uuid=#{uuid}"
+    )
+    String findNameByUuid(@Param("uuid") String uuid);
+
+
+    @Select({
+            "select  a.*   from  account_table a   where a.uuid=#{uuid}"
+    })
+    AccountModel findById(@Param("uuid") String uuid) throws SQLException;
 }

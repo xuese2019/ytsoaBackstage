@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Api(value = "项目委派接口", description = "项目委派接口")
 @RestController
@@ -57,7 +58,7 @@ public class XmwpController {
 
     @ApiOperation(value = "根据uuid查出该条项目委派的信息")
     @RequestMapping(value = "/findById/{uuid}", method = RequestMethod.GET)
-    public ResponseResult<ResultModel> findById(@PathVariable("uuid") String uuid) throws Exception {
+    public ResponseResult<XmwpModel> findById(@PathVariable("uuid") String uuid) throws Exception {
         return xmwpService.findById(uuid);
     }
 
@@ -101,9 +102,30 @@ public class XmwpController {
         return new ResponseResult<>(false, "缺失参数，审核失败");
     }
 
-    @ApiOperation(value = "项目管理，委派管理页面，分页条件查询")
+    @ApiOperation(value = "委派管理页面，分页条件查询")
     @RequestMapping(value = "/find/{pageNow}", method = RequestMethod.POST)
     public ResponseResult<PageInfo<XmwpModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model) throws Exception {
+        return xmwpService.find(pageNow, yamlPageUtils.getPageSize(), model);
+    }
+
+    /**
+     * 报告申请页面
+     * 项目名称搜索只能查询自己承接的项目
+     * 并且必须得是审核通过的项目才能申请报告
+     *
+     * @param model
+     * @return
+     */
+    @ApiOperation(value = "每个项目负责人只能查询自己的项目，并且是已经审核通过的")
+    @RequestMapping(value = "/findByXmfzr", method = RequestMethod.POST)
+    public ResponseResult<List<XmwpModel>> findByXmfzr(@RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
+        return xmwpService.findByXmfzr(model, accid);
+    }
+
+    @ApiOperation(value = "项目管理页面，分页条件查询")
+    @RequestMapping(value = "/xmgl/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<PageInfo<XmwpModel>> xmgl(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model) throws Exception {
         return xmwpService.find(pageNow, yamlPageUtils.getPageSize(), model);
     }
 }

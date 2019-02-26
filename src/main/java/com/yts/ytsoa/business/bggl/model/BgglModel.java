@@ -184,4 +184,7 @@ public class BgglModel implements Serializable {
      */
     @ApiModelProperty(value = "完成状态", name = "wczt", dataType = "int")
     private int wczt;
+
+    @ApiModelProperty(value = "项目子名称", name = "xmzmc")
+    private String xmzmc;
 }

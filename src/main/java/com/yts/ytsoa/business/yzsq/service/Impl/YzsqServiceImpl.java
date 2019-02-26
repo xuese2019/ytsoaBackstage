@@ -211,4 +211,23 @@ public class YzsqServiceImpl implements YzsqService {
             return new ResponseResult<>(false, "无审核记录");
         }
     }
+
+    /**
+     * 项目管理，详情，用章管理
+     * 且为已审核通过的用章申请
+     *
+     * @param xmid
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public ResponseResult<List<YzsqModel>> findYzglByXmid(String xmid) throws Exception {
+        if (xmid != null && !xmid.isEmpty()) {
+            List<YzsqModel> list = yzsqMapper.findYzglByXmid(xmid);
+            if (list.size() != 0) {
+                return new ResponseResult<>(true, "查询成功", list);
+            }
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
 }

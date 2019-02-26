@@ -4,8 +4,8 @@ import com.auth0.jwt.interfaces.Claim;
 import com.yts.ytsoa.business.account.model.AccountModel;
 import com.yts.ytsoa.business.account.model.AdminModel;
 import com.yts.ytsoa.business.account.service.AccountService;
+import com.yts.ytsoa.business.qxfy.service.QxfyService;
 import com.yts.ytsoa.business.qxgl.model.QxglModel;
-import com.yts.ytsoa.business.qxgl.service.ZzQxService;
 import com.yts.ytsoa.utils.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -28,7 +28,7 @@ public class StatelessRealm extends AuthorizingRealm {
     @Resource
     private AccountService accountService;
     @Resource
-    private ZzQxService zzQxService;
+    private QxfyService qxfyService;
 
     @Override
     public boolean supports(AuthenticationToken token) {
@@ -49,10 +49,12 @@ public class StatelessRealm extends AuthorizingRealm {
             ResponseResult<List<AccountModel>> result = accountService.findByAccount(model);
             if (result.isSuccess()) {
                 info.addRole("user");
-                ResponseResult<List<QxglModel>> result1 = zzQxService.findByAccid(token.getUuid());
+                ResponseResult<List<QxglModel>> result1 = qxfyService.findByAccId(token.getUuid());
                 if (result1.isSuccess()) {
                     result1.getData().forEach(k -> {
-                        info.addStringPermission(k.getQxbs());
+                        if (k.getIco().equals("1")) {
+                            info.addStringPermission(k.getQxbs());
+                        }
                     });
                 }
             } else {

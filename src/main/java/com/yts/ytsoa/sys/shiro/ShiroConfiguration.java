@@ -94,7 +94,9 @@ public class ShiroConfiguration {
         filterChainDefinitionMap.put("/login/**", "anon");
         filterChainDefinitionMap.put("/file/**", "anon");
         filterChainDefinitionMap.put("/websocket", "anon");
-        filterChainDefinitionMap.put("/emailtest/**", "anon");
+        filterChainDefinitionMap.put("/**.jpg", "anon");
+        filterChainDefinitionMap.put("/**.png", "anon");
+        filterChainDefinitionMap.put("/**.gif", "anon");
         filterChainDefinitionMap.put("/**", "statelessAuthcFilter");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;

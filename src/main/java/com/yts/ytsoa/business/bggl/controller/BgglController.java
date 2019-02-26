@@ -32,7 +32,7 @@ public class BgglController {
     private BgshjlService bgshjlService;
 
     /**
-     * 分页查询带条件
+     * 报告审核分页查询带条件
      *
      * @param pageNow
      * @param model
@@ -112,6 +112,13 @@ public class BgglController {
             return bgglService.addBggl(model);
         }
         return new ResponseResult<>(false, "申请报告失败");
+    }
+
+    @ApiOperation(value = "项目详情，报告管理")
+    @RequestMapping(value = "/findBgByXmid/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<PageInfo<BgglModel>> find(@PathVariable("pageNow") int pageNow, @RequestParam(value = "uuid",required = false) String uuid, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
+        return bgglService.findBgByXmid(pageNow, yamlPageUtils.getPageSize(), uuid, accid);
     }
 }
 

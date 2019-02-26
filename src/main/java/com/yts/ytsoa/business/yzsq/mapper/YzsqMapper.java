@@ -73,4 +73,17 @@ public interface YzsqMapper {
 
     @SelectProvider(type = YzsqSql.class, method = "findByShjl")
     List<ResultsModel> findByShjl(@Param("prentid") String prentid) throws SQLException;
+
+    /**
+     * 项目详情，用章管理
+     * 且审核结果为已通过的用章申请
+     *
+     * @param xmid
+     * @return
+     */
+    @Select({
+            "SELECT y.* FROM yzsq_table y  where y.xmid=#{xmid} AND y.shjg=3"
+    })
+    List<YzsqModel> findYzglByXmid(@Param("xmid") String xmid) throws SQLException;
+
 }

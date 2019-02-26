@@ -15,6 +15,11 @@ public interface BgshjlMapper {
     int insert(@Param("model") BgshjlModel model);
 
     @SelectProvider(type = BgshjlSql.class, method = "find")
+    @Results(id = "resultMap", value = {
+            @Result(id = true, property = "uuid", column = "uuid", javaType = String.class),
+            @Result(property = "xmzmcModels", column = "uuid", javaType = List.class,
+                    many = @Many(select = "com.yts.ytsoa.business.xmcj.mapper.XmcjMapper.findByParentid"))
+    })
     List<BgshjlModel> find(@Param("model") BgshjlModel model);
 
     /**

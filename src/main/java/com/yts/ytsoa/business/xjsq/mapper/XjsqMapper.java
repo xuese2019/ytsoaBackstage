@@ -25,4 +25,16 @@ public interface XjsqMapper {
 
     @UpdateProvider(type = XjsqSql.class, method = "update")
     void update(@Param("model") XjsqModel model) throws SQLException;
+
+    @Select({
+            "SELECT x.uuid,a.`name`AS xjsqr,x.xjqsrq,x.xjjzrq,x.xjsy,x.shjg  FROM xjsq_table x LEFT JOIN account_table a ON x.xjsqr=a.uuid where a.bm=#{bm} and shjg=#{shjg}"
+    })
+    List<XjsqModel> findByBm(@Param("bm") String bm, @Param("shjg") int shjg) throws SQLException;
+
+    @SelectProvider(type = XjsqSql.class, method = "findByBms")
+    List<XjsqModel> findByBms(@Param("model") XjsqModel model) throws SQLException;
+
+
+    @SelectProvider(type = XjsqSql.class, method = "kqgl")
+    List<XjsqModel> kqgl(@Param("model") XjsqModel model) throws SQLException;
 }

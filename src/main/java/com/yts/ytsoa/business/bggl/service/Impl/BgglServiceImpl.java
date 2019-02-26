@@ -192,6 +192,7 @@ public class BgglServiceImpl implements BgglService {
         if (ywzt < 6) {
             return new ResponseResult<>(false, "未审核完成的项目不能出具报告");
         } else {
+            model.setShjg(1);
             bgglMapper.addBggl(model);
             return new ResponseResult<>(true, "报告出具成功");
         }
@@ -260,6 +261,17 @@ public class BgglServiceImpl implements BgglService {
                 return new ResponseResult<>(true, "查询成功", page);
             }
             return new ResponseResult<>(false, "查无信息");
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
+    @Override
+    public ResponseResult<PageInfo<BgglModel>> findBgByXmid(int pageNow, int pageSize,String uuid,String bgzbr) throws Exception {
+        PageHelper.startPage(pageNow, pageSize);
+        List<BgglModel> list = bgglMapper.findBgByXmid(uuid,bgzbr);
+        PageInfo<BgglModel> page = new PageInfo<>(list);
+        if (page.getSize() > 0) {
+            return new ResponseResult<>(true, "统计成功", page);
         }
         return new ResponseResult<>(false, "查无信息");
     }

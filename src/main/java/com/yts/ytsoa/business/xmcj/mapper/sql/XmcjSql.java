@@ -43,15 +43,9 @@ public class XmcjSql {
         return new SQL() {
             {
                 UPDATE("xmwp_table");
-//                if (xmcjModel.getXmzmc() != null && !xmcjModel.getXmzmc().isEmpty()) {
-//                    SET("xmzmc=#{xmcjModel.xmzmc}");
-//                }
                 if (xmcjModel.getYwzt() != 0) {
                     SET("ywzt=#{xmcjModel.ywzt}");
                 }
-                /*if (xmcjModel.getGsryap() != null && !xmcjModel.getGsryap().isEmpty()) {
-                    SET("gsryap=#{xmcjModel.gsryap}");
-                }*/
                 if (xmcjModel.getFxpg() != null && !xmcjModel.getFxpg().isEmpty()) {
                     SET("fxpg=#{xmcjModel.fxpg}");
                 }
@@ -88,12 +82,11 @@ public class XmcjSql {
     public String findById(@Param("uuid") String uuid) {
         return new SQL() {
             {
-                SELECT("x.*,CONCAT(zj.zzjgmc,'/',z.zzjgmc) as zzjgmc,a.name as cjr");
-                FROM(Tables.XMWP_TABLE + " x");
-                LEFT_OUTER_JOIN("account_table a ON x.xmfzr = a.uuid");
-                LEFT_OUTER_JOIN("zzjg_table z on z.uuid = x.cjbm");
-                LEFT_OUTER_JOIN("zzjg_table zj on zj.uuid = z.zzjgfj");
-                WHERE("x.uuid = #{uuid}");
+                SELECT();
+                FROM(Tables.XMWP_TABLE + " x join bumen_table b on x.cjbm=b.uuid join account_table a on a.uuid=x.xmfzr");
+                if (uuid != null && !uuid.isEmpty()) {
+                    WHERE("x.uuid=#{uuid}");
+                }
             }
         }.toString();
     }
@@ -118,19 +111,4 @@ public class XmcjSql {
             }
         }.toString();
     }
-
-    /*public String findXmzmcByParentid(@Param("model") XmzmcModel model) {
-        return new SQL() {
-            {
-                SELECT("t.*,x.wtf,x.bsjdw");
-                FROM("xmwp_table x join xmzmc_table t on x.uuid=t.parentid");
-                if (model.getParentid() != null && !model.getParentid().isEmpty()) {
-                    WHERE("t.parentid=#{model.parentid}");
-                }
-                if (model.getXmzmc() != null && !model.getXmzmc().isEmpty()) {
-                    WHERE("t.xmzmc like concat('%',#{model.xmzmc},'%')");
-                }
-            }
-        }.toString();
-    }*/
 }

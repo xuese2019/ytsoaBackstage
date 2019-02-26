@@ -46,8 +46,10 @@ public class YzsqModel {
     /**
      * 1:未审核
      * 2：已审核
+     * 3:同意
+     * 4：不同意
      */
-    @ApiModelProperty(value = "审核状态", name = "shzt", dataType = "Integer")
+    @ApiModelProperty(value = "审核状态", name = "shjg", dataType = "Integer")
     private Integer shjg;
 
     @ApiModelProperty(value = "项目id", name = "xmid", dataType = "String")

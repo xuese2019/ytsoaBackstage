@@ -101,7 +101,7 @@ public class PjsqServiceImpl implements PjsqService {
         int result = xmshMapper.add(model);
         if (result != 0) {
             PjsqModel pjsqModel = new PjsqModel();
-            pjsqModel.setUuid(model.getUuid());
+            pjsqModel.setUuid(model.getPrentid());
             pjsqModel.setShjg(model.getShjg());
             pjsqMapper.update(pjsqModel);
             return new ResponseResult<>(true, "审核成功");

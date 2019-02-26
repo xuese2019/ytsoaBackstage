@@ -19,4 +19,7 @@ public interface GzrzMapper {
 
     @SelectProvider(type = GzrzSql.class, method = "findByXmid")
     List<GzrzModel> findByXmid(@Param("model") GzrzModel model);
+
+    @SelectProvider(type = GzrzSql.class, method = "rgtj")
+    List<GzrzModel> rgtj(@Param("model")GzrzModel model);
 }

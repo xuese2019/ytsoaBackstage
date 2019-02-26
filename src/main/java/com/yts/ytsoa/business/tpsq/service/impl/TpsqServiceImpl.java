@@ -54,7 +54,7 @@ public class TpsqServiceImpl implements TpsqService {
         if (result != 0) {
             TpsqModel tpsqModel = new TpsqModel();
             tpsqModel.setUuid(model.getPrentid());
-            tpsqModel.setShjg(2);
+            tpsqModel.setShjg(model.getShjg());
             tpsqMapper.update(tpsqModel);
             return new ResponseResult<>(true, "审核成功");
         }

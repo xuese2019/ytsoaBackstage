@@ -49,11 +49,11 @@ public class XmcyController {
         return new ResponseResult<>(false, "修改失败");
     }
 
-    @ApiOperation(value = "人工统计")
+    /*@ApiOperation(value = "人工统计")
     @RequestMapping(value = "/rgtj/{pageNow}", method = RequestMethod.POST)
     public ResponseResult<PageInfo<resultModel>> rgtj(@PathVariable("pageNow") int pageNow, @RequestBody resultModel model) throws Exception {
         return xmcyService.rgtj(pageNow, yamlPageUtils.getPageSize(), model);
-    }
+    }*/
 
     @ApiModelProperty(value = "根据id查出详细信息")
     @RequestMapping(value = "findById/{uuid}", method = RequestMethod.GET)

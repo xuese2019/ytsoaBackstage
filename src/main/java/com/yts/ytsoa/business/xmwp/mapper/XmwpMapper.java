@@ -36,16 +36,11 @@ public interface XmwpMapper {
     @UpdateProvider(type = XmwpglSql.class, method = "updById")
     int updById(@Param("model") XmwpModel model);
 
-    @Select({
-            "select x.*,a.name,z.zzjgmc from " + Tables.XMWP_TABLE + " x join account_table a on x.xmfzr=a.uuid join zzjg_table z on z.uuid=x.cjbm where x.uuid=#{uuid}"
-    })
-    ResultModel findById(@Param("uuid") String uuid);
-
     @SelectProvider(type = XmwpglSql.class, method = "findByXmmc")
     @Results(id = "xmwpMap", value = {
             @Result(id = true, property = "uuid", column = "uuid"),
             @Result(property = "cjbm", column = "cjbm", javaType = String.class,
-                    one = @One(select = "com.yts.ytsoa.business.zzjg.mapper.ZzjgMapper.getZzjgmcById")),
+                    one = @One(select = "com.yts.ytsoa.business.bm.mapper.BmMapper.findBmmcById")),
             @Result(property = "ghr", column = "ghr", javaType = String.class,
                     one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
             @Result(property = "wpr", column = "wpr", javaType = String.class,
@@ -71,10 +66,24 @@ public interface XmwpMapper {
     @SelectProvider(type = XmwpSql.class, method = "findYwzt")
     XmwpModel findYwzt(@Param("uuid") String uuid);
 
-    @Select({
-            "select * from xmwp_table where xmfzr=#{accid}"
+    /**
+     * 报告申请页面
+     * 项目名称搜索只能查询自己承接的项目
+     * 并且必须得是审核通过的项目才能申请报告
+     *
+     * @param model
+     * @return
+     */
+    @SelectProvider(type = XmwpglSql.class, method = "findByXmfzr")
+    @Results(id = "resultMap", value = {
+            @Result(id = true, property = "uuid", column = "uuid", javaType = String.class),
+            @Result(property = "xmfzr", column = "xmfzr", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.findNameByUuid")
+            ),
+            @Result(property = "xmzmcModels", column = "uuid", javaType = List.class,
+                    many = @Many(select = "com.yts.ytsoa.business.xmcj.mapper.XmcjMapper.findByParentid"))
     })
-    XmwpModel findByXmfzr(@Param("accid") String accid);
+    List<XmwpModel> findByXmfzr(@Param("model") XmwpModel model) throws SQLException;
 
     @Select({
             "select x.* from xmwp_table x where x.uuid=#{uuid}"
@@ -88,4 +97,42 @@ public interface XmwpMapper {
 
     @SelectProvider(type = XmwpglSql.class, method = "findByXmyq")
     List<XmwpModel> findByXmyq(@Param("model") XmwpModel model);
+
+    /**
+     * 项目管理页面
+     * 必须是业务状态大于等于2的
+     * @param model
+     * @return
+     */
+    @SelectProvider(type = XmwpglSql.class, method = "xmgl")
+    @Results(id = "xmglMap", value = {
+            @Result(id = true, property = "uuid", column = "uuid"),
+            @Result(property = "cjbm", column = "cjbm", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.bm.mapper.BmMapper.findBmmcById")),
+            @Result(property = "ghr", column = "ghr", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
+            @Result(property = "wpr", column = "wpr", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
+            @Result(property = "xmfzr", column = "xmfzr", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
+            @Result(property = "xmzmcModels", column = "uuid", javaType = List.class,
+                    many = @Many(select = "com.yts.ytsoa.business.xmcj.mapper.XmcjMapper.findByParentid"))
+    })
+    List<XmwpModel> xmgl(@Param("model") XmwpModel model);
+
+    @Select({
+            "select x.* from" + Tables.XMWP_TABLE + " x where x.uuid=#{uuid}"
+    })
+    @Results(id = "resultMap1", value = {
+            @Result(id = true, property = "uuid", column = "uuid"),
+            @Result(property = "cjbm", column = "cjbm", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.bm.mapper.BmMapper.findBmmcById")),
+            @Result(property = "wpr", column = "wpr", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
+            @Result(property = "xmfzr", column = "xmfzr", javaType = String.class,
+                    one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
+            @Result(property = "xmzmcModels", column = "uuid", javaType = List.class,
+                    many = @Many(select = "com.yts.ytsoa.business.xmcj.mapper.XmcjMapper.findByParentid"))
+    })
+    XmwpModel findById(@Param("uuid") String uuid);
 }

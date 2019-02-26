@@ -49,9 +49,9 @@ public class GdglServiceImpl implements GdglService {
     @Override
     public ResponseResult<PageInfo<GdglModel>> find(int pageNow, int pageSize, GdglModel model) throws Exception {
         PageHelper.startPage(pageNow, pageSize);
+        model.setZt(1);
         List<GdglModel> list = gdglMapper.find(model);
         PageInfo<GdglModel> page = new PageInfo<>(list);
-        model.setZt(1);
         if (page.getSize() > 0) {
             return new ResponseResult<>(true, "查询成功", page);
         }

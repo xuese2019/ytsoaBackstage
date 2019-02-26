@@ -62,4 +62,7 @@ public class GzrzModel {
      */
     @ApiModelProperty(value = "出差地点", name = "ccdd", dataType = "String")
     private String ccdd;
+
+    @ApiModelProperty(value = "出差天数", name = "ccts", dataType = "int")
+    private int ccts;
 }

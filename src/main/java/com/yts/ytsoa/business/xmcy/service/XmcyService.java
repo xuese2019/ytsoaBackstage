@@ -28,10 +28,10 @@ public interface XmcyService {
 
     ResponseResult<XmcyModel> update(XmcyModel model) throws Exception;
 
-    /**
+/*    *//**
      * 人工统计
-     */
-    ResponseResult<PageInfo<resultModel>> rgtj(int pageNow, int pageSize, resultModel model) throws Exception;
+     *//*
+    ResponseResult<PageInfo<resultModel>> rgtj(int pageNow, int pageSize, resultModel model) throws Exception;*/
 
     /**
      * 根据id查出详细信息

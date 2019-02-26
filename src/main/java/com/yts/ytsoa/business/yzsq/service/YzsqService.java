@@ -69,4 +69,14 @@ public interface YzsqService {
     ResponseResult<XmshModel> yzsh(XmshModel model, String fsr) throws Exception;
 
     ResponseResult<List<ResultsModel>> findByShjl(String prentid) throws Exception;
+
+    /**
+     * 项目管理详情，用章管理
+     * 且为审核通过的用章申请
+     *
+     * @param xmid
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<List<YzsqModel>> findYzglByXmid(String xmid) throws Exception;
 }

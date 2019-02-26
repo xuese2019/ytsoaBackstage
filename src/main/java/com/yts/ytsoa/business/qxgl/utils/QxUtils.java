@@ -91,7 +91,7 @@ public class QxUtils {
 
         list.add(new QxglModel("bh", "考勤管理", "kqgl", "b", "1", "", "", null));
 
-        list.add(new QxglModel("bi", "我的考勤", "wdkq", "b", "1", "", "", null));
+//        list.add(new QxglModel("bi", "我的考勤", "wdkq", "b", "1", "", "", null));
 
         list.add(new QxglModel("bj", "请假申请", "qjsq", "b", "1", "", "", null));
 

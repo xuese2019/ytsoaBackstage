@@ -60,8 +60,8 @@ public class PjsqSql {
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     WHERE("xmmc like concat('%',#{model.xmmc},'%')");
                 }
-                if (model.getShjg() != 0) {
-                    WHERE("shjg=#{model.shjg}");
+                if ((model.getShjg() == 1) || (model.getShjg() == 3)) {
+                    WHERE("shjg=1 or t.shjg=3");
                 }
             }
         }.toString();
@@ -82,7 +82,7 @@ public class PjsqSql {
     public String findByShjl(@Param("prentid") String prentid) {
         return new SQL() {
             {
-                SELECT("y.kpbh,a.name,s.shyj,s.shjg");
+                SELECT("y.kpbh,a.name as shr,s.shyj,s.shjg");
                 FROM("shjl_table s JOIN pjsq_table y ON y.uuid=s.prentid join account_table a on a.uuid=s.shr");
                 WHERE("s.prentid=#{prentid}");
             }

@@ -144,9 +144,9 @@
         <!--邮箱模版-->
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-velocity -->
         <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-velocity</artifactId>-->
-            <!--<version>1.4.7.RELEASE</version>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-starter-velocity</artifactId>-->
+        <!--<version>1.4.7.RELEASE</version>-->
         <!--</dependency>-->
 
     </dependencies>

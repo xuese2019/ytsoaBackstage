@@ -34,8 +34,8 @@ public interface XmcyMapper {
     @UpdateProvider(type = XmcySql.class, method = "update")
     int update(@Param("model") XmcyModel model) throws SQLException;
 
-    @SelectProvider(type = XmcySql.class, method = "rgtj")
-    List<resultModel> rgtj(@Param("x") resultModel model) throws SQLException;
+/*    @SelectProvider(type = XmcySql.class, method = "rgtj")
+    List<resultModel> rgtj(@Param("x") resultModel model) throws SQLException;*/
 
     @SelectProvider(type = XmcySql.class, method = "findById")
     XmcyModel findById(@Param("uuid") String uuid) throws SQLException;
@@ -48,4 +48,9 @@ public interface XmcyMapper {
 
     @InsertProvider(type = XmcySql.class, method = "insertRgglTable")
     int insertRgglTable(@Param("models") List<resultModel> models) throws SQLException;
+
+    @Select({
+            "SELECT x.ygid FROM xmcy_table x WHERE x.xmid=#{xmid}"
+    })
+    List<XmcyModel> findYgidByXmid(@Param("xmid") String xmid);
 }

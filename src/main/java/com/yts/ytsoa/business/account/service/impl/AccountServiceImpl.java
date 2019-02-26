@@ -133,6 +133,7 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<AccountModel> updById(AccountModel model) throws Exception {
         int result = mapper.updById(model);

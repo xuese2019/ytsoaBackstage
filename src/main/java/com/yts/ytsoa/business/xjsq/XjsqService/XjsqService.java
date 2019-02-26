@@ -27,7 +27,7 @@ public interface XjsqService {
      * @return
      * @throws Exception
      */
-    ResponseResult<PageInfo<XjsqModel>> find(int pageNow, int pageSize, XjsqModel model) throws Exception;
+    ResponseResult<PageInfo<XjsqModel>> find(int pageNow, int pageSize, XjsqModel model, HttpServletRequest request) throws Exception;
 
     /**
      * 根据uuid 查到当前的休假申请
@@ -37,5 +37,9 @@ public interface XjsqService {
      */
     ResponseResult<XjsqModel> findById(String uuid) throws SQLException;
 
+    ResponseResult<XjsqModel> findByBm(String bm) throws SQLException;
+
     ResponseResult<XmshModel> xjsh(XmshModel model, HttpServletRequest request) throws Exception;
+
+    ResponseResult<PageInfo<XjsqModel>> kqgl(int pageNow, int pageSize, XjsqModel model, HttpServletRequest request) throws Exception;
 }

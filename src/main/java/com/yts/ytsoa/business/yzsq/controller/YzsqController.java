@@ -107,4 +107,10 @@ public class YzsqController {
             return new ResponseResult<>(false, "没有审核记录");
         }
     }
+
+    @ApiOperation(value = "项目管理，详情里的用章管理，且都是已审核通过的申请记录")
+    @RequestMapping(value = "findYzglByXmid/{xmid}", method = RequestMethod.GET)
+    public ResponseResult<List<YzsqModel>> findYzglByXmid(@PathVariable(value = "xmid") String xmid) throws Exception {
+        return yzsqService.findYzglByXmid(xmid);
+    }
 }

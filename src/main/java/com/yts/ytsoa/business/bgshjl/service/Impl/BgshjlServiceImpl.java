@@ -40,59 +40,61 @@ public class BgshjlServiceImpl implements BgshjlService {
         XmwpModel xmwpModel = bgshjlMapper.findXmfzr(model.getBgid());
         //查询报告审核人表，用作和当前登陆人做判断
         BgshrModel bgshrModel = bgshrMapper.find();
-        model.setShrid(accid);
-        if (accid.equals(bgshrModel.getBmjlid())) {
+        if (accid.equals(xmwpModel.getXmfzr())) {
             int result = bgshjlMapper.insert(model);
             if (result != 0) {
-                if (model.getTof() != 1) {
-                    BgglModel bgglModel = new BgglModel();
-                    bgglModel.setShjg(4);
-                    bgglModel.setUuid(model.getBgid());
-                    bgglMapper.update(bgglModel);
-                }
-            }
-            return new ResponseResult<>(true, "审核成功");
-        } else if (accid.equals(bgshrModel.getZkbid())) {
-            int result = bgshjlMapper.insert(model);
-            if (result != 0) {
-                if (model.getTof() != 1) {
-                    BgglModel bgglModel = new BgglModel();
-                    bgglModel.setShjg(5);
-                    bgglModel.setUuid(model.getBgid());
-                    bgglMapper.update(bgglModel);
-                }
-            }
-            return new ResponseResult<>(true, "审核成功");
-        } else if (accid.equals(bgshrModel.getHhrid())) {
-            int result = bgshjlMapper.insert(model);
-            if (result != 0) {
-                if (model.getTof() != 1) {
-                    BgglModel bgglModel = new BgglModel();
-                    bgglModel.setShjg(6);
-                    bgglModel.setUuid(model.getBgid());
-                    bgglMapper.update(bgglModel);
-                    List<BgglModel> lists = bgglMapper.findBgsByUuid(xmwpModel.getUuid());
-                    for (int i = 0; i < lists.size(); i++) {
-                        if (lists.get(i).getShjg() == 6) {
-                            XmwpModel xmwpModel1 = new XmwpModel();
-                            xmwpModel1.setUuid(xmwpModel.getUuid());
-                            xmwpModel1.setYwzt(7);
-                            xmwpMapper.updateYwzt(xmwpModel1);
-                        }
-                    }
-                }
-            }
-            return new ResponseResult<>(true, "审核成功");
-        } else if (xmwpModel.getXmfzr().equals(accid)) {
-            int reuslt = bgshjlMapper.insert(model);
-            if (reuslt != 0) {
-                if (model.getTof() != 1) {
+                if (model.getTof() == 2) {
                     BgglModel bgglModel = new BgglModel();
                     bgglModel.setShjg(3);
                     bgglModel.setUuid(model.getBgid());
                     bgglMapper.update(bgglModel);
+                    return new ResponseResult<>(true, "审核成功");
                 }
-                return new ResponseResult<>(true, "审核完成");
+            }
+        } else if (bgshrModel != null) {
+            if (accid.equals(bgshrModel.getBmjlid())) {
+                int result = bgshjlMapper.insert(model);
+                if (result != 0) {
+                    if (model.getTof() == 2) {
+                        BgglModel bgglModel = new BgglModel();
+                        bgglModel.setShjg(4);
+                        bgglModel.setUuid(model.getBgid());
+                        bgglMapper.update(bgglModel);
+                    }
+                    return new ResponseResult<>(true, "审核成功");
+                }
+            } else if (accid.equals(bgshrModel.getZkbid())) {
+                int result = bgshjlMapper.insert(model);
+                if (result != 0) {
+                    if (model.getTof() == 2) {
+                        BgglModel bgglModel = new BgglModel();
+                        bgglModel.setShjg(5);
+                        bgglModel.setUuid(model.getBgid());
+                        bgglMapper.update(bgglModel);
+                    }
+                    return new ResponseResult<>(true, "审核成功");
+                }
+            } else if (accid.equals(bgshrModel.getHhrid())) {
+                int result = bgshjlMapper.insert(model);
+                if (result != 0) {
+                    if (model.getTof() == 2) {
+                        BgglModel bgglModel = new BgglModel();
+                        bgglModel.setShjg(6);
+                        bgglModel.setUuid(model.getBgid());
+                        bgglMapper.update(bgglModel);
+                        List<BgglModel> list = bgglMapper.findBgsByUuid(xmwpModel.getUuid());
+                        //判断该项目下所有的报告是否都是审核通过，如果所有报告都审核通过，则把项目的业务状态改未报告已出具
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i).getShjg() == 6) {
+                                XmwpModel xmwpModel1 = new XmwpModel();
+                                xmwpModel1.setUuid(xmwpModel.getUuid());
+                                xmwpModel1.setYwzt(7);
+                                xmwpMapper.updateYwzt(xmwpModel1);
+                            }
+                        }
+                    }
+                    return new ResponseResult<>(true, "审核成功");
+                }
             }
         }
         return new ResponseResult<>(false, "权限不足无法审核");

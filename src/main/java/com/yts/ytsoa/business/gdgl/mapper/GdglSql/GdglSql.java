@@ -69,6 +69,9 @@ public class GdglSql {
                 if (model.getBgbh() != null && !model.getBgbh().isEmpty()) {
                     WHERE("bgbh=#{model.bgbh}");
                 }
+                if (model.getShjg() != 0) {
+                    WHERE("shjg=#{model.shjg}");
+                }
             }
         }.toString();
     }

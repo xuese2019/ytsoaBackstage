@@ -9,11 +9,8 @@ public class XmwpglSql {
     public String find(@Param("model") XmwpModel model) {
         return new SQL() {
             {
-                SELECT("x.*,CONCAT(zj.zzjgmc,'/',z.zzjgmc) as zzjgmc,a.name as cjr");
-                FROM(Tables.XMWP_TABLE + " x");
-                LEFT_OUTER_JOIN("account_table a ON x.xmcjr = a.uuid");
-                LEFT_OUTER_JOIN("zzjg_table z on z.uuid = x.cjbm");
-                LEFT_OUTER_JOIN("zzjg_table zj on zj.uuid = z.zzjgfj");
+                SELECT("x.*,b.bmmc as cjbm,a.name as cjr");
+                FROM(Tables.XMWP_TABLE + " x join bumen_table b on x.cjbm=b.uuid join account_table a on a.uuid=x.xmfzr");
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     WHERE("x.xmmc like concat('%',#{model.xmmc},'%')");
                 }
@@ -24,7 +21,10 @@ public class XmwpglSql {
                     WHERE("x.xmfzr=#{model.xmfzr}");
                 }
                 if (model.getYwzt() != 0 && !model.getXmfzr().isEmpty()) {
-                    WHERE("x.ywzt > 2");
+                    WHERE("x.ywzt =#{model.ywzt}");
+                }
+                if (model.getUuid() != null && !model.getUuid().isEmpty()) {
+                    WHERE("uuid=#{model.uuid}");
                 }
             }
         }.toString();
@@ -66,6 +66,11 @@ public class XmwpglSql {
         }.toString();
     }
 
+    /**
+     * 项目委派管理
+     * @param model
+     * @return
+     */
     public String findByXmmc(@Param("model") XmwpModel model) {
         return new SQL() {
             {
@@ -89,9 +94,6 @@ public class XmwpglSql {
                 if (model.getShr() != null && !model.getShr().isEmpty()) {
                     WHERE("x.shr=#{model.shr}");
                 }
-                /*if (model.getUuid() != null && !model.getUuid().isEmpty()) {
-                    WHERE("x.uuid = #{model.uuid}");
-                }*/
                 if (model.getCjbm() != null && !model.getCjbm().isEmpty()) {
                     WHERE("x.cjbm=#{model.cjbm}");
                 }
@@ -103,6 +105,9 @@ public class XmwpglSql {
                 }
                 if (model.getXmfzr() != null && !model.getXmfzr().isEmpty()) {
                     WHERE("x.xmfzr=#{model.xmfzr}");
+                }
+                if (model.getUuid() != null && !model.getUuid().isEmpty()) {
+                    WHERE("x.uuid=#{model.uuid}");
                 }
             }
         }.toString();
@@ -157,4 +162,76 @@ public class XmwpglSql {
         }.toString();
     }
 
+    public String findByXmfzr(@Param("model") XmwpModel model) {
+        return new SQL() {
+            {
+                SELECT("*");
+                FROM(Tables.XMWP_TABLE);
+                if (model.getXmfzr() != null && !model.getXmfzr().isEmpty()) {
+                    WHERE("xmfzr=#{model.xmfzr}");
+                }
+                if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
+                    WHERE("xmmc like concat('%',#{model.xmmc},'%')");
+                }
+                WHERE("ywzt=6");
+            }
+        }.toString();
+    }
+
+    /**
+     * 项目管理页面
+     * 条件必须是业务状态大于等于2的
+     * @param model
+     * @return
+     */
+    public String xmgl(@Param("model") XmwpModel model) {
+        return new SQL() {
+            {
+                SELECT("x.*");
+                FROM(Tables.XMWP_TABLE + " x");
+                if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
+                    WHERE("x.xmmc like concat('%',#{model.xmmc},'%')");
+                }
+                if (model.getYwzt() != 0) {
+                    WHERE("x.ywzt >= #{model.ywzt}");
+                }
+                if (model.getXmfzr() != null && !model.getXmfzr().isEmpty()) {
+                    WHERE("x.xmfzr=#{model.xmfzr}");
+                }
+                if (model.getWpr() != null && !model.getWpr().isEmpty()) {
+                    WHERE("x.wpr=#{model.wpr}");
+                }
+                if (model.getXmshzt() != 0) {
+                    WHERE("x.xmshzt=#{model.xmshzt}");
+                }
+                if (model.getShr() != null && !model.getShr().isEmpty()) {
+                    WHERE("x.shr=#{model.shr}");
+                }
+                if (model.getCjbm() != null && !model.getCjbm().isEmpty()) {
+                    WHERE("x.cjbm=#{model.cjbm}");
+                }
+                if (model.getXmxcjssj() != null) {
+                    WHERE("xmxcjssj=#{model.xmxcjssj}");
+                }
+                if (model.getShr() != null && !model.getShr().isEmpty()) {
+                    WHERE("shr=#{model.shr}");
+                }
+                if (model.getXmfzr() != null && !model.getXmfzr().isEmpty()) {
+                    WHERE("x.xmfzr=#{model.xmfzr}");
+                }
+            }
+        }.toString();
+    }
+
+    public String findById(@Param("uuid") String uuid) {
+        return new SQL() {
+            {
+                SELECT("x.*");
+                FROM(Tables.XMWP_TABLE + " x");
+                if (uuid != null && !uuid.isEmpty()) {
+                    WHERE("uuid=#{uuid}");
+                }
+            }
+        }.toString();
+    }
 }

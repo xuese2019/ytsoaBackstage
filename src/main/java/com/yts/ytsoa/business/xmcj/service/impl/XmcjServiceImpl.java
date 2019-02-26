@@ -115,6 +115,8 @@ public class XmcjServiceImpl implements XmcjService {
         }
         xmcjMapper.updateById(xmcjModel);
         xmcjModel.getXmzmcModels().forEach(k -> {
+            String uuid = GetUuid.getUUID();
+            k.setUuid(uuid);
             k.setParentid(xmcjModel.getUuid());
             xmcjMapper.insertXmzmc(k);
         });

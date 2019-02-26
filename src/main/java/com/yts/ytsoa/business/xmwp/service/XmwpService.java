@@ -6,6 +6,8 @@ import com.yts.ytsoa.business.xmwp.model.ResultModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.ResponseResult;
 
+import java.util.List;
+
 public interface XmwpService {
     /**
      * 添加一条项目委派的信息
@@ -41,7 +43,7 @@ public interface XmwpService {
      * @return
      * @throws Exception
      */
-    ResponseResult<ResultModel> findById(String uuid) throws Exception;
+    ResponseResult<XmwpModel> findById(String uuid) throws Exception;
 
     /**
      * 分页，条件查询，默认查询所有项目名称
@@ -83,4 +85,25 @@ public interface XmwpService {
      * @throws Exception
      */
     ResponseResult<PageInfo<XmwpModel>> find(int pageNow, int pageSize, XmwpModel model) throws Exception;
+
+    /**
+     * 报告申请页面
+     * 项目名称搜索只能查询自己承接的项目
+     * 并且必须得是审核通过的项目才能申请报告
+     *
+     * @param model
+     * @return
+     */
+    ResponseResult<List<XmwpModel>> findByXmfzr(XmwpModel model, String accid) throws Exception;
+
+    /**
+     * 项目管理页面
+     * 业务状态必须是大于等于2的
+     * @param pageNow
+     * @param pageSize
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<PageInfo<XmwpModel>> xmgl(int pageNow, int pageSize, XmwpModel model) throws Exception;
 }

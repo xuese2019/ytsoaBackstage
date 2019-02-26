@@ -21,8 +21,8 @@ public class XmcyModel {
     private String xmid;
     @ApiModelProperty(value = "员工id", name = "ygid", dataType = "String")
     private String ygid;
-    @ApiModelProperty(value = "专业技术能力", name = "zyjsnl", dataType = "int")
-    private int zyjsnl;
+    @ApiModelProperty(value = "专业技术能力", name = "zyjsnl", dataType = "String")
+    private String zyjsnl;
     @ApiModelProperty(value = "工作效率", name = "gzxl", dataType = "String")
     private String gzxl;
     @ApiModelProperty(value = "沟通能力", name = "gtnl", dataType = "String")
@@ -35,5 +35,9 @@ public class XmcyModel {
     private String name;
     @ApiModelProperty(value = "项目天数", name = "xmts", dataType = "double")
     private double xmts;
+
+    private Double trgxmsj;
+
+    private String xmfzr;
 
 }

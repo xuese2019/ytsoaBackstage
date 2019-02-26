@@ -16,10 +16,20 @@ public interface GzrzService {
     /**
      * 添加一条日志记录（非/项目日志）
      */
-    ResponseResult<GzrzModel> addGzrz(GzrzModel model);
+    ResponseResult<GzrzModel> addGzrz(GzrzModel model, String accid);
 
     /**
      * 根据项目id查询该项目的所有日志
      */
     ResponseResult<PageInfo<GzrzModel>> findByXmid(int pageNow, int pageSize, GzrzModel model) throws Exception;
+
+    /**
+     * 人工统计
+     * @param pageNow
+     * @param pageSize
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<PageInfo<GzrzModel>> rgtj(int pageNow, int pageSize,GzrzModel model) throws Exception;
 }

@@ -28,7 +28,7 @@ public class YcsqSql {
                     WHERE("y.sqr like #{ycsqModel.sqr}");
                 }
                 if ((ycsqModel.getShjg() == 1) || (ycsqModel.getShjg() == 3)) {
-                    WHERE("t.shjg=1 or t.shjg=3");
+                    WHERE("y.shjg=1 or y.shjg=3");
                 }
             }
         }.toString();

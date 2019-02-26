@@ -83,6 +83,9 @@ public class AccountSql {
                 if (model.getWsxx() > 0) {
                     SET("wsxx=#{model.wsxx}");
                 }
+                if (model.getBm() != null && !model.getBm().isEmpty()) {
+                    SET("bm=#{model.bm}");
+                }
                 WHERE("uuid = #{model.uuid}");
             }
         }.toString();
@@ -91,9 +94,10 @@ public class AccountSql {
     public String findAllSql(@Param("model") AccountModel model) {
         return new SQL() {
             {
-                SELECT("a.*,z.zzjgmc");
+                SELECT("a.*,(case a.bm when '0' THEN a.bm else b.bmmc END) as bmmc,(case a.bmzw when '0' THEN a.bmzw else z.bmzw END) AS zwmc");
                 FROM("account_table a");
-                LEFT_OUTER_JOIN("zzjg_table z on z.uuid = a.bm");
+                LEFT_OUTER_JOIN("bumen_table b on b.uuid = a.bm");
+                LEFT_OUTER_JOIN("bmzw_table z on z.uuid = a.bmzw");
                 if (model.getAccount() != null && !model.getAccount().isEmpty()) {
                     model.setAccount("%" + model.getAccount() + "%");
                     WHERE("a.account like #{model.account}");
@@ -117,6 +121,7 @@ public class AccountSql {
                 if (model.getName() != null && !model.getName().isEmpty()) {
                     WHERE("a.name!=#{model.name}");
                 }
+
             }
         }.toString();
     }
@@ -127,6 +132,9 @@ public class AccountSql {
                 UPDATE("account_table");
                 if (model.getBm() != null && !model.getBm().isEmpty()) {
                     SET("bm=#{model.bm}");
+                }
+                if (model.getBmzw() != null && !model.getBmzw().isEmpty()) {
+                    SET("bmzw=#{model.bmzw}");
                 }
                 WHERE("uuid = #{model.uuid}");
             }

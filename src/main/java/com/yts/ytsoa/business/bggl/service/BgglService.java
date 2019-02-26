@@ -6,6 +6,8 @@ import com.yts.ytsoa.business.bggl.model.BgglsModel;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.utils.ResponseResult;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface BgglService {
     /**
      * 添加申请报告
@@ -56,4 +58,14 @@ public interface BgglService {
      * @throws Exception
      */
     ResponseResult<PageInfo<BgglModel>> bggl(int pageNow, int pageSize, BgglModel model, String fsr, String accid) throws Exception;
+
+    /**
+     * 项目详情，报告管理
+     * @param pageNow
+     * @param pageSize
+     * @param uuid
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<PageInfo<BgglModel>> findBgByXmid(int pageNow, int pageSize, String uuid, String bgzbr) throws Exception;
 }

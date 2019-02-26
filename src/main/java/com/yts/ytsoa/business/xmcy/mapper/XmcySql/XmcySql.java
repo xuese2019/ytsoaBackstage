@@ -52,14 +52,9 @@ public class XmcySql {
     public String find(@Param("model") XmcyModel model) {
         return new SQL() {
             {
-                SELECT("*");
-                FROM(Tables.XMCY_TABLE);
-                if (model.getName() != null && !model.getName().isEmpty()) {
-                    WHERE("name like concat ('%',#{model.name},'%')");
-                }
-                if (model.getXmid() != null && !model.getXmid().isEmpty()) {
-                    WHERE("xmid=#{model.xmid}");
-                }
+                SELECT("x.uuid,a.name as ygid,g.trgxmsj,x.zyjsnl,x.gzxl,x.gtnl,x.zrxjtdjs,x.py,a1.name as xmfzr");
+                FROM(Tables.XMCY_TABLE +" x LEFT JOIN gzrz_table g on x.ygid=g.tjr join account_table a on a.uuid=x.ygid join xmwp_table xm on xm.uuid=x.xmid join account_table a1 on a1.uuid=xm.xmfzr");
+                WHERE("x.xmid=#{model.xmid}");
             }
         }.toString();
     }
@@ -68,7 +63,7 @@ public class XmcySql {
         return new SQL() {
             {
                 UPDATE(Tables.XMCY_TABLE);
-                if (model.getZyjsnl() != 0) {
+                if (model.getZyjsnl() != null && !model.getZyjsnl().isEmpty()) {
                     SET("zyjsnl=#{model.zyjsnl}");
                 }
                 if (model.getGzxl() != null && !model.getGzxl().isEmpty()) {
@@ -88,10 +83,10 @@ public class XmcySql {
         }.toString();
     }
 
-    public String rgtj(@Param("x") resultModel model) {
+    /*public String rgtj(@Param("x") resultModel model) {
         return new SQL() {
             {
-                SELECT("x.uuid,a.name,x.zyjsnl,x.gzxl,x.gtnl,x.zrxjtdjs,x.py,g.trgxmsj,case when g.trgxmsj>=8 THEN g.trgxmsj/8 ELSE g.trgxmsj end as 'xmts',case when g.sfcc=2 then count(1) else 0 end as 'ccts'");
+                SELECT("x.uuid,a.name,x.zyjsnl,x.gzxl,x.gtnl,x.zrxjtdjs,x.py,g.trgxmsj,case when g.trgxmsj>=8 THEN g.trgxmsj*a.zj ELSE g.trgxmsj end as 'xmts',case when g.sfcc=2 then count(1) else 0 end as 'ccts'");
                 FROM(Tables.ACCOUNT_TABLE + " as a join " + Tables.XMCY_TABLE + " as x on a.uuid=x.ygid join " + Tables.GZRZ_TABLE + " g on g.tjr=a.uuid");
                 if (model.getXmid() != null && !model.getXmid().isEmpty()) {
                     WHERE("x.xmid=#{x.xmid}");
@@ -102,13 +97,13 @@ public class XmcySql {
                 GROUP_BY("x.uuid");
             }
         }.toString();
-    }
+    }*/
 
     public String findById(@Param("uuid") String uuid) {
         return new SQL() {
             {
                 SELECT("*");
-                FROM(Tables.XMCY_TABLE);
+                FROM(Tables.XMCY_TABLE );
                 if (uuid != null && !uuid.isEmpty()) {
                     WHERE("uuid=#{uuid}");
                 }

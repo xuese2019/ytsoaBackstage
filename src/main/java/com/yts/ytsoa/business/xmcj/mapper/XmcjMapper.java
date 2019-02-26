@@ -26,7 +26,7 @@ public interface XmcjMapper {
     @Results(id = "xmcjMap", value = {
             @Result(id = true, property = "uuid", column = "uuid"),
             @Result(property = "cjbm", column = "cjbm", javaType = String.class,
-                    one = @One(select = "com.yts.ytsoa.business.zzjg.mapper.ZzjgMapper.getZzjgmcById")),
+                    one = @One(select = "com.yts.ytsoa.business.bm.mapper.BmMapper.findBmmcById")),
             @Result(property = "ghr", column = "ghr", javaType = String.class,
                     one = @One(select = "com.yts.ytsoa.business.account.mapper.AccountMapper.getByUuid")),
             @Result(property = "wpr", column = "wpr", javaType = String.class,
@@ -56,7 +56,7 @@ public interface XmcjMapper {
     List<ResultModel> findXmzmcByParentid(@Param("model") XmzmcModel model);*/
 
     @Select({
-            "SELECT a.bm FROM account_table a join zzjg_table z on a.bm=z.uuid where a.uuid=#{uuid}"
+            "SELECT a.bm FROM account_table a join bumen_table b on b.uuid=a.bm where a.uuid=#{uuid}"
     })
     String findBmByUuid(@Param("uuid") String uuid);
 }

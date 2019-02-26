@@ -9,7 +9,6 @@ import com.yts.ytsoa.business.shjl.service.XmshService;
 import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.business.ycsq.mapper.YcsqMapper;
-import com.yts.ytsoa.business.zzjg.mapper.ZzjgMapper;
 import com.yts.ytsoa.utils.GetUuid;
 import com.yts.ytsoa.utils.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +32,6 @@ public class XmshServiceImpl implements XmshService {
     private XmwpMapper xmwpMapper;
     @Autowired
     private GdglMapper gdglMapper;
-    @Autowired
-    private ZzjgMapper zzjgMapper;
     @Autowired
     private BgglMapper bgglMapper;
 

@@ -60,8 +60,8 @@ public class BgglSql {
     public String find(@Param("model") BgglModel model) {
         return new SQL() {
             {
-                SELECT("b.*");
-                FROM(Tables.BGGL_TABLE + " b");
+                SELECT("b.*,x.xmzmc");
+                FROM(Tables.BGGL_TABLE + " b join xmzmc_table x on b.xmid=x.uuid");
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     WHERE("b.xmmc like concat ('%',#{model.xmmc},'%')");
                 }
@@ -72,8 +72,32 @@ public class BgglSql {
                     WHERE("b.xmid=#{model.xmid}");
                 }
                 if (model.getShjg() != 0) {
-                    WHERE("b.shjg=1");
+                    WHERE("b.shjg=#{model.shjg}");
                 }
+                if (model.getBgzbr() != null && !model.getBgzbr().isEmpty()) {
+                    WHERE("b.bgzbr=#{model.bgzbr}");
+                }
+            }
+        }.toString();
+    }
+
+    /**
+     *
+     * @param uuid
+     * @return
+     */
+    public String findBgByXmid(@Param("uuid") String uuid,@Param("bgzbr") String bgzbr) {
+        return new SQL() {
+            {
+                SELECT("b.*");
+                FROM("xmwp_table x join xmzmc_table xm on xm.parentid=x.uuid join bggl_table b on b.xmid=xm.uuid");
+                if (uuid != null && !uuid.isEmpty()) {
+                    WHERE("x.uuid=#{uuid}");
+                }
+                if (bgzbr != null && !bgzbr.isEmpty()) {
+                    WHERE("b.bgzbr=#{bgzbr}");
+                }
+                WHERE("b.shjg>6");
             }
         }.toString();
     }

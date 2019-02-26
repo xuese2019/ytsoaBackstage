@@ -35,8 +35,15 @@ public class XjsqController {
 
     @ApiOperation(value = "分页带条件查询")
     @RequestMapping(value = "/find/{pageNow}", method = RequestMethod.POST)
-    public ResponseResult<PageInfo<XjsqModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody XjsqModel model) throws Exception {
-        return xjsqService.find(pageNow, yamlPageUtils.getPageSize(), model);
+    public ResponseResult<PageInfo<XjsqModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody XjsqModel model, HttpServletRequest request) throws Exception {
+        return xjsqService.find(pageNow, yamlPageUtils.getPageSize(), model, request);
+    }
+
+
+    @ApiOperation(value = "分页带条件查询")
+    @RequestMapping(value = "/page/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<PageInfo<XjsqModel>> kqgl(@PathVariable("pageNow") int pageNow, @RequestBody XjsqModel model, HttpServletRequest request) throws Exception {
+        return xjsqService.kqgl(pageNow, yamlPageUtils.getPageSize(), model, request);
     }
 
     @ApiOperation(value = "根据uuid查出详细信息")
@@ -45,11 +52,18 @@ public class XjsqController {
         return xjsqService.findById(uuid);
     }
 
+
+    @ApiOperation(value = "根据uuid查出详细信息")
+    @RequestMapping(value = "/findByBm/{bm}", method = RequestMethod.GET)
+    public ResponseResult<XjsqModel> findByBm(@PathVariable("bm") String bm) throws SQLException {
+        return xjsqService.findByBm(bm);
+    }
+
     @ApiOperation(value = "休假审核")
     @RequestMapping(value = "/xjsh", method = RequestMethod.POST)
     public ResponseResult<XmshModel> xjsh(@RequestBody XmshModel model, HttpServletRequest request) throws Exception {
         String accid = JWTUtils.getAccId(request);
         model.setShr(accid);
-        return xmshService.add(model);
+        return xjsqService.xjsh(model, request);
     }
 }
