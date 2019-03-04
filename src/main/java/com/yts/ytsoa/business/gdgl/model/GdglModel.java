@@ -81,8 +81,8 @@ public class GdglModel implements Serializable {
     private Integer fjgs;
 
 
-    @ApiModelProperty(value = "1未审2已审3审核已通过4审核未通过", name = "shjg", dataType = "Integer")
-    private Integer shjg;
+    @ApiModelProperty(value = "1未审2已审3审核已通过4审核未通过", name = "shjg", dataType = "int")
+    private int shjg;
 
     @ApiModelProperty(value = "审核意见", name = "shyj", dataType = "String")
     private String shyj;
@@ -114,5 +114,10 @@ public class GdglModel implements Serializable {
      */
     @ApiModelProperty(value = "完成状态", name = "wczt", dataType = "int")
     private int wczt;
-
+    /**
+     * 1:电子
+     * 2：纸质
+     */
+    @ApiModelProperty(value = "档案类型", name = "dalx", dataType = "int")
+    private int dalx;
 }

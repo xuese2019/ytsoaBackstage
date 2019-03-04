@@ -2,7 +2,6 @@ package com.yts.ytsoa.business.xmwp.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
-import com.yts.ytsoa.business.xmwp.model.ResultModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.business.xmwp.service.XmwpService;
 import com.yts.ytsoa.sys.shiro.JWTUtils;

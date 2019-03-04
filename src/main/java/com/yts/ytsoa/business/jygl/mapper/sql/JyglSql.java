@@ -11,6 +11,7 @@ public class JyglSql {
             {
                 SELECT("j.uuid,j.dgjybh,d.damc,j.jyrq,a.name AS 'jyr',j.ghrq,a1.name as'ghr',j.shjg");
                 FROM("jygl_table j LEFT JOIN account_table a on a.uuid=j.jyr LEFT JOIN dggd_table d on d.gdsqbh_hz=j.dgjybh LEFT JOIN account_table a1 ON j.ghr=a1.uuid");
+
                 if (jyglModel.getDamc() != null && !jyglModel.getDamc().isEmpty()) {
                     jyglModel.setDamc("%" + jyglModel.getDamc() + "%");
                     WHERE("j.damc like #{model.damc}");
@@ -24,13 +25,13 @@ public class JyglSql {
                     WHERE("j.dgjybh like #{model.dgjybh}");
                 }
                 if ((jyglModel.getShjg() == 1) || (jyglModel.getShjg() == 3)) {
-                    WHERE("t.shjg=1 or t.shjg=3");
+                    WHERE("j.shjg=1 or j.shjg=3");
                 }
                 if (jyglModel.getJyzt() != 0) {
                     WHERE("j.jyzt=#{model.jyzt}");
                 }
                 if (jyglModel.getGhr() != null && !jyglModel.getGhr().isEmpty()) {
-                    WHERE("ghr=#{model.ghr}");
+                    WHERE("j.ghr=#{model.ghr}");
                 }
             }
 
@@ -42,24 +43,14 @@ public class JyglSql {
             {
                 UPDATE("jygl_table");
 
-                if (jyglModel.getDamc() != null && !jyglModel.getDamc().isEmpty()) {
-                    SET("damc=#{model.damc}");
-                }
-                if (jyglModel.getJyrq() != null) {
-                    SET("jyrq=#{model.jyrq}");
-                }
+
                 if (jyglModel.getGhr() != null && !jyglModel.getGhr().isEmpty()) {
                     SET("ghr=#{model.ghr}");
                 }
                 if (jyglModel.getGhrq() != null) {
                     SET("ghrq=#{model.ghrq}");
                 }
-                if (jyglModel.getBz() != null && !jyglModel.getBz().isEmpty()) {
-                    SET("bz=#{model.bz}");
-                }
-                if (jyglModel.getShjg() != 0) {
-                    SET("shjg=#{model.shjg}");
-                }
+
                 if (jyglModel.getJyzt() != 0) {
                     SET("jyzt=#{model.jyzt}");
                 }
@@ -129,6 +120,9 @@ public class JyglSql {
                 UPDATE(Tables.JYGL_TABLE);
                 if (model.getShjg() != 0) {
                     SET("shjg=#{model.shjg}");
+                }
+                if (model.getJyzt() != 0) {
+                    SET("jyzt=#{model.jyzt}");
                 }
                 WHERE("uuid=#{model.uuid}");
             }

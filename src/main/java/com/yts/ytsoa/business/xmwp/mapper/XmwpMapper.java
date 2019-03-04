@@ -2,7 +2,6 @@ package com.yts.ytsoa.business.xmwp.mapper;
 
 import com.yts.ytsoa.business.xmwp.mapper.Sql.XmwpSql;
 import com.yts.ytsoa.business.xmwp.mapper.Sql.XmwpglSql;
-import com.yts.ytsoa.business.xmwp.model.ResultModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.Tables;
 import org.apache.ibatis.annotations.*;
@@ -14,7 +13,7 @@ import java.util.List;
 public interface XmwpMapper {
     @Insert({
             "insert into " + Tables.XMWP_TABLE + "(uuid,xmmc,wtf,wtflxr,wtflxdh,wtsj,bsjdw,wpr,cjbm,xmfzr,yjsf,wpdscsj,ywzt,xmbzgs,hhrsh,zkbsh)" +
-                    "values(replace(uuid(), '-', ''),#{m.xmmc},#{m.wtf},#{m.wtflxr},#{m.wtflxdh},#{m.wtsj},#{m.bsjdw},#{m.wpr},#{m.cjbm},#{m.xmfzr},#{m.yjsf},#{m.wpdscsj},#{m.ywzt},#{m.xmbzgs},#{m.zkbsh},#{m.hhrsh})"
+                    "values(replace(uuid(), '-', ''),#{m.xmmc},#{m.wtf},#{m.wtflxr},#{m.wtflxdh},#{m.wtsj},#{m.bsjdw},#{m.wpr},#{m.cjbm},#{m.xmfzr},#{m.yjsf},#{m.wpdscsj},#{m.ywzt},#{m.xmbzgs},#{m.hhrsh},#{m.zkbsh})"
     })
     int addXmwp(@Param("m") XmwpModel model);
 
@@ -85,10 +84,19 @@ public interface XmwpMapper {
     })
     List<XmwpModel> findByXmfzr(@Param("model") XmwpModel model) throws SQLException;
 
+    /**
+     * 根据项目子名称的id查出项目的业务状态
+     * 如果业务状态小于6则未完成审核
+     * 不让出具报告
+     *
+     * @param
+     * @return
+     * @throws SQLException
+     */
     @Select({
-            "select x.* from xmwp_table x where x.uuid=#{uuid}"
+            "select  p.ywzt from xmwp_table p where p.uuid = #{uuid}"
     })
-    XmwpModel findXmByUuid(@Param("uuid") String uuid) throws SQLException;
+    int findXmByUuid(@Param("uuid") String uuid) throws SQLException;
 
     @Select({
             "SELECT x.hhrsh FROM xmwp_table x where x.uuid=#{uuid}"
@@ -101,6 +109,7 @@ public interface XmwpMapper {
     /**
      * 项目管理页面
      * 必须是业务状态大于等于2的
+     *
      * @param model
      * @return
      */

@@ -12,6 +12,7 @@ import com.yts.ytsoa.business.gdgl.service.GdglService;
 import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
+import com.yts.ytsoa.utils.GetUuid;
 import com.yts.ytsoa.utils.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class GdglServiceImpl implements GdglService {
         Date date = new Date();
         String ssnf = s.format(date);
         model.setSsnf(ssnf);
+        model.setShjg(1);
         int result = gdglMapper.addGdsq(model);
         if (result > 0) {
             return new ResponseResult<>(true, "添加成功");
@@ -45,11 +47,11 @@ public class GdglServiceImpl implements GdglService {
         return new ResponseResult<>(false, "添加失败");
     }
 
-    @Transactional(rollbackFor = Exception.class)
+
     @Override
     public ResponseResult<PageInfo<GdglModel>> find(int pageNow, int pageSize, GdglModel model) throws Exception {
         PageHelper.startPage(pageNow, pageSize);
-        model.setZt(1);
+        /*  model.setZt(1);*/
         List<GdglModel> list = gdglMapper.find(model);
         PageInfo<GdglModel> page = new PageInfo<>(list);
         if (page.getSize() > 0) {
@@ -98,6 +100,8 @@ public class GdglServiceImpl implements GdglService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<XmshModel> update(XmshModel model) throws Exception {
+        String uuid = GetUuid.getUUID();
+        model.setUuid(uuid);
         model.setShsj(new Date());
         int result = xmshMapper.add(model);
         if (result != 0) {
@@ -152,5 +156,15 @@ public class GdglServiceImpl implements GdglService {
         } else {
             return new ResponseResult<>(false, "无审核记录");
         }
+    }
+
+    @Override
+    public ResponseResult<List<GdglModel>> findGdByXmid(int pageNow, int pageSize, GdglModel model, String xmid) throws Exception {
+        //        用xmid 查询所有的子项目
+        List<GdglModel> gdglModels = gdglMapper.findGdByXmid(xmid);
+        if (gdglModels.size() > 0) {
+            return new ResponseResult<>(true, "查询成功", gdglModels);
+        }
+        return new ResponseResult<>(false, "查无信息");
     }
 }

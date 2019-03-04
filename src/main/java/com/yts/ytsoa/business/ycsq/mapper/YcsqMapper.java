@@ -36,7 +36,7 @@ public interface YcsqMapper {
     int add(@Param("ycsqModel") YcsqModel ycsqModel) throws SQLException;
 
     @Select({
-            "select * from " + Tables.YCSQ_TABLE + " where uuid = #{uuid}"
+            "select y.uuid,a.name as sqr,y.ycsy,y.cphgsd,y.cph,y.cfsj,y.fhsj from  ycsq_table y left join account_table a on a.uuid=y.sqr where y.uuid = #{uuid}"
             /*  "select * from zsk_table where uuid={#uuid}"*/
     })
     List<YcsqModel> findById(@Param("uuid") String uuid) throws SQLException;

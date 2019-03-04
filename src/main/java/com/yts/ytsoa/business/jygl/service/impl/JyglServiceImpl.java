@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.jygl.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.gdgl.mapper.GdglMapper;
+import com.yts.ytsoa.business.gdgl.model.GdglModel;
 import com.yts.ytsoa.business.jygl.mapper.JyglMapper;
 import com.yts.ytsoa.business.jygl.model.JyglModel;
 import com.yts.ytsoa.business.jygl.model.ResultModel;
@@ -32,6 +33,7 @@ public class JyglServiceImpl implements JyglService {
     private GdglMapper gdglMapper;
     @Autowired
     private XmshMapper xmshMapper;
+
 
     /**
      * 条件分页查询
@@ -83,10 +85,16 @@ public class JyglServiceImpl implements JyglService {
     public ResponseResult<JyglModel> updById(JyglModel jyglModel, String accid) throws Exception {
         jyglModel.setGhr(accid);
         jyglModel.setGhrq(new Date());
-        jyglModel.setJyzt(2);
         int result = jyglMapper.updById(jyglModel);
         if (result > 0) {
-            return new ResponseResult<>(true, "修改成功");
+            JyglModel byId = jyglMapper.findByDamc(jyglModel.getUuid());
+            if (byId != null) {
+                GdglModel gdglModel = new GdglModel();
+                gdglModel.setUuid(byId.getDamc());
+                gdglModel.setJyzt(1);
+                gdglMapper.update(gdglModel);
+            }
+            return new ResponseResult<>(true, "归还成功");
         } else return new ResponseResult<>(false, "修改失败");
     }
 
@@ -133,6 +141,7 @@ public class JyglServiceImpl implements JyglService {
     @Override
     public ResponseResult<JyglModel> add(JyglModel model) throws Exception {
         model.setJyrq(new Date());
+        model.setJyzt(1);
         int result = jyglMapper.add(model);
         if (result != 0) {
             return new ResponseResult<>(true, "借阅成功");
@@ -152,6 +161,13 @@ public class JyglServiceImpl implements JyglService {
             jyglModel.setUuid(model.getPrentid());
             jyglModel.setShjg(model.getShjg());
             jyglMapper.update(jyglModel);
+            JyglModel one = jyglMapper.findById2(model.getPrentid());
+            if (one != null) {
+                GdglModel gdglModel = new GdglModel();
+                gdglModel.setUuid(one.getDamc());
+                gdglModel.setJyzt(2);
+                gdglMapper.update(gdglModel);
+            }
             return new ResponseResult<>(true, "审核成功");
         } else {
             return new ResponseResult<>(false, "审核失败");

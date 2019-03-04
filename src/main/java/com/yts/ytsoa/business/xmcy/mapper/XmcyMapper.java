@@ -53,4 +53,9 @@ public interface XmcyMapper {
             "SELECT x.ygid FROM xmcy_table x WHERE x.xmid=#{xmid}"
     })
     List<XmcyModel> findYgidByXmid(@Param("xmid") String xmid);
+
+    @Select({
+            "SELECT x.uuid,x.ygid FROM xmcy_table x WHERE x.xmid=#{xmid}"
+    })
+    List<XmcyModel> findxmid(@Param("xmid") String xmid) throws SQLException;
 }

@@ -28,5 +28,9 @@ public interface XmshMapper {
     XmshModel findById(@Param("uuid") String uuid) throws SQLException;
 
     @SelectProvider(type = ShjlSql.class, method = "findShjl")
+    @Results(id = "jlMap", value = {
+            @Result(id = true, property = "uuid", column = "uuid"),
+            @Result(property = "shr", column = "name")
+    })
     List<XmshModel> findShjl(@Param("prentid") String prentid) throws SQLException;
 }

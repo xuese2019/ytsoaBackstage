@@ -26,11 +26,17 @@ public interface JyglMapper {
     @Select({
             "select j.uuid,j.dgjybh,d.damc,j.jyrq,a.name as 'jyr'  from jygl_table j join dggd_table d on d.gdsqbh_hz=j.dgjybh join account_table a on a.uuid=j.jyr where j.uuid = #{uuid}"
     })
-    /**
-     * 根据uuid进行查询
-     */
-
     JyglModel findById(@Param("uuid") String uuid) throws SQLException;
+
+    @Select({
+            "select * from jygl_table where uuid=#{uuid} "
+    })
+    JyglModel findByDamc(@Param("uuid") String uuid) throws SQLException;
+
+    @Select({
+            "select *  from jygl_table where uuid = #{uuid}"
+    })
+    JyglModel findById2(@Param("uuid") String uuid) throws SQLException;
 
     /**
      * 根据uuid修改

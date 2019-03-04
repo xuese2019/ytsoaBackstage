@@ -2,11 +2,10 @@ package com.yts.ytsoa.business.bggl.service;
 
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.bggl.model.BgglModel;
-import com.yts.ytsoa.business.bggl.model.BgglsModel;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.utils.ResponseResult;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public interface BgglService {
     /**
@@ -23,6 +22,11 @@ public interface BgglService {
     ResponseResult<PageInfo<BgglModel>> find(int pageNow, int pageSize, BgglModel model, String fsr, String accid) throws Exception;
 
     /**
+     * 条件查询带分页
+     */
+    ResponseResult<List<BgglModel>> findsh(int pageNow, BgglModel model, String fsr, String accid) throws Exception;
+
+    /**
      * 删除一条申请记录
      */
     ResponseResult<BgglModel> delete(BgglModel model);
@@ -35,7 +39,7 @@ public interface BgglService {
     /**
      * 修改之前根据id查出详细信息
      */
-    ResponseResult<BgglsModel> findById(String uuid) throws Exception;
+    ResponseResult<BgglModel> findById(String uuid) throws Exception;
 
     /**
      * 修改报告审核状态
@@ -61,11 +65,13 @@ public interface BgglService {
 
     /**
      * 项目详情，报告管理
+     *
      * @param pageNow
      * @param pageSize
-     * @param uuid
      * @return
      * @throws Exception
      */
-    ResponseResult<PageInfo<BgglModel>> findBgByXmid(int pageNow, int pageSize, String uuid, String bgzbr) throws Exception;
+    ResponseResult<List<BgglModel>> findBgByXmid(int pageNow, int pageSize, BgglModel model, String xmid) throws Exception;
+
+    ResponseResult<BgglModel> findByXmZmc(String uuid) throws Exception;
 }

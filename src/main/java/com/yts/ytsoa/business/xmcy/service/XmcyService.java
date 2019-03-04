@@ -2,7 +2,6 @@ package com.yts.ytsoa.business.xmcy.service;
 
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.xmcy.model.XmcyModel;
-import com.yts.ytsoa.business.xmcy.result.resultModel;
 import com.yts.ytsoa.utils.ResponseResult;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public interface XmcyService {
 
     ResponseResult<XmcyModel> update(XmcyModel model) throws Exception;
 
-/*    *//**
+    /*    *//**
      * 人工统计
      *//*
     ResponseResult<PageInfo<resultModel>> rgtj(int pageNow, int pageSize, resultModel model) throws Exception;*/
@@ -47,4 +46,6 @@ public interface XmcyService {
      * 查出项目中的员工
      */
     ResponseResult<List<XmcyModel>> findYgid(String xmid) throws Exception;
+
+    ResponseResult<List<XmcyModel>> findxmid(String xmid) throws Exception;
 }

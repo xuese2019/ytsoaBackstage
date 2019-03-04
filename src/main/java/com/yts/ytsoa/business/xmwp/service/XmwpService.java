@@ -2,7 +2,6 @@ package com.yts.ytsoa.business.xmwp.service;
 
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
-import com.yts.ytsoa.business.xmwp.model.ResultModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.ResponseResult;
 
@@ -99,6 +98,7 @@ public interface XmwpService {
     /**
      * 项目管理页面
      * 业务状态必须是大于等于2的
+     *
      * @param pageNow
      * @param pageSize
      * @param model

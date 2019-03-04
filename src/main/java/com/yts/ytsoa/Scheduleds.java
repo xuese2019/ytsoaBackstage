@@ -1,19 +1,10 @@
 package com.yts.ytsoa;
 
 
-import com.yts.ytsoa.business.gzrz.model.GzrzModel;
 import com.yts.ytsoa.business.gzrz.service.GzrzService;
-import com.yts.ytsoa.business.gzrz.service.Impl.GzrzServiceImpl;
-import com.yts.ytsoa.business.xmcy.service.XmcyService;
 import com.yts.ytsoa.business.xxgl.service.XxglService;
-import com.yts.ytsoa.business.xxgl.service.impl.XxglServiceImpl;
-import com.yts.ytsoa.business.xxgl.utils.XxglUtils;
-import com.yts.ytsoa.sys.spring.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.text.SimpleDateFormat;
 
 /**
  * @author ld
@@ -55,13 +46,13 @@ public class Scheduleds {
         xmcyService.rgtj(1, 10000, model);
     }*/
 
-    @Scheduled(cron = "0 0 * * * ?")
-    public void rgtj() throws Exception {
-        if (gzrzService != null) {
-            gzrzService = SpringUtil.getBean(GzrzServiceImpl.class);
-        }
-        GzrzModel gzrzModel = new GzrzModel();
-        gzrzService.rgtj(1,100,gzrzModel);
-        System.out.println("人工统计中。。。");
-    }
+//    @Scheduled(cron = "0 0 * * * ?")
+//    public void rgtj() throws Exception {
+//        if (gzrzService != null) {
+//            gzrzService = SpringUtil.getBean(GzrzServiceImpl.class);
+//        }
+//        GzrzModel gzrzModel = new GzrzModel();
+//        gzrzService.rgtj(1,100,gzrzModel);
+//        System.out.println("人工统计中。。。");
+//    }
 }

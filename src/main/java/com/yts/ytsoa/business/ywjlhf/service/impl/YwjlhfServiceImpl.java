@@ -33,7 +33,7 @@ public class YwjlhfServiceImpl implements YwjlhfService {
 
     @Override
     public ResponseResult<PageInfo<YwjlhfModel>> findAll(int pageNow, int pageSize, YwjlhfModel ywjlhfModel) throws Exception {
-        PageHelper.startPage(pageNow, pageSize);
+        PageHelper.startPage(pageNow, pageSize, "a.hfsj Desc");
         List<YwjlhfModel> list = ywjlhfMapper.findAll(ywjlhfModel);
         PageInfo<YwjlhfModel> page = new PageInfo<>(list);
         if (page.getSize() > 0) {

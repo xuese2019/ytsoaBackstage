@@ -12,10 +12,11 @@ public class YwjlhfSql {
                 SELECT("a.*,ac.name");
                 FROM("ywjlhf_table a");
                 LEFT_OUTER_JOIN(Tables.ACCOUNT_TABLE + " ac on ac.uuid = a.hfr");
-                ORDER_BY("a.hfsj Desc");
                 if (ywjlhfModel.getXmid() != null && !ywjlhfModel.getXmid().isEmpty()) {
                     WHERE("a.xmid = #{ywjlhfModel.xmid}");
                 }
+//                ORDER_BY("a.hfsj Desc");
+
             }
         }.toString();
     }

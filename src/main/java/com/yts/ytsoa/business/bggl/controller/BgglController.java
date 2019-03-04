@@ -2,7 +2,6 @@ package com.yts.ytsoa.business.bggl.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.bggl.model.BgglModel;
-import com.yts.ytsoa.business.bggl.model.BgglsModel;
 import com.yts.ytsoa.business.bggl.service.BgglService;
 import com.yts.ytsoa.business.bgshjl.service.BgshjlService;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Api(value = "报告管理", description = "报告管理接口")
 @RestController
@@ -32,14 +32,14 @@ public class BgglController {
     private BgshjlService bgshjlService;
 
     /**
-     * 报告审核分页查询带条件
+     * 报告分页查询带条件
      *
      * @param pageNow
      * @param model
      * @return
      * @throws Exception
      */
-    @ApiOperation(value = "报告审核，分页查询带条件")
+    @ApiOperation(value = "分页查询带条件")
     @RequestMapping(value = "/find/{pageNow}", method = RequestMethod.POST)
     public ResponseResult<PageInfo<BgglModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody BgglModel model, String fsr, HttpServletRequest request) throws Exception {
         String accid = JWTUtils.getAccId(request);
@@ -47,6 +47,37 @@ public class BgglController {
             return bgglService.find(pageNow, yamlPageUtils.getPageSize(), model, fsr, accid);
         }
         return new ResponseResult<>(false, "查无信息");
+    }
+
+    /**
+     * 报告审核分页查询带条件
+     *
+     * @param pageNow
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "分页审核查询带条件")
+    @RequestMapping(value = "/findsh/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<List<BgglModel>> findsh(@PathVariable("pageNow") int pageNow, @RequestBody BgglModel model, String fsr, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
+        if (model != null) {
+
+            return bgglService.findsh(pageNow, model, fsr, accid);
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
+    /**
+     * 审核记录
+     *
+     * @return
+     * @throws Exception
+     */
+    @ApiOperation(value = "审核记录")
+    @RequestMapping(value = "/findshjl/{uuid}", method = RequestMethod.GET)
+    public ResponseResult<List<XmshModel>> findshjl(@PathVariable("uuid") String uuid) throws Exception {
+        return bgshjlService.findByParentId(uuid);
     }
 
     /**
@@ -98,12 +129,22 @@ public class BgglController {
 
     @ApiOperation(value = "根据id查询该条记录")
     @RequestMapping(value = "/findById/{uuid}", method = RequestMethod.GET)
-    public ResponseResult<BgglsModel> findById(@PathVariable("uuid") String uuid) throws Exception {
+    public ResponseResult<BgglModel> findById(@PathVariable("uuid") String uuid) throws Exception {
         if (uuid != null && !uuid.isEmpty()) {
             return bgglService.findById(uuid);
         }
         return new ResponseResult<>(false, "查无信息");
     }
+
+    @ApiOperation(value = "根据项目子名称，查询报告编号")
+    @RequestMapping(value = "/findByXmZmc/{uuid}", method = RequestMethod.GET)
+    public ResponseResult<BgglModel> findByXmZmc(@PathVariable("uuid") String uuid) throws Exception {
+        if (uuid != null && !uuid.isEmpty()) {
+            return bgglService.findByXmZmc(uuid);
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
 
     @ApiOperation(value = "添加申请报告")
     @RequestMapping(value = "/addBggl", method = RequestMethod.POST)
@@ -115,11 +156,11 @@ public class BgglController {
     }
 
     @ApiOperation(value = "项目详情，报告管理")
-    @RequestMapping(value = "/findBgByXmid/{pageNow}", method = RequestMethod.POST)
-    public ResponseResult<PageInfo<BgglModel>> find(@PathVariable("pageNow") int pageNow, @RequestParam(value = "uuid",required = false) String uuid, HttpServletRequest request) throws Exception {
-        String accid = JWTUtils.getAccId(request);
-        return bgglService.findBgByXmid(pageNow, yamlPageUtils.getPageSize(), uuid, accid);
+    @RequestMapping(value = "/findBgByXmid/{xmid}/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<List<BgglModel>> find(@PathVariable("xmid") String xmid, @PathVariable("pageNow") int pageNow, BgglModel model) throws Exception {
+        return bgglService.findBgByXmid(pageNow, yamlPageUtils.getPageSize(), model, xmid);
     }
+
 }
 
 

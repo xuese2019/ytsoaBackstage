@@ -32,6 +32,7 @@ public class GdglSql {
                 VALUES("xmid", "#{model.xmid}");
                 VALUES("zt", "#{model.zt}");
                 VALUES("jyzt", "#{model.jyzt}");
+                VALUES("shjg", "#{model.shjg}");
             }
         }.toString();
     }
@@ -39,38 +40,37 @@ public class GdglSql {
     public String find(@Param("model") GdglModel model) {
         return new SQL() {
             {
-                SELECT("*");
-                FROM("dggd_table a");
+                SELECT("d.uuid,d.gdsqbh_hz,d.sqrq,d.sqf,d.xmmc,x.xmzmc AS xmzmc,d.bgbh,d.das,d.damc,d.dgcs,d.zt,d.jyzt,d.shjg");
+                FROM("dggd_table  d ");
+                LEFT_OUTER_JOIN("xmzmc_table x ON x.uuid=d.xmzmc");
                 if (model.getXmid() != null) {
                     WHERE("a.xmid=#{model.xmid}");
                 }
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     model.setXmmc("%" + model.getXmmc() + "%");
-                    WHERE("a.xmmc like #{model.xmmc}");
+                    WHERE("d.xmmc like #{model.xmmc}");
                 }
                 if (model.getSqf() != null && !model.getSqf().isEmpty()) {
                     model.setSqf("%" + model.getSqf() + "%");
-                    WHERE("a.sqf like #{model.sqf}");
+                    WHERE("d.sqf like #{model.sqf}");
                 }
                 if (model.getDas() != null && !model.getDas().isEmpty()) {
                     model.setDas("%" + model.getDas() + "%");
-                    WHERE("a.das like #{model.das}");
+                    WHERE("d.das like #{model.das}");
                 }
                 if (model.getDamc() != null && !model.getDamc().isEmpty()) {
                     model.setDamc("%" + model.getDamc() + "%");
-                    WHERE("a.damc like #{model.damc}");
+                    WHERE("d.damc like #{model.damc}");
                 }
-                if (model.getXmid() != null && !model.getXmid().isEmpty()) {
-                    WHERE("xmid=#{model.xmid}");
-                }
+
                 if (model.getJyzt() != 0 && !model.getXmid().isEmpty()) {
-                    WHERE("jyzt=#{model.jyzt}");
+                    WHERE("d.jyzt=#{model.jyzt}");
                 }
                 if (model.getBgbh() != null && !model.getBgbh().isEmpty()) {
-                    WHERE("bgbh=#{model.bgbh}");
+                    WHERE("d.bgbh=#{model.bgbh}");
                 }
-                if (model.getShjg() != 0) {
-                    WHERE("shjg=#{model.shjg}");
+                if ((model.getShjg() == 1) || (model.getShjg() == 3)) {
+                    WHERE("d.shjg=1 or d.shjg=3");
                 }
             }
         }.toString();
@@ -127,6 +127,9 @@ public class GdglSql {
                 if (gdglModel.getJyzt() != 0 && !gdglModel.getDamc().isEmpty()) {
                     SET("jyzt=#{gdglModel.jyzt}");
                 }
+                if (gdglModel.getShjg() != 0) {
+                    SET("shjg=#{gdglModel.shjg}");
+                }
                 WHERE("uuid = #{gdglModel.uuid}");
             }
         }.toString();
@@ -136,13 +139,36 @@ public class GdglSql {
         return new SQL() {
             {
                 UPDATE(Tables.DGGD_TABLE);
-                if ((model.getShjg() == 1) || (model.getShjg() == 3)) {
-                    WHERE("t.shjg=1 or t.shjg=3");
+                if (model.getShjg() != 0) {
+                    SET("shjg=#{model.shjg}");
                 }
                 if (model.getWczt() != 0) {
                     SET("wczt=#{model.wczt}");
                 }
+                if (model.getJyzt() != 0) {
+                    SET("jyzt=#{model.jyzt}");
+                }
+
                 WHERE("uuid=#{model.uuid}");
+            }
+        }.toString();
+    }
+
+    public String updates(@Param("model") GdglModel model) {
+        return new SQL() {
+            {
+                UPDATE(Tables.DGGD_TABLE);
+                if (model.getShjg() != 0) {
+                    SET("shjg=#{model.shjg}");
+                }
+                if (model.getWczt() != 0) {
+                    SET("wczt=#{model.wczt}");
+                }
+                if (model.getJyzt() != 0) {
+                    SET("jyzt=#{model.jyzt}");
+                }
+
+                WHERE("damc=#{model.damc}");
             }
         }.toString();
     }
@@ -193,6 +219,16 @@ public class GdglSql {
                 SELECT("j.bgbh,a.name AS'shr',s.shyj,s.shjg");
                 FROM("shjl_table s JOIN dggd_table j ON j.uuid=s.prentid JOIN account_table a ON a.uuid=s.shr");
                 WHERE("s.prentid=#{prentid}");
+            }
+        }.toString();
+    }
+
+    public String findGdByXmid(@Param("xmid") String xmid) {
+        return new SQL() {
+            {
+                SELECT("d.*");
+                FROM("dggd_table d  LEFT JOIN xmzmc_table x ON x.uuid = d.xmzmc");
+                WHERE("d.xmzmc in(SELECT x.uuid FROM xmzmc_table x WHERE x.parentid=#{xmid} and d.shjg=2)");
             }
         }.toString();
     }

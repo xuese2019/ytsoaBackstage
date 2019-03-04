@@ -60,7 +60,7 @@ public class BgglModel implements Serializable {
     /**
      * 审核结果
      */
-    @ApiModelProperty(value = "状态（1未审核/2已审核/3项目经理审核4/部门经理审核/5质控部审核6合伙人审核7未通过）", name = "shjg", dataType = "int")
+    @ApiModelProperty(value = "状态（1未审核/2项目负责人审核通过/3部门经理审核通过/4质控部审核通过/6最终完成审核）", name = "shjg", dataType = "int")
     private int shjg;
     /**
      * 项目性质

@@ -4,7 +4,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.xmcy.mapper.XmcyMapper;
 import com.yts.ytsoa.business.xmcy.model.XmcyModel;
-import com.yts.ytsoa.business.xmcy.result.resultModel;
 import com.yts.ytsoa.business.xmcy.service.XmcyService;
 import com.yts.ytsoa.utils.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
@@ -110,6 +109,15 @@ public class XmcyServiceImpl implements XmcyService {
     @Override
     public ResponseResult<List<XmcyModel>> findYgid(String xmid) throws Exception {
         List<XmcyModel> list = xmcyMapper.findYgid(xmid);
+        if (list != null) {
+            return new ResponseResult<>(true, "查询成功", list);
+        }
+        return new ResponseResult<>(false, "查询失败");
+    }
+
+    @Override
+    public ResponseResult<List<XmcyModel>> findxmid(String xmid) throws Exception {
+        List<XmcyModel> list = xmcyMapper.findxmid(xmid);
         if (list != null) {
             return new ResponseResult<>(true, "查询成功", list);
         }

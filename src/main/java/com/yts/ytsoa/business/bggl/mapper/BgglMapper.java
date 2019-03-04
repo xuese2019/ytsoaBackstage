@@ -1,9 +1,9 @@
 package com.yts.ytsoa.business.bggl.mapper;
 
 
+import com.yts.ytsoa.business.account.model.AccountModel;
 import com.yts.ytsoa.business.bggl.mapper.BgglSql.BgglSql;
 import com.yts.ytsoa.business.bggl.model.BgglModel;
-import com.yts.ytsoa.business.bggl.model.BgglsModel;
 import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.Tables;
@@ -23,6 +23,9 @@ public interface BgglMapper {
     int findByBgbhsjs(@Param("bgbhsjs") int bgbhsjs);
 
     @SelectProvider(type = BgglSql.class, method = "find")
+    @Results(id = "bgglMap", value = {
+            @Result(column = "zbr", property = "bgzbr")
+    })
     List<BgglModel> find(@Param("model") BgglModel model) throws SQLException;
 
 
@@ -50,10 +53,10 @@ public interface BgglMapper {
     Integer limit(@Param("bglx") int bglx);
 
     @Select({
-            "select bg.uuid,bg.bgbh,bg.xmmc,sh.shr,sh.shyj,sh.shjg from bggl_table bg join shjl_table sh  ON bg.uuid=sh.prentid " +
-                    "where bg.uuid=#{uuid}"
+            "select b.*,a.name as zbr from bggl_table b left join account_table a on a.uuid = b.bgzbr where b.uuid = #{uuid}"
     })
-    List<BgglsModel> findById(@Param("uuid") String uuid) throws SQLException;
+    @ResultMap(value = "bgglMap")
+    BgglModel findById(@Param("uuid") String uuid) throws SQLException;
 
     /**
      * 根据报告的xmid 查询该项目的信息
@@ -90,5 +93,47 @@ public interface BgglMapper {
     XmzmcModel findByParentid(@Param("parentid") String parentid);
 
     @SelectProvider(type = BgglSql.class, method = "findBgByXmid")
-    List<BgglModel> findBgByXmid(@Param("uuid") String uuid, @Param("bgzbr") String bgzbr);
+    List<BgglModel> findBgByXmid(@Param("xmid") String xmid) throws SQLException;
+
+    @Select({
+            "select b.*,x.xmzmc as m from bggl_table b left join xmzmc_table x on x.uuid = b.xmid left join xmwp_table p on p.uuid = x.parentid where b.shjg = 1 and p.xmfzr = #{accid}"
+    })
+    @Results(id = "bgMap", value = {
+            @Result(column = "m", property = "xmid")
+    })
+    List<BgglModel> one(@Param("accid") String accid);
+
+    @Select({
+            "select * from account_table a where a.uuid = #{accid} and a.bmzw = '0'"
+    })
+    AccountModel acc(@Param("accid") String accid);
+
+    @Select({
+            "select b.*,x.xmzmc as m from bggl_table b left join xmzmc_table x on x.uuid = b.xmid left join xmwp_table p on p.uuid = x.parentid where b.shjg = 2 and p.cjbm = #{bmid}"
+    })
+    @ResultMap(value = "bgMap")
+    List<BgglModel> two(@Param("bmid") String bmid);
+
+    @Select({
+            "select b.*,x.xmzmc as m from bggl_table b left join xmzmc_table x on x.uuid = b.xmid left join xmwp_table p on p.uuid = x.parentid where b.shjg = #{jg}"
+    })
+    @ResultMap(value = "bgMap")
+    List<BgglModel> three(@Param("jg") int jg);
+
+    //    修改状态
+    @Update({
+            "update bggl_table set shjg = #{shjg} where uuid = #{uuid}"
+    })
+    void updateShjgByUuid(@Param("uuid") String uuid, @Param("shjg") int shjg) throws Exception;
+
+    @Select({
+            "select * from xmzmc_table m left join xmwp_table x on x.uuid = m.parentid where m.uuid = #{uuid}"
+    })
+    XmwpModel getXm(@Param("uuid") String uuid) throws Exception;
+
+    @Select({
+            "SELECT x.xmzmc,b.bgbh\n" +
+                    "FROM bggl_table b LEFT JOIN xmzmc_table x ON b.xmid=x.uuid where x.uuid=#{uuid}"
+    })
+    BgglModel findByXmZmc(@Param("uuid") String uuid) throws SQLException;
 }

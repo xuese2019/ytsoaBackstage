@@ -8,7 +8,6 @@ import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.shrsz.mapper.ShrszMapper;
 import com.yts.ytsoa.business.shrsz.model.ShrszModel;
 import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
-import com.yts.ytsoa.business.xmwp.model.ResultModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.business.xmwp.service.XmwpService;
 import com.yts.ytsoa.business.xxgl.model.XxglModel;
@@ -56,8 +55,8 @@ public class XmwpServiceImpl implements XmwpService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<XmwpModel> delById(String uuid) throws Exception {
-        XmwpModel model = xmwpMapper.findXmByUuid(uuid);
-        if (model != null && model.getYwzt() < 2) {
+        int xmByUuid = xmwpMapper.findXmByUuid(uuid);
+        if (xmByUuid < 2) {
             xmwpMapper.delById(uuid);
             return new ResponseResult<>(true, "删除成功");
         }

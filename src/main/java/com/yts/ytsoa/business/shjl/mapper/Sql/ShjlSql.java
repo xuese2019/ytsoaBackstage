@@ -8,7 +8,7 @@ public class ShjlSql {
     public String findShjl(@Param("prentid") String prentid) {
         return new SQL() {
             {
-                SELECT("s.*,a.name");
+                SELECT("s.*,a.name as name");
                 FROM(Tables.SHJL_TABLE + " s join account_table a on a.uuid=s.shr");
                 WHERE("prentid=#{prentid}");
             }

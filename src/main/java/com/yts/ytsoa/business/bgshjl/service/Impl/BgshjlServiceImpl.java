@@ -9,6 +9,8 @@ import com.yts.ytsoa.business.bgshjl.model.BgshjlModel;
 import com.yts.ytsoa.business.bgshjl.service.BgshjlService;
 import com.yts.ytsoa.business.bgshr.mapper.BgshrMapper;
 import com.yts.ytsoa.business.bgshr.model.BgshrModel;
+import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
+import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.ResponseResult;
@@ -32,6 +34,8 @@ public class BgshjlServiceImpl implements BgshjlService {
 
     @Autowired
     private XmwpMapper xmwpMapper;
+    @Autowired
+    private XmshMapper xmshMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -100,7 +104,6 @@ public class BgshjlServiceImpl implements BgshjlService {
         return new ResponseResult<>(false, "权限不足无法审核");
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<PageInfo<BgshjlModel>> find(int pageNow, int pageSize, BgshjlModel model) {
         PageHelper.startPage(pageNow, pageSize);
@@ -108,6 +111,15 @@ public class BgshjlServiceImpl implements BgshjlService {
         PageInfo<BgshjlModel> page = new PageInfo<>(list);
         if (page.getSize() > 0) {
             return new ResponseResult<>(true, "成功", page);
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
+    @Override
+    public ResponseResult<List<XmshModel>> findByParentId(String uuid) throws Exception {
+        List<XmshModel> list = xmshMapper.findShjl(uuid);
+        if (list.size() > 0) {
+            return new ResponseResult<>(true, "成功", list);
         }
         return new ResponseResult<>(false, "查无信息");
     }

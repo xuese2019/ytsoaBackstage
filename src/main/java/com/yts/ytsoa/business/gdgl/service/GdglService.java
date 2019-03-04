@@ -54,4 +54,6 @@ public interface GdglService {
     ResponseResult<List<BgglModel>> findBgByUuid(String uuid) throws Exception;
 
     ResponseResult<List<GdglResultModel>> findByShjl(String prentid) throws Exception;
+
+    ResponseResult<List<GdglModel>> findGdByXmid(int pageNow, int pageSize, GdglModel model, String xmid) throws Exception;
 }

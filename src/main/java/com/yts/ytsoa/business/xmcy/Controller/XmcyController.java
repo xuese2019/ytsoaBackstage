@@ -2,7 +2,6 @@ package com.yts.ytsoa.business.xmcy.Controller;
 
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.xmcy.model.XmcyModel;
-import com.yts.ytsoa.business.xmcy.result.resultModel;
 import com.yts.ytsoa.business.xmcy.service.XmcyService;
 import com.yts.ytsoa.utils.ResponseResult;
 import com.yts.ytsoa.utils.yamlutils.YamlPageUtils;
@@ -60,6 +59,16 @@ public class XmcyController {
     public ResponseResult<XmcyModel> findById(@PathVariable("uuid") String uuid) throws Exception {
         if (uuid != null) {
             return xmcyService.findById(uuid);
+        }
+        return new ResponseResult<>(false, "查无数据");
+    }
+
+
+    @ApiModelProperty(value = "根据xmid查询项目的所有成员")
+    @RequestMapping(value = "findxmid/{xmid}", method = RequestMethod.GET)
+    public ResponseResult<List<XmcyModel>> findxmid(@PathVariable("xmid") String xmid) throws Exception {
+        if (xmid != null) {
+            return xmcyService.findxmid(xmid);
         }
         return new ResponseResult<>(false, "查无数据");
     }

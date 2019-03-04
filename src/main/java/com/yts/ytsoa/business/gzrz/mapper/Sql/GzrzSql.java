@@ -77,7 +77,7 @@ public class GzrzSql {
             {
                 SELECT("a.name as tjr,SUM(g.trgxmsj) as trgxmsj,SUM(g.trgxmsj)*a.zj as xmts,COUNT(CASE when g.sfcc=2 then 1 else null end) as ccts");
                 FROM(Tables.GZRZ_TABLE + " g join " + Tables.ACCOUNT_TABLE + " a on g.tjr=a.uuid");
-                if (model.getXmid()!=null && !model.getXmid().isEmpty()) {
+                if (model.getXmid() != null && !model.getXmid().isEmpty()) {
                     WHERE("g.xmid=#{model.xmid}");
                 }
                 GROUP_BY("g.tjr");

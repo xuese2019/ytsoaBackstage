@@ -46,7 +46,7 @@ public class GzrzController {
 
     @ApiOperation(value = "人工统计")
     @RequestMapping(value = "/rgtj/{pageNow}", method = RequestMethod.POST)
-    public ResponseResult<PageInfo<GzrzModel>> rgtj(@PathVariable("pageNow")int pageNow,@RequestBody GzrzModel model) throws Exception {
+    public ResponseResult<PageInfo<GzrzModel>> rgtj(@PathVariable("pageNow") int pageNow, @RequestBody GzrzModel model) throws Exception {
         return gzrzService.rgtj(pageNow, yamlPageUtils.getPageSize(), model);
     }
 }

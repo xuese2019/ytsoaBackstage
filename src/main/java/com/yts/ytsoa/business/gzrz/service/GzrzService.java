@@ -25,11 +25,13 @@ public interface GzrzService {
 
     /**
      * 人工统计
+     *
      * @param pageNow
      * @param pageSize
      * @param model
      * @return
      * @throws Exception
      */
-    ResponseResult<PageInfo<GzrzModel>> rgtj(int pageNow, int pageSize,GzrzModel model) throws Exception;
+    ResponseResult<PageInfo<GzrzModel>> rgtj(int pageNow, int pageSize, GzrzModel model) throws Exception;
+
 }

@@ -170,4 +170,8 @@ public class Tables implements Serializable {
      * 权限关系表
      */
     public static final String QXFY_TABLE = " qxfy_table ";
+    /**
+     * 工作指令
+     */
+    public static final String GZZL_TABLE = " gzzl_table";
 }

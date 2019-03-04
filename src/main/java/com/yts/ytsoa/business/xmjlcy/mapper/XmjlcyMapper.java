@@ -11,6 +11,9 @@ import java.util.List;
 @Mapper
 public interface XmjlcyMapper {
     @SelectProvider(type = XmjlcySql.class, method = "findAllSql")
+    @Results(id = "xmjlcyMap", value = {
+            @Result(column = "cy", property = "name")
+    })
     List<XmjlcyModel> findAll(@Param("xmjlcyModel") XmjlcyModel xmjlcyModel) throws SQLException;
 
     @Insert({

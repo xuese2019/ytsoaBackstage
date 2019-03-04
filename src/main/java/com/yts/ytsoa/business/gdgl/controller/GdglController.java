@@ -106,4 +106,11 @@ public class GdglController {
             return new ResponseResult<>(false, "没有审核记录");
         }
     }
+
+    @ApiOperation(value = "项目详情，归档管理")
+    @RequestMapping(value = "/findGdByXmid/{xmid}/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<List<GdglModel>> find(@PathVariable("xmid") String xmid, @PathVariable("pageNow") int pageNow, GdglModel model) throws Exception {
+        return gdglService.findGdByXmid(pageNow, yamlPageUtils.getPageSize(), model, xmid);
+    }
+
 }

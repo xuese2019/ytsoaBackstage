@@ -1,6 +1,5 @@
 package com.yts.ytsoa.business.xmjlcy.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.xmjlcy.mapper.XmjlcyMapper;
 import com.yts.ytsoa.business.xmjlcy.model.XmjlcyModel;
@@ -19,7 +18,7 @@ public class XmjlcyServiceImpl implements XmjlcyService {
 
     @Override
     public ResponseResult<PageInfo<XmjlcyModel>> findAll(int pageNow, int pageSize, XmjlcyModel xmjlcyModel) throws Exception {
-        PageHelper.startPage(pageNow, pageSize);
+//        PageHelper.startPage(pageNow, pageSize);
         List<XmjlcyModel> list = xmjlcyMapper.findAll(xmjlcyModel);
         PageInfo<XmjlcyModel> page = new PageInfo<>(list);
         if (page.getSize() > 0) {
