@@ -19,8 +19,11 @@ public class PjsqSql {
                     pjsqModel.setKpbh("%" + pjsqModel.getKpbh() + "%");
                     WHERE("a.kpbh like #{pjsqModel.kpbh}");
                 }
-                if (pjsqModel.getShjg() != 0) {
-                    WHERE("a.shjg=#{pjsqModel.shjg}");
+                if (pjsqModel.getShjg() == 1 || pjsqModel.getShjg() == 3) {
+                    WHERE("a.shjg=1 or a.shjg=3");
+                }
+                if (pjsqModel.getShjg() == 2) {
+                    WHERE(" a.shjg=2 ");
                 }
             }
         }.toString();
@@ -82,7 +85,7 @@ public class PjsqSql {
     public String findByShjl(@Param("prentid") String prentid) {
         return new SQL() {
             {
-                SELECT("y.kpbh,a.name as shr,s.shyj,s.shjg");
+                SELECT("y.uuid,s.shjg,y.kpbh,a.name as shr,s.shyj");
                 FROM("shjl_table s JOIN pjsq_table y ON y.uuid=s.prentid join account_table a on a.uuid=s.shr");
                 WHERE("s.prentid=#{prentid}");
             }

@@ -49,6 +49,13 @@ public class JyglController {
         return jyglService.findAll(pageNow, yamlPageUtils.getPageSize(), jyglModel);
     }
 
+    @ApiOperation(value = "分页条件查询")
+    @RequestMapping(value = "/findByJyjl/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<PageInfo<JyglModel>> findAllJyjl(@PathVariable("pageNow") int pageNow, @RequestBody
+            JyglModel jyglModel) throws Exception {
+        return jyglService.findAllJyjl(pageNow, yamlPageUtils.getPageSize(), jyglModel);
+    }
+
     @ApiOperation(value = "根据id条件查询")
     @RequestMapping(value = "/findById/{uuid}", method = RequestMethod.GET)
     public ResponseResult<JyglModel> findById(@PathVariable("uuid") String uuid, HttpServletRequest request) throws Exception {
@@ -107,7 +114,7 @@ public class JyglController {
         return new ResponseResult<>(false, "审核失败");
     }
 
-    @ApiOperation(value = "审核记录")
+    @ApiOperation(value = "借阅记录")
     @RequestMapping(value = "/findByShjl/{prentid}", method = RequestMethod.GET)
     public ResponseResult<List<ResultModel>> findByShjl(@PathVariable("prentid") String prentid) throws Exception {
         ResponseResult<List<ResultModel>> result = jyglService.findByShjl(prentid);

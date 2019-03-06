@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.cwgl.controller;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.cwgl.model.CwglModel;
 import com.yts.ytsoa.business.cwgl.service.CwglService;
+import com.yts.ytsoa.sys.shiro.JWTUtils;
 import com.yts.ytsoa.utils.ResponseResult;
 import com.yts.ytsoa.utils.yamlutils.YamlPageUtils;
 import io.swagger.annotations.Api;
@@ -39,7 +40,8 @@ public class CwglController {
     @ApiOperation(value = "新增财务管理")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public ResponseResult<CwglModel> add(@RequestBody CwglModel cwglModel, HttpServletRequest request) throws Exception {
-        return cwglService.add(cwglModel);
+        String accid = JWTUtils.getAccId(request);
+        return cwglService.add(cwglModel, accid);
     }
 
     /**

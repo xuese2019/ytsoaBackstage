@@ -1,8 +1,10 @@
 package com.yts.ytsoa.business.xmwp.mapper;
 
+import com.yts.ytsoa.business.account.model.AccountModel;
 import com.yts.ytsoa.business.xmwp.mapper.Sql.XmwpSql;
 import com.yts.ytsoa.business.xmwp.mapper.Sql.XmwpglSql;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
+import com.yts.ytsoa.business.xmwp.model.XmwpShjlModel;
 import com.yts.ytsoa.utils.Tables;
 import org.apache.ibatis.annotations.*;
 
@@ -74,6 +76,7 @@ public interface XmwpMapper {
      * @return
      */
     @SelectProvider(type = XmwpglSql.class, method = "findByXmfzr")
+
     @Results(id = "resultMap", value = {
             @Result(id = true, property = "uuid", column = "uuid", javaType = String.class),
             @Result(property = "xmfzr", column = "xmfzr", javaType = String.class,
@@ -144,4 +147,43 @@ public interface XmwpMapper {
                     many = @Many(select = "com.yts.ytsoa.business.xmcj.mapper.XmcjMapper.findByParentid"))
     })
     XmwpModel findById(@Param("uuid") String uuid);
+
+    @SelectProvider(type = XmwpglSql.class, method = "findByShjl")
+    List<XmwpShjlModel> findByShjl(@Param("prentid") String prentid) throws SQLException;
+
+    @Select({
+            "select x.* from xmwp_table x where uuid=#{xmid}"
+    })
+    XmwpModel findByXmId(@Param("xmid") String uuid) throws SQLException;
+
+
+    @Select({
+            "select * from xmwp_table where uuid=#{uuid}"
+    })
+    XmwpModel findXmwpByUuid(@Param("uuid") String uuid);
+
+    @Select({
+            "select * from account_table a where a.uuid = #{accid} and a.bmzw = '0'"
+    })
+    AccountModel acc(@Param("accid") String accid);
+
+    @Select({
+            "select * from xmwp_table where xmfzr=#{xmfzr} and ywzt=2"
+    })
+    List<XmwpModel> first(@Param("xmfzr") String xmfzr);
+
+    @Select({
+            "select * from xmwp_table where cjbm=#{bm} and ywzt=3"
+    })
+    List<XmwpModel> seccond(@Param("bm") String bm);
+
+    @Select({
+            "select * from xmwp_table where ywzt=#{ywzt}"
+    })
+    List<XmwpModel> third(@Param("ywzt") int ywzt);
+
+    @Select({
+            "select * from xmwp_table where uuid=#{uuid}"
+    })
+    XmwpModel findByUuid(@Param("uuid") String uuid);
 }

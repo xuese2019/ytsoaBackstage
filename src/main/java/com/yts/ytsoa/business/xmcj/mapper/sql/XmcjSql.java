@@ -82,8 +82,8 @@ public class XmcjSql {
     public String findById(@Param("uuid") String uuid) {
         return new SQL() {
             {
-                SELECT();
-                FROM(Tables.XMWP_TABLE + " x join bumen_table b on x.cjbm=b.uuid join account_table a on a.uuid=x.xmfzr");
+                SELECT("x.uuid,x.xmmc,x.xmkssj, xmfzr,x.xmxcjssj,x.ywzt");
+                FROM(Tables.XMWP_TABLE + " x left join bumen_table b on x.cjbm=b.uuid left join account_table a on a.uuid=x.xmfzr");
                 if (uuid != null && !uuid.isEmpty()) {
                     WHERE("x.uuid=#{uuid}");
                 }

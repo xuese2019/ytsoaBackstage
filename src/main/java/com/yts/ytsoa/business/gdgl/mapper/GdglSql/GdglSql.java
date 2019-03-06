@@ -59,19 +59,21 @@ public class GdglSql {
                     WHERE("d.das like #{model.das}");
                 }
                 if (model.getDamc() != null && !model.getDamc().isEmpty()) {
-                    model.setDamc("%" + model.getDamc() + "%");
-                    WHERE("d.damc like #{model.damc}");
+                    WHERE("d.damc like concat ('%',#{model.damc},'%')");
                 }
 
-                if (model.getJyzt() != 0 && !model.getXmid().isEmpty()) {
+                if (model.getJyzt() != 0) {
                     WHERE("d.jyzt=#{model.jyzt}");
                 }
                 if (model.getBgbh() != null && !model.getBgbh().isEmpty()) {
                     WHERE("d.bgbh=#{model.bgbh}");
                 }
                 if ((model.getShjg() == 1) || (model.getShjg() == 3)) {
-                    WHERE("d.shjg=1 or d.shjg=3");
+                    WHERE("d.shjg=1 or d.shjg=3 ");
                 }
+               /* if ((model.getShjg() !=0)) {
+                    WHERE(" d.shjg=#{model.shjg}");
+                }*/
             }
         }.toString();
     }
@@ -229,6 +231,24 @@ public class GdglSql {
                 SELECT("d.*");
                 FROM("dggd_table d  LEFT JOIN xmzmc_table x ON x.uuid = d.xmzmc");
                 WHERE("d.xmzmc in(SELECT x.uuid FROM xmzmc_table x WHERE x.parentid=#{xmid} and d.shjg=2)");
+            }
+        }.toString();
+    }
+
+    /**
+     * 根据审核记录主键查出项目详情
+     *
+     * @param uuid
+     * @return
+     */
+    public String findXmwpByShjlUuid(@Param("uuid") String uuid) {
+        return new SQL() {
+            {
+                SELECT("xm.*");
+                FROM(" shjl_table s join bggl_table b on s.prentid=b.uuid join xmzmc_table x on x.uuid=b.xmid join xmwp_table xm on xm.uuid=x.parentid");
+                if (uuid != null && !uuid.isEmpty()) {
+                    WHERE(" s.uuid=#{uuid}");
+                }
             }
         }.toString();
     }

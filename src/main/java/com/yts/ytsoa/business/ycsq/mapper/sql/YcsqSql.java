@@ -15,13 +15,11 @@ public class YcsqSql {
                 if (ycsqModel.getSqrq() != null) {
                     WHERE("a.sqrq = #{ycsqModel.sqrq}");
                 }
-                if (ycsqModel.getCph() != null) {
-                    ycsqModel.setCph("%" + ycsqModel.getCph() + "%");
-                    WHERE("y.cph like #{ycsqModel.cph}");
-                }
                 if (ycsqModel.getCphgsd() != null && !ycsqModel.getCphgsd().isEmpty()) {
-                    ycsqModel.setCphgsd("%" + ycsqModel.getCphgsd() + "%");
-                    WHERE("y.cphgsd like #{ycsqModel.cphgsd}");
+                    WHERE("y.cphgsd like concat('%',#{ycsqModel.cphgsd},'%')");
+                }
+                if (ycsqModel.getCph() != null && !ycsqModel.getCph().isEmpty()) {
+                    WHERE("y.cph like concat('%',#{ycsqModel.cph},'%')");
                 }
                 if (ycsqModel.getSqr() != null && !ycsqModel.getSqr().isEmpty()) {
                     ycsqModel.setSqr("%" + ycsqModel.getSqr() + "%");

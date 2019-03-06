@@ -9,12 +9,12 @@ public class JyglSql {
     public String findAllSql(@Param("model") JyglModel jyglModel) {
         return new SQL() {
             {
-                SELECT("j.uuid,j.dgjybh,d.damc,j.jyrq,a.name AS 'jyr',j.ghrq,a1.name as'ghr',j.shjg");
+                SELECT("j.uuid,j.dgjybh,d.damc,j.jyrq,a.name AS 'jyr',j.ghrq,a1.name as'ghr',j.shjg,j.jyzt");
                 FROM("jygl_table j LEFT JOIN account_table a on a.uuid=j.jyr LEFT JOIN dggd_table d on d.gdsqbh_hz=j.dgjybh LEFT JOIN account_table a1 ON j.ghr=a1.uuid");
 
                 if (jyglModel.getDamc() != null && !jyglModel.getDamc().isEmpty()) {
                     jyglModel.setDamc("%" + jyglModel.getDamc() + "%");
-                    WHERE("j.damc like #{model.damc}");
+                    WHERE("d.damc like #{model.damc}");
                 }
                 if (jyglModel.getXmmc() != null && !jyglModel.getXmmc().isEmpty()) {
                     jyglModel.setXmmc("%" + jyglModel.getXmmc() + "%");
@@ -27,12 +27,34 @@ public class JyglSql {
                 if ((jyglModel.getShjg() == 1) || (jyglModel.getShjg() == 3)) {
                     WHERE("j.shjg=1 or j.shjg=3");
                 }
+                if ((jyglModel.getShjg() == 2)) {
+                    WHERE("j.shjg=2 ");
+                }
                 if (jyglModel.getJyzt() != 0) {
                     WHERE("j.jyzt=#{model.jyzt}");
                 }
                 if (jyglModel.getGhr() != null && !jyglModel.getGhr().isEmpty()) {
                     WHERE("j.ghr=#{model.ghr}");
                 }
+            }
+
+        }.toString();
+    }
+
+
+    public String findAllJyjl(@Param("model") JyglModel jyglModel) {
+        return new SQL() {
+            {
+                SELECT("j.uuid,j.dgjybh,d.damc,j.jyrq,a.name AS 'jyr',j.ghrq,a1.name as'ghr',j.shjg");
+                FROM("jygl_table j LEFT JOIN account_table a on a.uuid=j.jyr LEFT JOIN dggd_table d on d.gdsqbh_hz=j.dgjybh LEFT JOIN account_table a1 ON j.ghr=a1.uuid");
+                if (jyglModel.getDamc() != null && !jyglModel.getDamc().isEmpty()) {
+                    WHERE("j.damc = #{model.damc}");
+                }
+                if (jyglModel.getDgjybh() != null && !jyglModel.getDgjybh().isEmpty()) {
+                    jyglModel.setDgjybh("%" + jyglModel.getDgjybh() + "%");
+                    WHERE("j.dgjybh like #{model.dgjybh}");
+                }
+
             }
 
         }.toString();

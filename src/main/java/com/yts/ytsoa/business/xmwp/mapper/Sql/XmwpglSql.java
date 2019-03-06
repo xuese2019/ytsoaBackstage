@@ -9,7 +9,7 @@ public class XmwpglSql {
     public String find(@Param("model") XmwpModel model) {
         return new SQL() {
             {
-                SELECT("x.*,b.bmmc as cjbm,a.name as cjr");
+                SELECT("x.*,b.bmmc as cjbm,a.name as xmfzr");
                 FROM(Tables.XMWP_TABLE + " x join bumen_table b on x.cjbm=b.uuid join account_table a on a.uuid=x.xmfzr");
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     WHERE("x.xmmc like concat('%',#{model.xmmc},'%')");
@@ -117,8 +117,9 @@ public class XmwpglSql {
     public String findByXmyq(@Param("model") XmwpModel model) {
         return new SQL() {
             {
-                SELECT("x.*");
+                SELECT("x.uuid,x.xmmc,x.xmkssj,x.xmxcjssj,a.name as xmfzr,x.ywzt");
                 FROM(Tables.XMWP_TABLE + " x");
+                LEFT_OUTER_JOIN("account_table a on a.uuid=x.xmfzr WHERE x.xmxcjssj<=now()");
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     WHERE("x.xmmc like concat('%',#{model.xmmc},'%')");
                 }
@@ -140,12 +141,12 @@ public class XmwpglSql {
                 if (model.getCjbm() != null && !model.getCjbm().isEmpty()) {
                     WHERE("x.cjbm=#{model.cjbm}");
                 }
-                if (model.getXmxcjssj() != null) {
-                    WHERE("xmxcjssj=#{model.xmxcjssj}");
-                }
                 if (model.getShr() != null && !model.getShr().isEmpty()) {
                     WHERE("shr=#{model.shr}");
                 }
+           /*     if (model.getXmxcjssj()!=null) {
+                    WHERE("xmxcjssj>=NOW()");
+                }*/
             }
         }.toString();
     }
@@ -233,6 +234,16 @@ public class XmwpglSql {
                 if (uuid != null && !uuid.isEmpty()) {
                     WHERE("uuid=#{uuid}");
                 }
+            }
+        }.toString();
+    }
+
+    public String findByShjl(@Param("prentid") String prentid) {
+        return new SQL() {
+            {
+                SELECT("a.name as shr,s.shyj,s.shjg");
+                FROM("shjl_table s JOIN xmwp_table y ON y.uuid=s.prentid join account_table a on a.uuid=s.shr");
+                WHERE("s.prentid=#{prentid}");
             }
         }.toString();
     }

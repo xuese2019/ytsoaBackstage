@@ -39,6 +39,8 @@ public class QxUtils {
 
         list.add(new QxglModel("ai", "工作日志", "gzrz", "a", "1", "", "", null));
 
+        list.add(new QxglModel("aia", "工作日志审核", "gzrzsh", "a", "1", "", "", null));
+
         list.add(new QxglModel("aj", "报告管理", "bggl", "a", "1", "", "", null));
         list.add(new QxglModel("aja", "报告管理审核记录", "bgglAuditingRecord", "aj", "2", "", "", null));
 
@@ -141,7 +143,7 @@ public class QxUtils {
         list.add(new QxglModel("da", "项目审核相关设置", "xmshxgsz", "d", "1", "treeview", "fa fa-sticky-note-o", null));
         list.add(new QxglModel("db", "报告审核相关设置", "bgshxgsz", "d", "1", "treeview", "fa fa-sticky-note-o", null));
         list.add(new QxglModel("dc", "审核相关设置", "shxgsz", "d", "1", "treeview", "fa fa-sticky-note-o", null));
-
+        list.add(new QxglModel("dd", "日志提交时间设置", "rztjsjsz", "d", "1", "treeview", "fa fa-sticky-note-o", null));
         return list;
     }
 }

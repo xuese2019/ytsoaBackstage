@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.xmcy.Controller;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.xmcy.model.XmcyModel;
 import com.yts.ytsoa.business.xmcy.service.XmcyService;
+import com.yts.ytsoa.sys.shiro.JWTUtils;
 import com.yts.ytsoa.utils.ResponseResult;
 import com.yts.ytsoa.utils.yamlutils.YamlPageUtils;
 import io.swagger.annotations.Api;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Api(value = "项目成员接口", description = "项目成员接口")
@@ -27,11 +29,6 @@ public class XmcyController {
     public ResponseResult<XmcyModel> addXmcy(@RequestBody List<XmcyModel> models) throws Exception {
         return xmcyService.addXmcy(models);
     }
-   /* @ApiOperation(value = "批量/添加一个成员")
-    @RequestMapping(value = "/addXmcy", method = RequestMethod.POST)
-    public ResponseResult<XmcyModel> addXmcy(@RequestBody XmcyModel model) throws Exception {
-        return xmcyService.addXmcy(model);
-    }*/
 
     @ApiOperation(value = "条件查询带分页")
     @RequestMapping(value = "/find/{pageNow}", method = RequestMethod.POST)
@@ -41,9 +38,10 @@ public class XmcyController {
 
     @ApiOperation(value = "修改项目成员评语")
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public ResponseResult<XmcyModel> update(@RequestBody XmcyModel model) throws Exception {
+    public ResponseResult<XmcyModel> update(@RequestBody XmcyModel model, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
         if (model != null) {
-            return xmcyService.update(model);
+            return xmcyService.update(model, accid);
         }
         return new ResponseResult<>(false, "修改失败");
     }
@@ -75,9 +73,10 @@ public class XmcyController {
 
     @ApiModelProperty(value = "添加一个项目成员")
     @RequestMapping(value = "/insertXmcy", method = RequestMethod.POST)
-    public ResponseResult<XmcyModel> insertXmcy(@RequestBody XmcyModel model) throws Exception {
+    public ResponseResult<XmcyModel> insertXmcy(@RequestBody XmcyModel model, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
         if (model != null) {
-            return xmcyService.insertXmcy(model);
+            return xmcyService.insertXmcy(model, accid);
         }
         return new ResponseResult<>(false, "添加失败");
     }

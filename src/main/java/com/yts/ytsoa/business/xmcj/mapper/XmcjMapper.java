@@ -69,4 +69,9 @@ public interface XmcjMapper {
             "select * from xmzmc_table x where parentid=#{xmid}"
     })
     List<XmzmcModel> findsXmzmc(@Param("xmid") String xmid) throws SQLException;
+
+    @Select({
+            "select x.*   from xmzmc_table x where x.uuid=#{uuid}"
+    })
+    List<XmzmcModel> findByXmzmcId(@Param("uuid") String uuid) throws SQLException;
 }

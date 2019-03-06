@@ -62,7 +62,6 @@ public class BgglController {
     public ResponseResult<List<BgglModel>> findsh(@PathVariable("pageNow") int pageNow, @RequestBody BgglModel model, String fsr, HttpServletRequest request) throws Exception {
         String accid = JWTUtils.getAccId(request);
         if (model != null) {
-
             return bgglService.findsh(pageNow, model, fsr, accid);
         }
         return new ResponseResult<>(false, "查无信息");
@@ -145,7 +144,6 @@ public class BgglController {
         return new ResponseResult<>(false, "查无信息");
     }
 
-
     @ApiOperation(value = "添加申请报告")
     @RequestMapping(value = "/addBggl", method = RequestMethod.POST)
     public ResponseResult<BgglModel> addBggl(@RequestBody BgglModel model) throws Exception {
@@ -160,7 +158,6 @@ public class BgglController {
     public ResponseResult<List<BgglModel>> find(@PathVariable("xmid") String xmid, @PathVariable("pageNow") int pageNow, BgglModel model) throws Exception {
         return bgglService.findBgByXmid(pageNow, yamlPageUtils.getPageSize(), model, xmid);
     }
-
 }
 
 

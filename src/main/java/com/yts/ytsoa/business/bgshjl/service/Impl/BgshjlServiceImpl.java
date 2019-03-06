@@ -49,7 +49,7 @@ public class BgshjlServiceImpl implements BgshjlService {
             if (result != 0) {
                 if (model.getTof() == 2) {
                     BgglModel bgglModel = new BgglModel();
-                    bgglModel.setShjg(3);
+                    bgglModel.setShjg(2);
                     bgglModel.setUuid(model.getBgid());
                     bgglMapper.update(bgglModel);
                     return new ResponseResult<>(true, "审核成功");
@@ -61,7 +61,7 @@ public class BgshjlServiceImpl implements BgshjlService {
                 if (result != 0) {
                     if (model.getTof() == 2) {
                         BgglModel bgglModel = new BgglModel();
-                        bgglModel.setShjg(4);
+                        bgglModel.setShjg(3);
                         bgglModel.setUuid(model.getBgid());
                         bgglMapper.update(bgglModel);
                     }
@@ -72,7 +72,7 @@ public class BgshjlServiceImpl implements BgshjlService {
                 if (result != 0) {
                     if (model.getTof() == 2) {
                         BgglModel bgglModel = new BgglModel();
-                        bgglModel.setShjg(5);
+                        bgglModel.setShjg(4);
                         bgglModel.setUuid(model.getBgid());
                         bgglMapper.update(bgglModel);
                     }

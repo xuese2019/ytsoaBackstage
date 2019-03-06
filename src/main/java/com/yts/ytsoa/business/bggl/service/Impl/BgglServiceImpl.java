@@ -15,6 +15,7 @@ import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.sz.mapper.SzMapper;
 import com.yts.ytsoa.business.sz.model.SzModel;
 import com.yts.ytsoa.business.xmcj.mapper.XmcjMapper;
+import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
 import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.business.xxgl.service.XxglService;
@@ -75,61 +76,6 @@ public class BgglServiceImpl implements BgglService {
             return new ResponseResult<>(true, "成功", page);
         }
         return new ResponseResult<>(false, "未查询到数据");
-//        //查询报告审核人表
-//        BgshrModel bgshrModel = bgshrMapper.find();
-//        //根据报告的的xmid查出该项目的详细信息
-//        XmwpModel xmwpModel = bgglMapper.findByXmid(model.getXmid());
-//        if (xmwpModel != null) {
-//            if (xmwpModel.getXmfzr().equals(accid)) {
-//                model.setBgzbr(accid);
-//                PageHelper.startPage(pageNow, pageSize);
-//                List<BgglModel> list = bgglMapper.find(model);
-//                PageInfo<BgglModel> page = new PageInfo<>(list);
-//                model.setGdyxq(model.getGdyxq() - 1);
-//                bgglMapper.update(model);
-//                if (model.getGdyxq() < 1) {
-//                    xxglService.save(new XxglUtils().setXx(7, "归档有效期不足1天：" + model.getXmmc(), model.getBgbh(), fsr, xmwpModel.getXmfzr()));
-//                    return new ResponseResult<>(true, "查询成功", page);
-//                }
-//                return new ResponseResult<>(false, "查无信息");
-//            } else if (accid.equals(bgshrModel.getBmjlid())) {
-//                model.setShjg(3);
-//                PageHelper.startPage(pageNow, pageSize);
-//                List<BgglModel> list = bgglMapper.find(model);
-//                PageInfo<BgglModel> page = new PageInfo<>(list);
-//                if (page.getSize() > 0) {
-//                    return new ResponseResult<>(true, "查询成功", page);
-//                }
-//                return new ResponseResult<>(false, "查无信息");
-//            } else if (accid.equals(bgshrModel.getZkbid())) {
-//                model.setShjg(4);
-//                PageHelper.startPage(pageNow, pageSize);
-//                List<BgglModel> list = bgglMapper.find(model);
-//                PageInfo<BgglModel> page = new PageInfo<>(list);
-//                if (page.getSize() > 0) {
-//                    return new ResponseResult<>(true, "查询成功", page);
-//                }
-//                return new ResponseResult<>(false, "查无信息");
-//            } else if (accid.equals(bgshrModel.getHhrid())) {
-//                model.setShjg(5);
-//                PageHelper.startPage(pageNow, pageSize);
-//                List<BgglModel> list = bgglMapper.find(model);
-//                PageInfo<BgglModel> page = new PageInfo<>(list);
-//                if (page.getSize() > 0) {
-//                    return new ResponseResult<>(true, "查询成功", page);
-//                }
-//                return new ResponseResult<>(false, "查无信息");
-//            }
-//        } else {
-//            PageHelper.startPage(pageNow, pageSize);
-//            List<BgglModel> list = bgglMapper.find(model);
-//            PageInfo<BgglModel> page = new PageInfo<>(list);
-//            if (page.getSize() > 0) {
-//                return new ResponseResult<>(true, "查询成功", page);
-//            }
-//            return new ResponseResult<>(false, "查无信息");
-//        }
-//        return new ResponseResult<>(false, "查无信息");
     }
 
     @Override
@@ -165,7 +111,7 @@ public class BgglServiceImpl implements BgglService {
         List<SzModel> list = szMapper.findAll();
         if (list.size() > 0) {
             SzModel szModel = list.get(0);
-            if (szModel.getAccid() != null && !szModel.getAccid().isEmpty()) {
+            if (szModel.getAccid() != null && !szModel.getAccid().isEmpty() && szModel.getAccid().equals(accid)) {
                 PageHelper.startPage(pageNow, 5);
                 List<BgglModel> four = bgglMapper.three(4);
                 if (four.size() > 0) {
@@ -237,7 +183,26 @@ public class BgglServiceImpl implements BgglService {
                 return new ResponseResult<>(true, "查询成功", model);
             }
         }
-        return new ResponseResult<>(false, "查无信息");
+        return new ResponseResult<>(false, "报告未审核完成，不能申请归档");
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public ResponseResult<BgglModel> updateGdyxq(BgglModel model, String accid) throws Exception {
+        List<BgglModel> list = bgglMapper.findAllBgs();
+        if (list.size() != 0) {
+            for (int i = 0; i < list.size(); i++) {
+                model.setGdyxq(list.get(i).getGdyxq() - 1);
+                model.setUuid(list.get(i).getUuid());
+                bgglMapper.updateGdyxq(model);
+                XmwpModel xmwpModel = bgglMapper.findByXmid(list.get(i).getXmid());
+                if (list.get(i).getGdyxq() < 1) {
+                    xxglService.save(new XxglUtils().setXx(7, "归档有效期不足1天,报告名称为：" + list.get(i).getXmmc(), model.getBgbh(), accid, xmwpModel.getXmfzr()));
+                }
+            }
+            return new ResponseResult<>(true, "归档有效期修改成功");
+        }
+        return new ResponseResult<>(true, "归档有效期修改失败");
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -245,7 +210,7 @@ public class BgglServiceImpl implements BgglService {
     public ResponseResult<XmshModel> update(XmshModel model) throws Exception {
         String uuid = GetUuid.getUUID();
         if (model.getPrentid() == null || model.getPrentid().isEmpty()) {
-            return new ResponseResult<>(false, "为传递报告id");
+            return new ResponseResult<>(false, "未传递报告id");
         }
         model.setUuid(uuid);
         model.setShsj(new Date());
@@ -269,10 +234,34 @@ public class BgglServiceImpl implements BgglService {
                             bgglMapper.updateShjgByUuid(model.getPrentid(), 4);
                         } else {
                             bgglMapper.updateShjgByUuid(model.getPrentid(), 6);
+                            XmwpModel xmwpModel = bgglMapper.findXmYwztByBgXmid(model.getPrentid());
+                            if (xmwpModel != null) {
+                                List<BgglModel> list = bgglMapper.findBgsByUuid(xmwpModel.getUuid());
+                                for (int i = 0; i < list.size(); i++) {
+                                    if (list.get(i).getShjg() == 6) {
+                                        XmwpModel xmwpModel1 = new XmwpModel();
+                                        xmwpModel1.setUuid(xmwpModel.getUuid());
+                                        xmwpModel1.setYwzt(7);
+                                        xmwpMapper.updateYwzt(xmwpModel1);
+                                    }
+                                }
+                            }
                         }
                         return new ResponseResult<>(true, "审核成功");
                     case 4:
                         bgglMapper.updateShjgByUuid(one.getUuid(), 6);
+                        XmwpModel xmwpModel = bgglMapper.findXmYwztByBgXmid(model.getPrentid());
+                        if (xmwpModel != null) {
+                            List<BgglModel> list = bgglMapper.findBgsByUuid(xmwpModel.getUuid());
+                            for (int i = 0; i < list.size(); i++) {
+                                if (list.get(i).getShjg() == 6) {
+                                    XmwpModel xmwpModel1 = new XmwpModel();
+                                    xmwpModel1.setUuid(xmwpModel.getUuid());
+                                    xmwpModel1.setYwzt(7);
+                                    xmwpMapper.updateYwzt(xmwpModel1);
+                                }
+                            }
+                        }
                         return new ResponseResult<>(true, "审核成功");
                     default:
                         return new ResponseResult<>(true, "当前项目已审核完成");
@@ -287,14 +276,18 @@ public class BgglServiceImpl implements BgglService {
 
     @Override
     public ResponseResult<BgglModel> addBggl(BgglModel model) throws Exception {
-        int ywzt = xmwpMapper.findXmByUuid(model.getXmid());
-        if (ywzt != 0) {
-            if (ywzt != 6) {
-                return new ResponseResult<>(false, "未审核完成的项目不能出具报告");
-            } else {
-                model.setShjg(1);
-                bgglMapper.addBggl(model);
-                return new ResponseResult<>(true, "报告出具成功");
+        List<XmzmcModel> byXmzmcId = xmcjMapper.findByXmzmcId(model.getXmid());
+        if (byXmzmcId != null) {
+            int ywzt = xmwpMapper.findXmByUuid(byXmzmcId.get(0).getParentid());
+            if (ywzt != 0) {
+                if (ywzt != 6) {
+                    return new ResponseResult<>(false, "未审核完成的项目不能出具报告");
+                } else {
+                    model.setShjg(1);
+                    model.setGdyxq(60);
+                    bgglMapper.addBggl(model);
+                    return new ResponseResult<>(true, "报告出具成功");
+                }
             }
         }
         return new ResponseResult<>(false, "报告出具失败");

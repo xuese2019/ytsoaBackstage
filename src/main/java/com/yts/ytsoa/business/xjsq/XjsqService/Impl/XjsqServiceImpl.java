@@ -65,7 +65,7 @@ public class XjsqServiceImpl implements XjsqService {
                 if (byBm.size() > 0) {
                     return new ResponseResult<>(true, "所长查询成功", page);
                 }
-                return new ResponseResult<>(false, "查无数据");
+                return new ResponseResult<>(false, "查无信息");
             }
             if (model1.getBmzw().equals("0")) {
                 List<XjsqModel> byBm = xjsqMapper.findByBm(model1.getBm(), 1);
@@ -73,12 +73,11 @@ public class XjsqServiceImpl implements XjsqService {
                 if (results.getSize() > 0) {
                     return new ResponseResult<>(true, "经理查询成功", results);
                 } else {
-                    return new ResponseResult<>(false, "查无结果");
+                    return new ResponseResult<>(false, "查无信息");
                 }
             }
-
         }
-        return new ResponseResult<>(false, "查无数据");
+        return new ResponseResult<>(false, "查无信息");
     }
 
     @Override
@@ -87,7 +86,7 @@ public class XjsqServiceImpl implements XjsqService {
         if (result != null) {
             return new ResponseResult<>(true, "查询成功", result);
         }
-        return new ResponseResult<>(false, "查询失败");
+        return new ResponseResult<>(false, "查无信息");
     }
 
     @Override
@@ -98,7 +97,7 @@ public class XjsqServiceImpl implements XjsqService {
         if (page.getSize() > 0) {
             return new ResponseResult<>(true, "查询成功", page);
         } else {
-            return new ResponseResult<>(false, "查询失败", null);
+            return new ResponseResult<>(false, "查无信息", null);
         }
     }
 
@@ -137,7 +136,7 @@ public class XjsqServiceImpl implements XjsqService {
             }
             return new ResponseResult<>(true, "审核成功");
         }
-        return new ResponseResult<>(false, "审核失败");
+        return new ResponseResult<>(false, "审核未能通过");
     }
 
 
@@ -147,7 +146,7 @@ public class XjsqServiceImpl implements XjsqService {
         if (result != null) {
             return new ResponseResult<>(true, "查询成功", result);
         }
-        return new ResponseResult<>(false, "查询失败");
+        return new ResponseResult<>(false, "查无信息");
     }
 }
 

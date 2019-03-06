@@ -2,11 +2,10 @@ package com.yts.ytsoa.business.gzrz.mapper;
 
 import com.yts.ytsoa.business.gzrz.mapper.Sql.GzrzSql;
 import com.yts.ytsoa.business.gzrz.model.GzrzModel;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectProvider;
+import com.yts.ytsoa.business.gzrz.model.RztjsjModel;
+import org.apache.ibatis.annotations.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Mapper
@@ -22,4 +21,24 @@ public interface GzrzMapper {
 
     @SelectProvider(type = GzrzSql.class, method = "rgtj")
     List<GzrzModel> rgtj(@Param("model") GzrzModel model);
+
+    @Update({
+            "update rztjsj_table set tjsj=#{model.tjsj}"
+    })
+    int updateTjsj(@Param("model") RztjsjModel model) throws SQLException;
+
+    @Select({
+            "select * from rztjsj_table"
+    })
+    RztjsjModel findTjsj();
+
+    @Update({
+            "update gzrz_table set rzdp=#{model.rzdp} where uuid=#{model.uuid}"
+    })
+    int addRzdp(@Param("model") GzrzModel model) throws SQLException;
+
+    @Select({
+            "select * from gzrz_table where uuid = #{uuid}"
+    })
+    List<GzrzModel> findById(@Param("uuid") String uuid) throws SQLException;
 }

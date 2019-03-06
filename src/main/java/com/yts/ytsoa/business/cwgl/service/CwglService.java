@@ -10,7 +10,7 @@ public interface CwglService {
 
     ResponseResult<PageInfo<CwglModel>> findAll(int pageNow, int pageSize, CwglModel cwglModel) throws Exception;
 
-    ResponseResult<CwglModel> add(CwglModel cwglModel) throws Exception;
+    ResponseResult<CwglModel> add(CwglModel cwglModel, String accid) throws Exception;
 
     ResponseResult<List<CwglModel>> findById(String uuid) throws Exception;
 

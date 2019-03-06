@@ -26,4 +26,6 @@ public interface JyglService {
     ResponseResult<XmshModel> update(XmshModel model) throws Exception;
 
     ResponseResult<List<ResultModel>> findByShjl(String prentid) throws Exception;
+
+    ResponseResult<PageInfo<JyglModel>> findAllJyjl(int pageNow, int pageSize, JyglModel jyglModel) throws Exception;
 }

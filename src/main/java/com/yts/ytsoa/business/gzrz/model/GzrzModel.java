@@ -54,6 +54,7 @@ public class GzrzModel {
     private Date rq;
     /**
      * 项目名称
+     * 0:如果是项目日志显示项目名称，如果是非项目日志默认传0
      */
     @ApiModelProperty(value = "项目名称", name = "xmmc", dataType = "String")
     private String xmmc;
@@ -62,7 +63,18 @@ public class GzrzModel {
      */
     @ApiModelProperty(value = "出差地点", name = "ccdd", dataType = "String")
     private String ccdd;
-
     @ApiModelProperty(value = "出差天数", name = "ccts", dataType = "int")
     private int ccts;
+    @ApiModelProperty(value = "审核人", name = "shr", dataType = "String")
+    private String shr;
+    @ApiModelProperty(value = "审核时间", name = "shsj", dataType = "Date")
+    private Date shsj;
+    @ApiModelProperty(value = "审核意见", name = "shyj", dataType = "String")
+    private String shyj;
+    @ApiModelProperty(value = "审核结果", name = "shjg", dataType = "int")
+    private int shjg;
+    @ApiModelProperty(value = "项目天数", name = "xmts", dataType = "Double")
+    private Double xmts;
+    @ApiModelProperty(value = "日志点评", name = "rzdp", dataType = "String")
+    private String rzdp;
 }

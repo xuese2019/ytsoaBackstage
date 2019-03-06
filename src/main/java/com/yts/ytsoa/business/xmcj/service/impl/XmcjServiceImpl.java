@@ -36,7 +36,7 @@ public class XmcjServiceImpl implements XmcjService {
     @Autowired
     private XmwpMapper xmwpMapper;
 
-    @Transactional(rollbackFor = Exception.class)
+
     @Override
     public ResponseResult<PageInfo<XmcjModel>> findAll(int pageNow, int pageSize, XmcjModel xmcjModel, String accid) throws Exception {
         xmcjModel.setXmfzr(accid);
@@ -57,7 +57,7 @@ public class XmcjServiceImpl implements XmcjService {
         return new ResponseResult<>(true, "成功", null);
     }
 
-    @Transactional(rollbackFor = Exception.class)
+
     @Override
     public ResponseResult<List<XmcjModel>> findById(String uuid) throws Exception {
         List<XmcjModel> list = xmcjMapper.findById(uuid);
@@ -68,7 +68,6 @@ public class XmcjServiceImpl implements XmcjService {
         }
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<String> excel(String basePath, String outPath, XmcjModel xmcjModel) throws Exception {
         List<XmcjModel> list = xmcjMapper.findAll(xmcjModel);
@@ -104,12 +103,16 @@ public class XmcjServiceImpl implements XmcjService {
         if (yglb != null) {
             String[] split = yglb.split(",");
             for (int i = 0; i < split.length; i++) {
+                if (accid.equals(split[i])) {
+                    return new ResponseResult<>(false, "项目成员不能为项目负责人");
+                }
                 XmcyModel model = new XmcyModel();
                 String uuid = GetUuid.getUUID();
                 model.setUuid(uuid);
                 model.setYgid(split[i]);
                 model.setXmid(xmcjModel.getUuid());
                 list.add(model);
+                xxglService.save(new XxglUtils().setXx(1, "已承接项目：" + xmcjModel.getXmmc(), null, xmcjModel.getXmfzr(), split[i]));
             }
             xmcyMapper.saves(list);
         }
@@ -120,10 +123,9 @@ public class XmcjServiceImpl implements XmcjService {
             k.setParentid(xmcjModel.getUuid());
             xmcjMapper.insertXmzmc(k);
         });
-        xxglService.save(new XxglUtils().setXx(1, "已承接项目：" + xmcjModel.getXmmc(), null, xmcjModel.getXmfzr(), xmcjModel.getWpr()));
         return new ResponseResult<>(true, "成功");
     }
-    /**/
+
 
     @Override
     public ResponseResult<List<XmzmcModel>> findXmzmc(XmzmcModel model) throws Exception {
@@ -133,10 +135,20 @@ public class XmcjServiceImpl implements XmcjService {
                 return new ResponseResult<>(true, "查询成功", result);
             }
         }
-        return new ResponseResult<>(false, "查无信息");
+        return new ResponseResult<>(false, "未查询到记录");
     }
 
-    /*@Override
+    @Override
+    public ResponseResult<List<XmzmcModel>> findByXmzmcId(String uuid) throws Exception {
+        List<XmzmcModel> list = xmcjMapper.findByXmzmcId(uuid);
+        if (list.size() > 0) {
+            return new ResponseResult<>(true, "成功", list);
+        } else {
+            return new ResponseResult<>(false, "未查询到记录", null);
+        }
+    }
+
+ /*@Override
     public ResponseResult<List<ResultModel>> findXmzmcByParentid(XmzmcModel model) throws Exception {
         if (model != null) {
             List<ResultModel> list = xmcjMapper.findXmzmcByParentid(model);

@@ -74,4 +74,14 @@ public interface BgglService {
     ResponseResult<List<BgglModel>> findBgByXmid(int pageNow, int pageSize, BgglModel model, String xmid) throws Exception;
 
     ResponseResult<BgglModel> findByXmZmc(String uuid) throws Exception;
+
+    /**
+     * 修改归档有效期
+     *
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<BgglModel> updateGdyxq(BgglModel model, String accid) throws Exception;
+
 }

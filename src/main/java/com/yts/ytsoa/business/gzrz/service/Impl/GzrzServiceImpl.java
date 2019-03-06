@@ -4,7 +4,9 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.gzrz.mapper.GzrzMapper;
 import com.yts.ytsoa.business.gzrz.model.GzrzModel;
+import com.yts.ytsoa.business.gzrz.model.RztjsjModel;
 import com.yts.ytsoa.business.gzrz.service.GzrzService;
+import com.yts.ytsoa.business.rgtj.mapper.RgtjMapper;
 import com.yts.ytsoa.business.xmcy.mapper.XmcyMapper;
 import com.yts.ytsoa.business.xmcy.model.XmcyModel;
 import com.yts.ytsoa.utils.DateUtils;
@@ -26,6 +28,8 @@ public class GzrzServiceImpl implements GzrzService {
     private GzrzMapper gzrzMapper;
     @Autowired
     private XmcyMapper xmcyMapper;
+    @Autowired
+    private RgtjMapper rgtjMapper;
 
     @Override
     public ResponseResult<PageInfo<GzrzModel>> find(int pageNow, int pageSize, GzrzModel model) {
@@ -41,9 +45,13 @@ public class GzrzServiceImpl implements GzrzService {
     @Override
     public ResponseResult<GzrzModel> addGzrz(GzrzModel model, String accid) {
         Date date = new Date();
-        SimpleDateFormat s = new SimpleDateFormat("HHss");
-        String tjsj = s.format(date);
-        if (DateUtils.rztjsjqr(tjsj, "1700")) {
+        SimpleDateFormat s = new SimpleDateFormat("HHmm");
+        SimpleDateFormat s1 = new SimpleDateFormat("HH:mm");
+        String dqsj = s.format(date);
+        RztjsjModel rztjsjModel = gzrzMapper.findTjsj();
+        String tjsj = s.format(rztjsjModel.getTjsj());
+        String tjsj1 = s1.format(rztjsjModel.getTjsj());
+        if (DateUtils.rztjsjqr(dqsj, tjsj)) {
             List<XmcyModel> list = xmcyMapper.findYgidByXmid(model.getXmid());
             if (list.size() != 0) {
                 for (int i = 0; i < list.size(); i++) {
@@ -53,11 +61,16 @@ public class GzrzServiceImpl implements GzrzService {
                         gzrzMapper.addGzrz(model);
                         return new ResponseResult<>(true, "提交成功");
                     }
-                    return new ResponseResult<>(false, "非项目成员不可提交该项目的工作日志");
                 }
+                return new ResponseResult<>(false, "非项目成员不可提交该项目的工作日志");
+            } else {
+                model.setTjsj(new Date());
+                model.setTjr(accid);
+                gzrzMapper.addGzrz(model);
+                return new ResponseResult<>(true, "提交成功");
             }
         }
-        return new ResponseResult<>(false, "项目日志或非项目日志必须在17:00以后才能提交");
+        return new ResponseResult<>(false, "项目日志或非项目日志必须在" + tjsj1 + "以后才能提交");
     }
 
     @Override
@@ -82,4 +95,39 @@ public class GzrzServiceImpl implements GzrzService {
         return new ResponseResult<>(false, "查无信息");
     }
 
+    @Override
+    public ResponseResult<RztjsjModel> updateTjsj(RztjsjModel model) throws Exception {
+        int result = gzrzMapper.updateTjsj(model);
+        if (result != 0) {
+            return new ResponseResult<>(true, "修改成功");
+        }
+        return new ResponseResult<>(false, "修改失败");
+    }
+
+    @Override
+    public ResponseResult<RztjsjModel> findTjsj() throws Exception {
+        RztjsjModel result = gzrzMapper.findTjsj();
+        if (result != null) {
+            return new ResponseResult<>(true, "查询成功", result);
+        }
+        return new ResponseResult<>(false, "查询失败");
+    }
+
+    @Override
+    public ResponseResult<List<GzrzModel>> findById(String uuid) throws Exception {
+        List<GzrzModel> result = gzrzMapper.findById(uuid);
+        if (result.size() > 0) {
+            return new ResponseResult<>(true, "查询成功！", result);
+        }
+        return new ResponseResult<>(false, "查询失败");
+    }
+
+    @Override
+    public ResponseResult<GzrzModel> addRzdp(GzrzModel model) throws Exception {
+        int result = gzrzMapper.addRzdp(model);
+        if (result > 0) {
+            return new ResponseResult<>(true, "添加成功！");
+        }
+        return new ResponseResult<>(false, "添加失败！");
+    }
 }

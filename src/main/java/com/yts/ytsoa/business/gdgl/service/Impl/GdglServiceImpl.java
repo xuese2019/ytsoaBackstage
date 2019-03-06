@@ -2,6 +2,7 @@ package com.yts.ytsoa.business.gdgl.service.Impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.yts.ytsoa.business.bggl.mapper.BgglMapper;
 import com.yts.ytsoa.business.bggl.model.BgglModel;
 import com.yts.ytsoa.business.gdgl.mapper.GdglMapper;
 import com.yts.ytsoa.business.gdgl.model.GdglModel;
@@ -12,6 +13,8 @@ import com.yts.ytsoa.business.gdgl.service.GdglService;
 import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
+import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
+import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.GetUuid;
 import com.yts.ytsoa.utils.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
@@ -31,33 +34,43 @@ public class GdglServiceImpl implements GdglService {
     private GdglMapper gdglMapper;
     @Autowired
     private XmshMapper xmshMapper;
+    @Autowired
+    private BgglMapper bgglMapper;
+
+    @Autowired
+    private XmwpMapper xmwpMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<GdglModel> addGdgl(GdglModel model) throws Exception {
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
-        String ssnf = s.format(date);
-        model.setSsnf(ssnf);
-        model.setShjg(1);
-        int result = gdglMapper.addGdsq(model);
-        if (result > 0) {
-            return new ResponseResult<>(true, "添加成功");
+        BgglModel byXmZmc = bgglMapper.findByXmZmc(model.getXmzmc());
+        if (byXmZmc.getShjg() >= 6) {
+            String ssnf = s.format(date);
+            model.setSsnf(ssnf);
+            model.setShjg(1);
+            int result = gdglMapper.addGdsq(model);
+            if (result > 0) {
+                return new ResponseResult<>(true, "添加成功");
+            } else {
+                return new ResponseResult<>(false, "添加未能完成");
+            }
         }
-        return new ResponseResult<>(false, "添加失败");
+        return new ResponseResult<>(false, "报告未审核完成，不能申请归档");
     }
 
 
     @Override
     public ResponseResult<PageInfo<GdglModel>> find(int pageNow, int pageSize, GdglModel model) throws Exception {
         PageHelper.startPage(pageNow, pageSize);
-        /*  model.setZt(1);*/
+        /*      model.setJyzt(1);*/
         List<GdglModel> list = gdglMapper.find(model);
         PageInfo<GdglModel> page = new PageInfo<>(list);
         if (page.getSize() > 0) {
             return new ResponseResult<>(true, "查询成功", page);
         }
-        return new ResponseResult<>(false, "查询失败");
+        return new ResponseResult<>(false, "查无数据");
     }
 
     /*          if (model != null && model.getZt() < 2) {
@@ -83,7 +96,7 @@ public class GdglServiceImpl implements GdglService {
         int result = gdglMapper.updById(gdglModel);
         if (result > 0) {
             return new ResponseResult<>(true, "修改成功");
-        } else return new ResponseResult<>(false, "修改失败");
+        } else return new ResponseResult<>(false, "修改未能完成");
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -105,11 +118,29 @@ public class GdglServiceImpl implements GdglService {
         model.setShsj(new Date());
         int result = xmshMapper.add(model);
         if (result != 0) {
-            GdglModel gdglModel = new GdglModel();
-            gdglModel.setUuid(model.getPrentid());
-            gdglModel.setShjg(model.getShjg());
-            gdglModel.setWczt(3);
-            gdglMapper.update(gdglModel);
+            if (model.getShjg() == 2) {
+                GdglModel gdglModel = new GdglModel();
+                gdglModel.setUuid(model.getPrentid());
+                gdglModel.setShjg(model.getShjg());
+                gdglModel.setWczt(3);
+                gdglMapper.update(gdglModel);
+            }
+            //根据审核记录的主键查出项目的详情
+            XmwpModel xmwpModel = gdglMapper.findXmwpByShjlUuid(model.getUuid());
+            if (xmwpModel != null) {
+                //查询该项目下所有的归档记录，判断wczt是不是等于3，如果都等于3，那么把项目的业务状态改为8
+                List<GdglModel> list = gdglMapper.findGdglByXmUuid(xmwpModel.getUuid());
+                if (list.size() != 0) {
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i).getWczt() == 3) {
+                            XmwpModel xmwpModel1 = new XmwpModel();
+                            xmwpModel1.setYwzt(8);
+                            xmwpModel1.setUuid(xmwpModel.getUuid());
+                            xmwpMapper.updateYwzt(xmwpModel1);
+                        }
+                    }
+                }
+            }
             return new ResponseResult<>(true, "审核成功");
         }
         return new ResponseResult<>(false, "审核失败");

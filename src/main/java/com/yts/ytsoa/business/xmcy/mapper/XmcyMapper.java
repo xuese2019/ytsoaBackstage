@@ -50,7 +50,7 @@ public interface XmcyMapper {
     int insertRgglTable(@Param("models") List<resultModel> models) throws SQLException;
 
     @Select({
-            "SELECT x.ygid FROM xmcy_table x WHERE x.xmid=#{xmid}"
+            "SELECT x.* FROM xmcy_table x WHERE x.xmid=#{xmid}"
     })
     List<XmcyModel> findYgidByXmid(@Param("xmid") String xmid);
 

@@ -56,6 +56,18 @@ public class JyglServiceImpl implements JyglService {
         }
     }
 
+    @Override
+    public ResponseResult<PageInfo<JyglModel>> findAllJyjl(int pageNow, int pageSize, JyglModel jyglModel) throws Exception {
+        PageHelper.startPage(pageNow, pageSize);
+        List<JyglModel> list = jyglMapper.findAllJyjl(jyglModel);
+        PageInfo<JyglModel> page = new PageInfo<>(list);
+        if (page.getSize() > 0) {
+            return new ResponseResult<>(true, "查询成功", page);
+        } else {
+            return new ResponseResult<>(false, "查无信息", null);
+        }
+    }
+
     /**
      * 根据uuid查询
      *
@@ -95,7 +107,7 @@ public class JyglServiceImpl implements JyglService {
                 gdglMapper.update(gdglModel);
             }
             return new ResponseResult<>(true, "归还成功");
-        } else return new ResponseResult<>(false, "修改失败");
+        } else return new ResponseResult<>(false, "归还失败");
     }
 
     /**
@@ -142,6 +154,7 @@ public class JyglServiceImpl implements JyglService {
     public ResponseResult<JyglModel> add(JyglModel model) throws Exception {
         model.setJyrq(new Date());
         model.setJyzt(1);
+        model.setShjg(1);
         int result = jyglMapper.add(model);
         if (result != 0) {
             return new ResponseResult<>(true, "借阅成功");

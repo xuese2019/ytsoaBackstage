@@ -120,7 +120,6 @@ public interface BgglMapper {
     @ResultMap(value = "bgMap")
     List<BgglModel> three(@Param("jg") int jg);
 
-    //    修改状态
     @Update({
             "update bggl_table set shjg = #{shjg} where uuid = #{uuid}"
     })
@@ -136,4 +135,15 @@ public interface BgglMapper {
                     "FROM bggl_table b LEFT JOIN xmzmc_table x ON b.xmid=x.uuid where x.uuid=#{uuid}"
     })
     BgglModel findByXmZmc(@Param("uuid") String uuid) throws SQLException;
+
+    @UpdateProvider(type = BgglSql.class, method = "updateGdyxq")
+    int updateGdyxq(@Param("model") BgglModel model);
+
+    @SelectProvider(type = BgglSql.class, method = "findXmYwztByBgXmid")
+    XmwpModel findXmYwztByBgXmid(@Param("prentid") String prentid);
+
+    @Select({
+            "select * from bggl_table"
+    })
+    List<BgglModel> findAllBgs();
 }

@@ -5,6 +5,8 @@ import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.cwgl.mapper.CwglMapper;
 import com.yts.ytsoa.business.cwgl.model.CwglModel;
 import com.yts.ytsoa.business.cwgl.service.CwglService;
+import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
+import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +22,26 @@ public class CwglServiceImpl implements CwglService {
     @Autowired
     private CwglMapper cwglMapper;
 
+    @Autowired
+    private XmwpMapper xmwpMapper;
+
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public ResponseResult<CwglModel> add(CwglModel cwglModel) throws Exception {
-        int list = cwglMapper.add(cwglModel);
-        if (list != 0) {
-            return new ResponseResult<>(true, "添加成功", null);
-        } else {
-            return new ResponseResult<>(false, "添加失败", null);
+    public ResponseResult<CwglModel> add(CwglModel cwglModel, String accid) throws Exception {
+        if (cwglModel != null) {
+            XmwpModel xmwpModel = xmwpMapper.findByUuid(cwglModel.getXmid());
+            if (xmwpModel != null && xmwpModel.getXmfzr().equals(accid)) {
+                if (xmwpModel.getYwzt() < 3) {
+                    int list = cwglMapper.add(cwglModel);
+                    if (list != 0) {
+                        return new ResponseResult<>(true, "添加成功");
+                    }
+                }
+                return new ResponseResult<>(false, "项目审核过后无法添加财务信息");
+            }
+            return new ResponseResult<>(false, "非项目负责人无法添加财务信息");
         }
+        return new ResponseResult<>(false, "添加失败");
     }
 
     @Transactional(rollbackFor = Exception.class)

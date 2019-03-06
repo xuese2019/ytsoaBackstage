@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -130,6 +131,7 @@ public class BgglModel implements Serializable {
     /**
      * 修改次数
      */
+    @ApiModelProperty(value = "修改次数", name = "xgcs", dataType = "int")
     private int xgcs;
     /**
      * 修改原因
@@ -162,8 +164,9 @@ public class BgglModel implements Serializable {
     /**
      * 归档有效期
      */
-    @ApiModelProperty(value = "归档有效期", name = "gdyxq", dataType = "int")
-    private int gdyxq;
+    @ApiModelProperty(value = "归档有效期", name = "gdyxq", dataType = "Integer")
+    @Min(value = 0, message = "最小值为0")
+    private Integer gdyxq;
 
     /**
      * 项目id
@@ -171,8 +174,6 @@ public class BgglModel implements Serializable {
     @ApiModelProperty(value = "项目子名称id", name = "xmzmcid", dataType = "String")
     private String xmid;
 
-    /*@ApiModelProperty(value = "报告类型", name = "model")
-    private BglxModel model;*/
     @ApiModelProperty(value = "编号", name = "bh", dataType = "int")
     private int bh;
     @ApiModelProperty(value = "多条报告", name = "bgs", dataType = "String")

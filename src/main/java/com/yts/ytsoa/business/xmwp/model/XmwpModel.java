@@ -131,4 +131,7 @@ public class XmwpModel implements Serializable {
     private int hhrsh;
     @ApiModelProperty(value = "质控部审核1是2否", name = "zkbsh", dataType = "int")
     private int zkbsh;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date xtsj;
 }

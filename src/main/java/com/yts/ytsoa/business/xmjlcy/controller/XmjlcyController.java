@@ -44,9 +44,10 @@ public class XmjlcyController {
     public ResponseResult<XmjlcyModel> add(@RequestBody XmjlcyModel xmjlcyModel, HttpServletRequest request) throws Exception {
         String accId = JWTUtils.getAccId(request);
         ResponseResult<String> xmfzr = xmwpService.findXmfzr(xmjlcyModel.getXmid());
-        if (xmfzr.isSuccess()) {
-            if (xmfzr.getData().equals(accId)) {
-                return xmjlcyService.add(xmjlcyModel);
+        if (xmfzr.getData().equals(accId)) {
+            ResponseResult<XmjlcyModel> add = xmjlcyService.add(xmjlcyModel);
+            if (add.isSuccess()) {
+                return new ResponseResult<>(true, "添加成功");
             }
         }
         return new ResponseResult<>(false, "只有项目负责人才能添加成员");

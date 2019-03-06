@@ -45,7 +45,7 @@ public class XmshServiceImpl implements XmshService {
         if (result != 0) {
             XmwpModel xmwpModel = new XmwpModel();
             xmwpModel.setUuid(xmshModel.getPrentid());
-            xmwpModel.setXmshzt(xmshModel.getShjg());
+            xmwpModel.setYwzt(xmshModel.getShjg());
             xmwpMapper.update(xmwpModel);
             return new ResponseResult<>(true, "审核记录添加成功");
         }

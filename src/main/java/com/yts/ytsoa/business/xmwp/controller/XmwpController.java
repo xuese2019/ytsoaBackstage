@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.xmwp.controller;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
+import com.yts.ytsoa.business.xmwp.model.XmwpShjlModel;
 import com.yts.ytsoa.business.xmwp.service.XmwpService;
 import com.yts.ytsoa.sys.shiro.JWTUtils;
 import com.yts.ytsoa.utils.ResponseResult;
@@ -63,9 +64,9 @@ public class XmwpController {
 
     @ApiOperation(value = "项目审核页面条件查询，分页")
     @RequestMapping(value = "/findByXmmc/{pageNow}", method = RequestMethod.POST)
-    public ResponseResult<PageInfo<XmwpModel>> findByXmmc(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
+    public ResponseResult<List<XmwpModel>> findByXmmc(@PathVariable(value = "pageNow") int pageNow, @RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
         String accId = JWTUtils.getAccId(request);
-        return xmwpService.findByXmmc(pageNow, yamlPageUtils.getPageSize(), model, accId);
+        return xmwpService.findxmsh(pageNow, model, accId);
     }
 
 
@@ -73,7 +74,6 @@ public class XmwpController {
     @RequestMapping(value = "/findByXmyq/{pageNow}", method = RequestMethod.POST)
     public ResponseResult<PageInfo<XmwpModel>> findByXmyq(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
         String accId = JWTUtils.getAccId(request);
-        /*  model.setXmfzr(accId);*/
         return xmwpService.findByXmyq(pageNow, yamlPageUtils.getPageSize(), model, accId);
     }
 
@@ -81,7 +81,6 @@ public class XmwpController {
     @RequestMapping(value = "/xmwpByXmmc/{pageNow}", method = RequestMethod.POST)
     public ResponseResult<PageInfo<XmwpModel>> xmwpByXmmc(@PathVariable("pathNow") int pageNow, @RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
         String accId = JWTUtils.getAccId(request);
-        /*  model.setWpr(accId);*/
         return xmwpService.findByXmmc(pageNow, yamlPageUtils.getPageSize(), model, accId);
     }
 
@@ -126,5 +125,17 @@ public class XmwpController {
     @RequestMapping(value = "/xmgl/{pageNow}", method = RequestMethod.POST)
     public ResponseResult<PageInfo<XmwpModel>> xmgl(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model) throws Exception {
         return xmwpService.find(pageNow, yamlPageUtils.getPageSize(), model);
+    }
+
+
+    @ApiOperation(value = "审核记录")
+    @RequestMapping(value = "/findByShjl/{prentid}", method = RequestMethod.GET)
+    public ResponseResult<List<XmwpShjlModel>> findByShjl(@PathVariable("prentid") String prentid) throws Exception {
+        ResponseResult<List<XmwpShjlModel>> result = xmwpService.findByShjl(prentid);
+        if (result != null) {
+            return new ResponseResult<>(true, "查询成功", result.getData());
+        } else {
+            return new ResponseResult<>(false, "没有审核记录");
+        }
     }
 }

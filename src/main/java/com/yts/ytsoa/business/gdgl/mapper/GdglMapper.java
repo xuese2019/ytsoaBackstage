@@ -7,6 +7,7 @@ import com.yts.ytsoa.business.gdgl.model.GdglResultModel;
 import com.yts.ytsoa.business.gdgl.query.GdglQueryModel;
 import com.yts.ytsoa.business.gdgl.result.ResultModel;
 import com.yts.ytsoa.business.xmcj.model.XmzmcModel;
+import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import org.apache.ibatis.annotations.*;
 
 import java.sql.SQLException;
@@ -74,4 +75,24 @@ public interface GdglMapper {
 
     @SelectProvider(type = GdglSql.class, method = "findGdByXmid")
     List<GdglModel> findGdByXmid(@Param("xmid") String xmid) throws SQLException;
+
+    /**
+     * 根据审核记录的uuid查出项目详情
+     *
+     * @param uuid
+     * @return
+     */
+    @SelectProvider(type = GdglSql.class, method = "findXmwpByShjlUuid")
+    XmwpModel findXmwpByShjlUuid(@Param("uuid") String uuid);
+
+    /**
+     * 根据项目的uuid查出所有归档记录
+     *
+     * @param uuid
+     * @return
+     */
+    @Select({
+            "SELECT d.* from xmwp_table x join dggd_table d on x.uuid=d.xmid where x.uuid=#{uuid}"
+    })
+    List<GdglModel> findGdglByXmUuid(@Param("uuid") String uuid);
 }

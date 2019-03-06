@@ -1,9 +1,12 @@
 package com.yts.ytsoa;
 
 
-import com.yts.ytsoa.business.gzrz.service.GzrzService;
-import com.yts.ytsoa.business.xxgl.service.XxglService;
+import com.yts.ytsoa.business.bggl.model.BgglModel;
+import com.yts.ytsoa.business.bggl.service.BgglService;
+import com.yts.ytsoa.business.rgtj.service.RgtjService;
+import com.yts.ytsoa.sys.spring.SpringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,8 +20,8 @@ import org.springframework.stereotype.Component;
 public class Scheduleds {
 
     @Autowired(required = false)
-    private XxglService xxglService;
-    private GzrzService gzrzService;
+    private RgtjService rgtjService;
+    private BgglService bgglService;
 
   /*  @Scheduled(cron = "0 0 11 * * ?") //每天00点0分0秒执行
     public void meals() {
@@ -37,22 +40,32 @@ public class Scheduleds {
         }
     }*/
 
- /*   @Scheduled(cron = "0 0 0 * * ?")// 每天凌晨统计
-    public void rgtj(resultModel model) throws Exception {
-        String format = new SimpleDateFormat("YYYY-mm-DD HH:MM:ss").format(System.currentTimeMillis());
-        if (xmcyService != null) {
-            xmcyService= SpringUtil.getBean(XmcyServiceImpl.class);
+    @Scheduled(cron = "0 0 0 * * ?")
+    /*@Scheduled(cron = "0/5 * * * * ?")*/
+    public void rgtj() throws Exception {
+        try {
+            if (rgtjService == null) {
+                rgtjService = SpringUtil.getBean(RgtjService.class);
+            }
+            rgtjService.insertRgtj();
+            System.out.println("人工统计中。。。");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        xmcyService.rgtj(1, 10000, model);
-    }*/
+    }
 
-//    @Scheduled(cron = "0 0 * * * ?")
-//    public void rgtj() throws Exception {
-//        if (gzrzService != null) {
-//            gzrzService = SpringUtil.getBean(GzrzServiceImpl.class);
-//        }
-//        GzrzModel gzrzModel = new GzrzModel();
-//        gzrzService.rgtj(1,100,gzrzModel);
-//        System.out.println("人工统计中。。。");
-//    }
+    @Scheduled(cron = "0 0 0 * * ?")
+    /*@Scheduled(cron = "0/1 * * * * ?")*/
+    public void updateGdyxq() throws Exception {
+        try {
+            if (bgglService == null) {
+                bgglService = SpringUtil.getBean(BgglService.class);
+            }
+            String accid = null;
+            bgglService.updateGdyxq(new BgglModel(), accid);
+            System.out.println("归档有效期修改中。。。");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

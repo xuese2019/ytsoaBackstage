@@ -44,7 +44,7 @@ public class TpsqServiceImpl implements TpsqService {
         if (page.getSize() > 0) {
             return new ResponseResult<>(true, "查询成功", page);
         } else {
-            return new ResponseResult<>(false, "查询失败", null);
+            return new ResponseResult<>(false, "查无信息", null);
         }
     }
 
@@ -58,7 +58,7 @@ public class TpsqServiceImpl implements TpsqService {
             tpsqMapper.update(tpsqModel);
             return new ResponseResult<>(true, "审核成功");
         }
-        return new ResponseResult<>(false, "审核失败");
+        return new ResponseResult<>(false, "审核未通过");
     }
 
 

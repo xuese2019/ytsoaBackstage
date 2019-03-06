@@ -23,7 +23,7 @@ public class JyglModel implements Serializable {
      * uuid主键
      */
 
-    @ApiModelProperty(value = "员工主键", name = "uuid", dataType = "String")
+    @ApiModelProperty(value = "主键", name = "uuid", dataType = "String")
     private String uuid;
     /**
      * 档案名称

@@ -20,5 +20,8 @@ public interface XmcjService {
 
     ResponseResult<List<XmzmcModel>> findXmzmc(XmzmcModel model) throws Exception;
 
+    ResponseResult<List<XmzmcModel>> findByXmzmcId(String uuid) throws Exception;
+
+
     /*ResponseResult<List<ResultModel>> findXmzmcByParentid(XmzmcModel model) throws Exception;*/
 }

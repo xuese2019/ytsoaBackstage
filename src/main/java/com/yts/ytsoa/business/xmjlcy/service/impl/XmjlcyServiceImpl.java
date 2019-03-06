@@ -33,9 +33,9 @@ public class XmjlcyServiceImpl implements XmjlcyService {
     public ResponseResult<XmjlcyModel> add(XmjlcyModel xmjlcyModel) throws Exception {
         int list = xmjlcyMapper.add(xmjlcyModel);
         if (list != 0) {
-            return new ResponseResult<>(true, "添加成功", null);
+            return new ResponseResult<>(true, "添加成功");
         } else {
-            return new ResponseResult<>(false, "添加失败", null);
+            return new ResponseResult<>(false, "添加失败");
         }
     }
 

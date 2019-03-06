@@ -3,16 +3,21 @@ package com.yts.ytsoa.business.xmwp.service.Impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.Xmshlc.mapper.XmshlcMapper;
+import com.yts.ytsoa.business.account.model.AccountModel;
 import com.yts.ytsoa.business.shjl.mapper.XmshMapper;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.shrsz.mapper.ShrszMapper;
 import com.yts.ytsoa.business.shrsz.model.ShrszModel;
+import com.yts.ytsoa.business.sz.mapper.SzMapper;
+import com.yts.ytsoa.business.sz.model.SzModel;
 import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
+import com.yts.ytsoa.business.xmwp.model.XmwpShjlModel;
 import com.yts.ytsoa.business.xmwp.service.XmwpService;
 import com.yts.ytsoa.business.xxgl.model.XxglModel;
 import com.yts.ytsoa.business.xxgl.service.XxglService;
 import com.yts.ytsoa.business.xxgl.utils.XxglUtils;
+import com.yts.ytsoa.utils.GetUuid;
 import com.yts.ytsoa.utils.ResponseResult;
 import com.yts.ytsoa.utils.poi.ExcelModelExportUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +44,9 @@ public class XmwpServiceImpl implements XmwpService {
     private XmshlcMapper xmshlcMapper;
     @Autowired
     private ShrszMapper shrszMapper;
+
+    @Autowired
+    private SzMapper szMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -83,46 +91,58 @@ public class XmwpServiceImpl implements XmwpService {
     }
 
     @Override
-    public ResponseResult<PageInfo<XmwpModel>> findByXmmc(int pageNow, int pageSize, XmwpModel model, String accId) throws Exception {
-        ShrszModel shrszModel = shrszMapper.findAllShr();
-        if (shrszModel != null) {
-            if (accId.equals(shrszModel.getBmjlid())) {
-                model.setYwzt(3);
-                PageHelper.startPage(pageNow, pageSize);
-                List<XmwpModel> list1 = xmwpMapper.findByXmmc(model);
-                PageInfo<XmwpModel> page1 = new PageInfo<>(list1);
-                if (page1.getSize() > 0) {
-                    return new ResponseResult<>(true, "查询成功", page1);
-                }
-                return new ResponseResult<>(false, "查无信息");
-            } else if (accId.equals(shrszModel.getZgbid())) {
-                model.setYwzt(4);
-                PageHelper.startPage(pageNow, pageSize);
-                List<XmwpModel> list1 = xmwpMapper.findByXmmc(model);
-                PageInfo<XmwpModel> page1 = new PageInfo<>(list1);
-                if (page1.getSize() > 0) {
-                    return new ResponseResult<>(true, "查询成功", page1);
-                }
-                return new ResponseResult<>(false, "查无信息");
-            } else if (accId.equals(shrszModel.getHhrid())) {
-                model.setYwzt(5);
-                PageHelper.startPage(pageNow, pageSize);
-                List<XmwpModel> list1 = xmwpMapper.findByXmmc(model);
-                PageInfo<XmwpModel> page1 = new PageInfo<>(list1);
-                if (page1.getSize() > 0) {
-                    return new ResponseResult<>(true, "查询成功", page1);
-                }
-                return new ResponseResult<>(false, "查无信息");
-            } else {
-                PageHelper.startPage(pageNow, pageSize);
-                model.setXmfzr(accId);
-                List<XmwpModel> list1 = xmwpMapper.findByXmmc(model);
-                PageInfo<XmwpModel> page1 = new PageInfo<>(list1);
-                if (page1.getSize() > 0) {
-                    return new ResponseResult<>(true, "查询成功", page1);
-                }
-                return new ResponseResult<>(false, "查无信息");
+    public ResponseResult<PageInfo<XmwpModel>> findByXmmc(int pageNow, int pageSize, XmwpModel model, String accid) throws Exception {
+        model.setXmfzr(accid);
+        PageHelper.startPage(pageNow, pageSize);
+        List<XmwpModel> list = xmwpMapper.findByXmmc(model);
+        PageInfo<XmwpModel> page = new PageInfo<>(list);
+        if (list.size() != 0) {
+            return new ResponseResult<>(true, "查询成功", page);
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
+    @Override
+    public ResponseResult<List<XmwpModel>> findxmsh(int pageNow, XmwpModel model, String accId) throws Exception {
+        List<XmwpModel> list = new ArrayList<>();
+
+        //项目负责人
+        PageHelper.startPage(pageNow, 5);
+        List<XmwpModel> list1 = xmwpMapper.first(accId);
+        if (list.size() != 0) {
+            list.addAll(list1);
+        }
+        //部门经理
+        AccountModel accountModel = xmwpMapper.acc(accId);
+        if (accountModel != null) {
+            model.setCjbm(accountModel.getBm());
+            PageHelper.startPage(pageNow, 5);
+            List<XmwpModel> list2 = xmwpMapper.seccond(accountModel.getBm());
+            if (list2.size() != 0) {
+                list.addAll(list2);
             }
+        }
+
+        //质控部
+        ShrszModel shrszModel = shrszMapper.findAllShr();
+        if (shrszModel != null && shrszModel.getZgbid().equals(accId)) {
+            PageHelper.startPage(pageNow, 5);
+            List<XmwpModel> list2 = xmwpMapper.third(4);
+            if (list2.size() != 0) {
+                list.addAll(list2);
+            }
+        }
+        //所长/合伙人
+        SzModel szModel = szMapper.findById(accId);
+        if (szModel != null) {
+            PageHelper.startPage(pageNow, 5);
+            List<XmwpModel> list2 = xmwpMapper.third(5);
+            if (list2.size() != 0) {
+                list.addAll(list2);
+            }
+        }
+        if (list.size() != 0) {
+            return new ResponseResult<>(true, "查询成功", list);
         }
         return new ResponseResult<>(false, "查无信息");
     }
@@ -164,107 +184,114 @@ public class XmwpServiceImpl implements XmwpService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public ResponseResult<XmshModel> xmsh(XmshModel model, String accid) throws Exception {
+        String uuid = GetUuid.getUUID();
         String xmfzr = xmwpMapper.findXmfzr(model.getPrentid());
         ShrszModel shrszModel = shrszMapper.findAllShr();
-        if (accid.equals(xmfzr)) {
-            model.setShsj(new Date());
-            model.setShr(accid);
-            int result = xmshMapper.add(model);
-            if (result != 0) {
-                XmwpModel xmwpModel = new XmwpModel();
-                xmwpModel.setUuid(model.getPrentid());
-                xmwpModel.setYwzt(3);
-                xmwpMapper.updateYwzt(xmwpModel);
-                return new ResponseResult<>(true, "审核成功");
-            }
-        } else if (shrszModel != null) {
-            if (accid.equals(shrszModel.getBmjlid())) {
-                XmwpModel xmwpModel = xmwpMapper.findById(model.getPrentid());
-                if (xmwpModel != null) {
-                    if (xmwpModel.getYwzt() == 3) {
-                        model.setShr(accid);
-                        model.setShsj(new Date());
-                        int result = xmshMapper.add(model);
-                        if (result != 0) {
-                            if (model.getShjg() == 2) {
+        XmwpModel xmwpModel = xmwpMapper.findByUuid(model.getPrentid());
+        if (xmwpModel != null) {
+            if (model.getShjg() == 2) {
+                switch (xmwpModel.getYwzt()) {
+                    case 2:
+                        if (accid.equals(xmfzr)) {
+                            model.setUuid(uuid);
+                            model.setShr(accid);
+                            model.setShsj(new Date());
+                            int result = xmshMapper.add(model);
+                            if (result != 0) {
+                                XmwpModel xmwpModel1 = new XmwpModel();
+                                xmwpModel1.setUuid(model.getPrentid());
+                                xmwpModel1.setYwzt(3);
+                                xmwpMapper.updateYwzt(xmwpModel1);
+                                return new ResponseResult<>(true, "审核成功");
+                            }
+                        }
+                        return new ResponseResult<>(false, "非项目经理不可审核");
+                    case 3:
+                        AccountModel accountModel = xmwpMapper.acc(accid);
+                        if (accountModel != null && accountModel.getBm().equals(xmwpModel.getCjbm())) {
+                            model.setUuid(uuid);
+                            model.setShr(accid);
+                            model.setShsj(new Date());
+                            int result = xmshMapper.add(model);
+                            if (result != 0) {
                                 XmwpModel xmwpModel1 = new XmwpModel();
                                 xmwpModel1.setUuid(model.getPrentid());
                                 xmwpModel1.setYwzt(4);
                                 xmwpMapper.updateYwzt(xmwpModel1);
+                                return new ResponseResult<>(true, "审核成功");
                             }
-                            return new ResponseResult<>(true, "审核成功");
                         }
-                    }
-                    return new ResponseResult<>(false, "项目经理未审，部门经理不可审核");
-                }
-            } else if (accid.equals(shrszModel.getZgbid())) {
-                XmwpModel xmwpModel = xmwpMapper.findById(model.getPrentid());
-                if (xmwpModel != null) {
-                    if (xmwpModel.getYwzt() == 4) {
-                        model.setShr(accid);
-                        model.setShsj(new Date());
-                        int result = xmshMapper.add(model);
-                        if (result != 0) {
-                            Integer hhrsh = xmwpMapper.hhrsh(model.getPrentid());
-                            if (hhrsh != null) {
-                                if (hhrsh == 0) {
-                                    if (model.getShjg() == 2) {
-                                        XmwpModel xmwpModel1 = new XmwpModel();
-                                        xmwpModel1.setUuid(model.getPrentid());
-                                        xmwpModel1.setYwzt(5);
-                                        xmwpMapper.updateYwzt(xmwpModel1);
-                                    }
+                        return new ResponseResult<>(false, "非部门经理不可审核");
+                    case 4:
+                        if (shrszModel != null && shrszModel.getZgbid().equals(accid)) {
+                            model.setUuid(uuid);
+                            model.setShr(accid);
+                            model.setShsj(new Date());
+                            int result = xmshMapper.add(model);
+                            if (result != 0) {
+                                if (xmwpModel.getHhrsh() == 1) {
+                                    XmwpModel xmwpModel1 = new XmwpModel();
+                                    xmwpModel1.setUuid(model.getPrentid());
+                                    xmwpModel1.setYwzt(5);
+                                    xmwpMapper.updateYwzt(xmwpModel1);
+                                    return new ResponseResult<>(true, "审核成功");
                                 } else {
-                                    if (model.getShjg() == 2) {
-                                        XmwpModel xmwpModel1 = new XmwpModel();
-                                        xmwpModel1.setUuid(model.getPrentid());
-                                        xmwpModel1.setYwzt(6);
-                                        xmwpMapper.updateYwzt(xmwpModel1);
-                                    }
+                                    XmwpModel xmwpModel1 = new XmwpModel();
+                                    xmwpModel1.setUuid(model.getPrentid());
+                                    xmwpModel1.setYwzt(6);
+                                    xmwpMapper.updateYwzt(xmwpModel1);
+                                    return new ResponseResult<>(true, "审核成功");
                                 }
                             }
-                            return new ResponseResult<>(true, "审核成功");
                         }
-                    }
-                    return new ResponseResult<>(false, "部门经理未审，质控部不可审");
+                        return new ResponseResult<>(false, "非质控部经理不可审核");
+                    case 5:
+                        SzModel szModel = szMapper.findById(accid);
+                        if (szModel != null) {
+                            model.setUuid(uuid);
+                            model.setShr(accid);
+                            model.setShsj(new Date());
+                            int result = xmshMapper.add(model);
+                            if (result != 0) {
+                                XmwpModel xmwpModel1 = new XmwpModel();
+                                xmwpModel1.setUuid(model.getPrentid());
+                                xmwpModel1.setYwzt(6);
+                                xmwpMapper.updateYwzt(xmwpModel1);
+                                return new ResponseResult<>(true, "审核成功");
+                            }
+                        }
+                        return new ResponseResult<>(false, "非合伙人不可审核");
+                    default:
+                        return new ResponseResult<>(false, "项目已完成审核");
                 }
-            } else if (accid.equals(shrszModel.getHhrid())) {
-                XmwpModel xmwpModel = xmwpMapper.findById(model.getPrentid());
-                if (xmwpModel != null) {
-                    if (xmwpModel.getYwzt() == 5) {
-                        model.setShr(accid);
-                        model.setShsj(new Date());
-                        int result = xmshMapper.add(model);
-                        if (result != 0) {
-                            XmwpModel xmwpModel1 = new XmwpModel();
-                            xmwpModel1.setUuid(model.getPrentid());
-                            xmwpModel1.setYwzt(6);
-                            xmwpMapper.updateYwzt(xmwpModel1);
-                            return new ResponseResult<>(true, "审核成功");
-                        }
-                    }
-                    return new ResponseResult<>(false, "质控部未审，项目合伙人不可审核");
+            } else {
+                model.setUuid(uuid);
+                model.setShr(accid);
+                model.setShsj(new Date());
+                int result = xmshMapper.add(model);
+                if (result != 0) {
+                    XmwpModel xmwpModel1 = new XmwpModel();
+                    xmwpModel1.setUuid(model.getPrentid());
+                    xmwpModel1.setYwzt(2);
+                    xmwpMapper.updateYwzt(xmwpModel1);
+                    return new ResponseResult<>(true, "审核成功");
                 }
             }
         }
-        return new ResponseResult<>(false, "权限不足，审核失败");
+        return new ResponseResult<>(false, "该项目未找到");
     }
 
     @Override
     public ResponseResult<PageInfo<XmwpModel>> findByXmyq(int pageNow, int pageSize, XmwpModel model, String accId) throws Exception {
-      /*  long s = model.getXmxcjssj().getTime();
-        long dd = System.currentTimeMillis();*/
-        /* if (s == dd) {*/
         PageHelper.startPage(pageNow, pageSize);
         List<XmwpModel> list = xmwpMapper.findByXmyq(model);
         PageInfo<XmwpModel> page = new PageInfo<>(list);
         if (page.getSize() > 0) {
             return new ResponseResult<>(true, "查询成功", page);
-       /*     }
-            return new ResponseResult<>(true, "项目需要延期");*/
         }
         return new ResponseResult<>(false, "查询失败");
     }
+
 
     @Override
     public ResponseResult<PageInfo<XmwpModel>> find(int pageNow, int pageSize, XmwpModel model) throws Exception {
@@ -306,5 +333,15 @@ public class XmwpServiceImpl implements XmwpService {
             return new ResponseResult<>(true, "查询成功", page1);
         }
         return new ResponseResult<>(false, "查无信息");
+    }
+
+    @Override
+    public ResponseResult<List<XmwpShjlModel>> findByShjl(String prentid) throws Exception {
+        List<XmwpShjlModel> list = xmwpMapper.findByShjl(prentid);
+        if (list.size() > 0) {
+            return new ResponseResult<>(true, "查询成功", list);
+        } else {
+            return new ResponseResult<>(false, "无审核记录");
+        }
     }
 }

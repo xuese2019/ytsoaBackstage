@@ -32,6 +32,7 @@ public class BgglSql {
                 VALUES("xgyy", "#{model.xgyy}");
                 VALUES("xmid", "#{model.xmid}");
                 VALUES("shjg", "#{model.shjg}");
+                VALUES("gdyxq", "#{model.gdyxq}");
             }
         }.toString();
     }
@@ -83,7 +84,6 @@ public class BgglSql {
         }.toString();
     }
 
-
     public String findBgByXmid(@Param("xmid") String xmid) {
         return new SQL() {
             {
@@ -103,6 +103,31 @@ public class BgglSql {
                         "FROM xmzmc_table x \n" +
                         "WHERE x.parentid=#{xmid} and b.shjg=6\n" +
                         ")");
+            }
+        }.toString();
+    }
+
+    public String updateGdyxq(@Param("model") BgglModel model) {
+        return new SQL() {
+            {
+                UPDATE(Tables.BGGL_TABLE);
+                if (model.getGdyxq() != null) {
+                    SET("gdyxq=#{model.gdyxq}");
+                }
+                WHERE("uuid=#{model.uuid}");
+            }
+        }.toString();
+    }
+
+    public String findXmYwztByBgXmid(@Param("prentid") String prentid) {
+        return new SQL() {
+            {
+                SELECT("xm.*");
+                FROM(" shjl_table s join bggl_table b on b.uuid=s.prentid join xmzmc_table x on x.uuid=b.xmid left JOIN xmwp_table xm on xm.uuid=x.parentid");
+                if (prentid != null && !prentid.isEmpty()) {
+                    WHERE("s.prentid=#{prentid}");
+                }
+                WHERE("s.shjg=2");
             }
         }.toString();
     }

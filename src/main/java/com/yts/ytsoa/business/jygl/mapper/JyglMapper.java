@@ -23,6 +23,10 @@ public interface JyglMapper {
     @SelectProvider(type = JyglSql.class, method = "findAllSql")
     List<JyglModel> findAll(@Param("model") JyglModel jyglModel) throws SQLException;
 
+
+    @SelectProvider(type = JyglSql.class, method = "findAllJyjl")
+    List<JyglModel> findAllJyjl(@Param("model") JyglModel jyglModel) throws SQLException;
+
     @Select({
             "select j.uuid,j.dgjybh,d.damc,j.jyrq,a.name as 'jyr'  from jygl_table j join dggd_table d on d.gdsqbh_hz=j.dgjybh join account_table a on a.uuid=j.jyr where j.uuid = #{uuid}"
     })

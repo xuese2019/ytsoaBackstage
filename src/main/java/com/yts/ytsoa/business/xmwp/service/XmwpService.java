@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.xmwp.service;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.business.shjl.model.XmshModel;
 import com.yts.ytsoa.business.xmwp.model.XmwpModel;
+import com.yts.ytsoa.business.xmwp.model.XmwpShjlModel;
 import com.yts.ytsoa.utils.ResponseResult;
 
 import java.util.List;
@@ -43,6 +44,15 @@ public interface XmwpService {
      * @throws Exception
      */
     ResponseResult<XmwpModel> findById(String uuid) throws Exception;
+
+    /**
+     * 项目审核
+     *
+     * @param
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<List<XmwpModel>> findxmsh(int pageNow, XmwpModel model, String accid) throws Exception;
 
     /**
      * 分页，条件查询，默认查询所有项目名称
@@ -106,4 +116,6 @@ public interface XmwpService {
      * @throws Exception
      */
     ResponseResult<PageInfo<XmwpModel>> xmgl(int pageNow, int pageSize, XmwpModel model) throws Exception;
+
+    ResponseResult<List<XmwpShjlModel>> findByShjl(String prentid) throws Exception;
 }
