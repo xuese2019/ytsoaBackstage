@@ -25,7 +25,7 @@ public interface XmcyService {
      */
     ResponseResult<PageInfo<XmcyModel>> find(int pageNow, int pageSize, XmcyModel model) throws Exception;
 
-    ResponseResult<XmcyModel> update(XmcyModel model,String accid) throws Exception;
+    ResponseResult<XmcyModel> update(XmcyModel model, String accid) throws Exception;
 
     /*    *//**
      * 人工统计
@@ -40,7 +40,7 @@ public interface XmcyService {
     /**
      * 添加项目成员
      */
-    ResponseResult<XmcyModel> insertXmcy(XmcyModel model,String accid) throws Exception;
+    ResponseResult<XmcyModel> insertXmcy(XmcyModel model, String accid) throws Exception;
 
     /**
      * 查出项目中的员工

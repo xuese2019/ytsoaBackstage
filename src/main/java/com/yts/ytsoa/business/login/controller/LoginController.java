@@ -5,6 +5,7 @@ import com.yts.ytsoa.business.account.model.AdminModel;
 import com.yts.ytsoa.business.account.model.interfaces.AccountLogin;
 import com.yts.ytsoa.business.account.service.AccountService;
 import com.yts.ytsoa.sys.shiro.JWTUtils;
+import com.yts.ytsoa.utils.PC2Utils;
 import com.yts.ytsoa.utils.ResponseResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,8 +38,12 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseResult<String> login(@Validated(value = AccountLogin.class) @RequestBody AccountModel model,
                                         BindingResult result) throws Exception {
+        boolean pc = PC2Utils.pc();
+        if (!pc) {
+            return new ResponseResult<>(false, "程序未激活");
+        }
         if (result.hasErrors()) {
-            return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage(), null);
+            return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage());
         }
         String md5Password = DigestUtils.md5DigestAsHex(model.getPassword().getBytes(StandardCharsets.UTF_8));
 //        验证输入的信息

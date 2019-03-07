@@ -6,6 +6,7 @@ import com.yts.ytsoa.business.account.model.AdminModel;
 import com.yts.ytsoa.business.account.service.AccountService;
 import com.yts.ytsoa.business.qxfy.service.QxfyService;
 import com.yts.ytsoa.business.qxgl.model.QxglModel;
+import com.yts.ytsoa.utils.PC2Utils;
 import com.yts.ytsoa.utils.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -76,6 +77,10 @@ public class StatelessRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
+        boolean pc = PC2Utils.pc();
+        if (!pc) {
+            throw new UnknownAccountException("程序未激活");
+        }
         String token = (String) authcToken.getPrincipal();
         if (token == null)
             throw new UnknownAccountException("令牌丢失!");

@@ -1,6 +1,7 @@
 package com.yts.ytsoa;
 
 import com.yts.ytsoa.utils.FileUtils;
+import com.yts.ytsoa.utils.PCUtils;
 import com.yts.ytsoa.utils.yamlutils.YamlFileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ public class MyApplicationRunner implements ApplicationRunner {
         FileUtils.judeDirExists(new File(yamlFileUtils.getFileModel()));
         FileUtils.judeDirExists(new File(yamlFileUtils.getDowPath()));
         FileUtils.judeDirExists(new File(yamlFileUtils.getUpPath()));
+        String c = PCUtils.getSerialNumber("C");
+        log.info(c);
     }
 
     /**

@@ -10,7 +10,7 @@ public class TpsqSql {
     public String findAllSql(@Param("model") TpsqModel model) {
         return new SQL() {
             {
-                SELECT("t.uuid,t.kpbh,t.tpje,a.name as tpsqr,t.xmfzr as name,t.fplb,t.fpsqr,t.tpsqsj");
+                SELECT("t.uuid,t.kpbh,t.tpje,a.name as tpsqr,t.xmfzr,t.fplb,t.fpsqr,t.tpsqsj,t.shjg");
                 FROM("tpsq_table t LEFT JOIN account_table a on t.tpsqr=a.name");
                 if (model.getBh() != null && !model.getBh().isEmpty()) {
                     WHERE("bh like concat('%',#{model.bh},'%')");

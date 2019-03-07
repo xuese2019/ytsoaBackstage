@@ -104,4 +104,5 @@ public class JyglModel implements Serializable {
      */
     @ApiModelProperty(value = "审核结果", name = "shjg", dataType = "int")
     private int shjg;
+
 }

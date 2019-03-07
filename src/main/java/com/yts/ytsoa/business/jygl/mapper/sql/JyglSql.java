@@ -27,8 +27,8 @@ public class JyglSql {
                 if ((jyglModel.getShjg() == 1) || (jyglModel.getShjg() == 3)) {
                     WHERE("j.shjg=1 or j.shjg=3");
                 }
-                if ((jyglModel.getShjg() == 2)) {
-                    WHERE("j.shjg=2 ");
+                if ((jyglModel.getShjg() != 0)) {
+                    WHERE("j.shjg=#{model.shjg} ");
                 }
                 if (jyglModel.getJyzt() != 0) {
                     WHERE("j.jyzt=#{model.jyzt}");
