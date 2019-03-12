@@ -86,6 +86,7 @@ public class BgglServiceImpl implements BgglService {
         List<BgglModel> one = bgglMapper.one(accid);
         if (one.size() > 0) {
             list5.addAll(one);
+            return new ResponseResult<>(true, "成功", list5);
         }
 //        第二种  部门经理
         AccountModel acc = bgglMapper.acc(accid);
@@ -99,7 +100,7 @@ public class BgglServiceImpl implements BgglService {
 //        第三种 质管部
         List<BgshrModel> list2 = bgshrMapper.find2();
         if (list2.size() > 0 && list2.get(0) != null) {
-            if (list2.get(0).getZkbid() != null && !list2.get(0).getZkbid().isEmpty()) {
+            if (list2.get(0).getZkbid() != null && !list2.get(0).getZkbid().isEmpty() && list2.get(0).getZkbid().equals(accid)) {
                 PageHelper.startPage(pageNow, 5);
                 List<BgglModel> three = bgglMapper.three(3);
                 if (three.size() > 0) {
@@ -192,12 +193,14 @@ public class BgglServiceImpl implements BgglService {
         List<BgglModel> list = bgglMapper.findAllBgs();
         if (list.size() != 0) {
             for (int i = 0; i < list.size(); i++) {
-                model.setGdyxq(list.get(i).getGdyxq() - 1);
-                model.setUuid(list.get(i).getUuid());
-                bgglMapper.updateGdyxq(model);
-                XmwpModel xmwpModel = bgglMapper.findByXmid(list.get(i).getXmid());
-                if (list.get(i).getGdyxq() < 1) {
-                    xxglService.save(new XxglUtils().setXx(7, "归档有效期不足1天,报告名称为：" + list.get(i).getXmmc(), model.getBgbh(), accid, xmwpModel.getXmfzr()));
+                if (list.get(i).getShjg() == 5 && list.get(i).getGdzt() == 1) {
+                    model.setGdyxq(list.get(i).getGdyxq() - 1);
+                    model.setUuid(list.get(i).getUuid());
+                    bgglMapper.updateGdyxq(model);
+                    XmwpModel xmwpModel = bgglMapper.findByXmid(list.get(i).getXmid());
+                    if (list.get(i).getGdyxq() < 1) {
+                        xxglService.save(new XxglUtils().setXx(7, "归档有效期不足1天,报告名称为：" + list.get(i).getXmmc(), model.getBgbh(), accid, xmwpModel.getXmfzr()));
+                    }
                 }
             }
             return new ResponseResult<>(true, "归档有效期修改成功");
@@ -226,7 +229,7 @@ public class BgglServiceImpl implements BgglService {
                         bgglMapper.updateShjgByUuid(one.getUuid(), 3);
                         return new ResponseResult<>(true, "审核成功");
                     case 3:
-                        XmwpModel xm = bgglMapper.getXm(one.getXmid());
+                        XmwpModel xm = bgglMapper.getXm(model.getPrentid());
                         if (xm == null) {
                             return new ResponseResult<>(false, "项目已不存在");
                         }
@@ -234,7 +237,7 @@ public class BgglServiceImpl implements BgglService {
                             bgglMapper.updateShjgByUuid(model.getPrentid(), 4);
                         } else {
                             bgglMapper.updateShjgByUuid(model.getPrentid(), 6);
-                            XmwpModel xmwpModel = bgglMapper.findXmYwztByBgXmid(model.getPrentid());
+                            XmwpModel xmwpModel = bgglMapper.getXm(model.getPrentid());
                             if (xmwpModel != null) {
                                 List<BgglModel> list = bgglMapper.findBgsByUuid(xmwpModel.getUuid());
                                 for (int i = 0; i < list.size(); i++) {
@@ -250,7 +253,7 @@ public class BgglServiceImpl implements BgglService {
                         return new ResponseResult<>(true, "审核成功");
                     case 4:
                         bgglMapper.updateShjgByUuid(one.getUuid(), 6);
-                        XmwpModel xmwpModel = bgglMapper.findXmYwztByBgXmid(model.getPrentid());
+                        XmwpModel xmwpModel = bgglMapper.getXm(model.getPrentid());
                         if (xmwpModel != null) {
                             List<BgglModel> list = bgglMapper.findBgsByUuid(xmwpModel.getUuid());
                             for (int i = 0; i < list.size(); i++) {
@@ -285,6 +288,7 @@ public class BgglServiceImpl implements BgglService {
                 } else {
                     model.setShjg(1);
                     model.setGdyxq(60);
+                    model.setGdzt(1);
                     bgglMapper.addBggl(model);
                     return new ResponseResult<>(true, "报告出具成功");
                 }

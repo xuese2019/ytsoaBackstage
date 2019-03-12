@@ -51,12 +51,22 @@ public class LoginController {
         if (result1.isSuccess()) {
             AccountModel model1 = result1.getData().get(0);
             if (md5Password.equals(model1.getPassword())) {
-                try {
-                    String s = JWTUtils.creaToken(result1.getData().get(0).getAccount(), result1.getData().get(0).getUuid(), result1.getData().get(0).getBm());
-                    return new ResponseResult<>(true, "成功", s);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    return new ResponseResult<>(false, "令牌生成错误");
+                int zt = model1.getYgzt();
+                switch (zt) {
+                    case 1:
+                        try {
+                            String s = JWTUtils.creaToken(result1.getData().get(0).getAccount(), result1.getData().get(0).getUuid(), result1.getData().get(0).getBm());
+                            return new ResponseResult<>(true, "成功", s);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return new ResponseResult<>(false, "令牌生成错误");
+                        }
+                    case 2:
+                        return new ResponseResult<>(false, "您在休假状态，不能登录系统");
+                    case 3:
+                        return new ResponseResult<>(false, "账号密码错误!!!");
+                    default:
+                        return new ResponseResult<>(false, "账号异常!!!");
                 }
             }
         } else {

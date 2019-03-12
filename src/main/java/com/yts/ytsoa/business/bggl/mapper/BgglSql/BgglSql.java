@@ -53,6 +53,9 @@ public class BgglSql {
                 if (model.getShjg() != 0) {
                     SET("shjg=#{model.shjg}");
                 }
+                if (model.getGdzt() != 0) {
+                    SET("gdzt=#{model.gdzt}");
+                }
                 WHERE("uuid=#{model.uuid}");
             }
         }.toString();
@@ -61,10 +64,11 @@ public class BgglSql {
     public String find(@Param("model") BgglModel model) {
         return new SQL() {
             {
-                SELECT("b.*,x.xmzmc,a.name as zbr");
+                SELECT("b.uuid,b.bgbh,b.bgzbr,b.sqf,b.bglx,b.bgcs,b.bgrq,b.shjg,b.gdyxq,x.xmzmc,a.name as zbr,xx.xmmc as xmmc");
                 FROM(Tables.BGGL_TABLE + " b ");
                 LEFT_OUTER_JOIN("xmzmc_table x on b.xmid=x.uuid");
                 LEFT_OUTER_JOIN("account_table a on a.uuid=b.bgzbr");
+                LEFT_OUTER_JOIN("xmwp_table xx on xx.uuid=x.parentid");
                 if (model.getXmmc() != null && !model.getXmmc().isEmpty()) {
                     WHERE("b.xmmc like concat ('%',#{model.xmmc},'%')");
                 }

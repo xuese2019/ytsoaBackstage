@@ -1,5 +1,7 @@
 package com.yts.ytsoa.business.account.controller;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.yts.ytsoa.GlobalExceptionHandler;
 import com.yts.ytsoa.business.account.model.AccountModel;
@@ -23,7 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * //@GetMapping 因为此类注解某些情况可能存在兼容性，不推荐这种类型的注解
@@ -223,5 +227,16 @@ public class AccountController {
             return new ResponseResult<>(false, result.getAllErrors().get(0).getDefaultMessage());
         }*/
         return service.updById(model);
+    }
+
+    @ApiOperation(value = "项目承接，搜索除项目负责人外所有的员工，项目的id：uuid，员工的姓名：name")
+    @RequestMapping(value = "/findExceptXmfzr/{uuid}", method = RequestMethod.POST)
+    public ResponseResult<List<AccountModel>> findExceptXmfzr(@PathVariable(value = "uuid") String uuid,
+                                                              @RequestBody String mc) throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        JavaType javaType2 = mapper.getTypeFactory().constructParametricType(HashMap.class, String.class, String.class);
+        Map<String, String> userMap = mapper.readValue(mc, javaType2);
+        String mc1 = userMap.get("mc");
+        return service.findExceptXmfzr(uuid, mc1);
     }
 }

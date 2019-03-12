@@ -41,4 +41,13 @@ public interface AccountService {
     ResponseResult<AccountModel> getAdminByAccount(AdminModel model) throws Exception;
 
     ResponseResult<AccountModel> updById(AccountModel model) throws Exception;
+
+    /**
+     * 用于项目承接，搜索除项目负责人外的所有员工
+     *
+     * @param uuid
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<List<AccountModel>> findExceptXmfzr(String uuid, String name) throws Exception;
 }

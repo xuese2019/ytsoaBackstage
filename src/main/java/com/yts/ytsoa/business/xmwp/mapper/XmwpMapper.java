@@ -168,22 +168,24 @@ public interface XmwpMapper {
     AccountModel acc(@Param("accid") String accid);
 
     @Select({
-            "select * from xmwp_table where xmfzr=#{xmfzr} and ywzt=2"
+            "select x.uuid,x.ywzt,x.xmmc,x.wtf,x.bsjdw,x.ywlx,x.xmfl,b.bmmc as cjbm,a.name as xmfzr from xmwp_table x join bumen_table b on b.uuid=x.cjbm join account_table a on a.uuid=x.xmfzr where x.xmfzr=#{xmfzr} and x.ywzt=2"
     })
     List<XmwpModel> first(@Param("xmfzr") String xmfzr);
 
     @Select({
-            "select * from xmwp_table where cjbm=#{bm} and ywzt=3"
+            "select x.uuid,x.ywzt,x.xmmc,x.wtf,x.bsjdw,x.ywlx,x.xmfl,b.bmmc as cjbm,a.name as xmfzr from xmwp_table x join bumen_table b on b.uuid=x.cjbm join account_table a on a.uuid=x.xmfzr where x.cjbm=#{bm} and x.ywzt=3"
     })
     List<XmwpModel> seccond(@Param("bm") String bm);
 
     @Select({
-            "select * from xmwp_table where ywzt=#{ywzt}"
+            "select x.uuid,x.ywzt,x.xmmc,x.wtf,x.bsjdw,x.ywlx,x.xmfl,b.bmmc as cjbm,a.name as xmfzr from xmwp_table x join bumen_table b on b.uuid=x.cjbm join account_table a on a.uuid=x.xmfzr where x.ywzt=#{ywzt}"
     })
     List<XmwpModel> third(@Param("ywzt") int ywzt);
 
     @Select({
-            "select * from xmwp_table where uuid=#{uuid}"
+            "select x.uuid,x.ywzt,x.xmmc,x.wtf,x.xmfzr,x.bsjdw,x.ywlx,x.xmfl,b.bmmc as cjbm,a.name as xmfzr from xmwp_table x join bumen_table b on b.uuid=x.cjbm join account_table a on a.uuid=x.xmfzr where x.uuid=#{uuid}"
     })
     XmwpModel findByUuid(@Param("uuid") String uuid);
+
+
 }

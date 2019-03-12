@@ -187,7 +187,7 @@ public class XmwpServiceImpl implements XmwpService {
         String uuid = GetUuid.getUUID();
         String xmfzr = xmwpMapper.findXmfzr(model.getPrentid());
         ShrszModel shrszModel = shrszMapper.findAllShr();
-        XmwpModel xmwpModel = xmwpMapper.findByUuid(model.getPrentid());
+        XmwpModel xmwpModel = xmwpMapper.findXmwpByUuid(model.getPrentid());
         if (xmwpModel != null) {
             if (model.getShjg() == 2) {
                 switch (xmwpModel.getYwzt()) {
@@ -294,7 +294,18 @@ public class XmwpServiceImpl implements XmwpService {
 
 
     @Override
-    public ResponseResult<PageInfo<XmwpModel>> find(int pageNow, int pageSize, XmwpModel model) throws Exception {
+    public ResponseResult<PageInfo<XmwpModel>> find(int pageNow, int pageSize, XmwpModel model, String accid) throws Exception {
+        PageHelper.startPage(pageNow, pageSize);
+        List<XmwpModel> list1 = xmwpMapper.findByXmmc(model);
+        PageInfo<XmwpModel> page1 = new PageInfo<>(list1);
+        if (page1.getSize() > 0) {
+            return new ResponseResult<>(true, "查询成功", page1);
+        }
+        return new ResponseResult<>(false, "查无信息");
+    }
+
+    @Override
+    public ResponseResult<PageInfo<XmwpModel>> findCjByXmmc(int pageNow, int pageSize, XmwpModel model) throws Exception {
         PageHelper.startPage(pageNow, pageSize);
         List<XmwpModel> list1 = xmwpMapper.findByXmmc(model);
         PageInfo<XmwpModel> page1 = new PageInfo<>(list1);
@@ -313,12 +324,14 @@ public class XmwpServiceImpl implements XmwpService {
      * @return
      */
     @Override
-    public ResponseResult<List<XmwpModel>> findByXmfzr(XmwpModel model, String accid) throws Exception {
+    public ResponseResult<PageInfo<XmwpModel>> findByXmfzr(int pageNow, int pageSize, XmwpModel model, String accid) throws Exception {
         if (model != null) {
+            PageHelper.startPage(pageNow, pageSize);
             model.setXmfzr(accid);
             List<XmwpModel> list = xmwpMapper.findByXmfzr(model);
+            PageInfo<XmwpModel> page = new PageInfo<>(list);
             if (list.size() != 0) {
-                return new ResponseResult<>(true, "查询成功", list);
+                return new ResponseResult<>(true, "查询成功", page);
             }
         }
         return new ResponseResult<>(false, "查无信息");
@@ -343,5 +356,17 @@ public class XmwpServiceImpl implements XmwpService {
         } else {
             return new ResponseResult<>(false, "无审核记录");
         }
+    }
+
+    @Override
+    public ResponseResult<PageInfo<XmwpModel>> findXmwpByXmfzr(int pageNow, int pageSize, XmwpModel model, String accid) throws Exception {
+        PageHelper.startPage(pageNow, pageSize);
+        model.setXmfzr(accid);
+        List<XmwpModel> list = xmwpMapper.findByXmmc(model);
+        PageInfo<XmwpModel> page = new PageInfo<>(list);
+        if (page.getSize() > 0) {
+            return new ResponseResult<>(true, "查询成功", page);
+        }
+        return new ResponseResult<>(false, "查无信息");
     }
 }

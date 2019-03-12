@@ -83,4 +83,9 @@ public interface AccountMapper {
             "select  a.*   from  account_table a   where a.uuid=#{uuid}"
     })
     AccountModel findById(@Param("uuid") String uuid) throws SQLException;
+
+    @Select({
+            "select * from account_table where uuid!=#{uuid} and name like concat('%',#{name},'%')"
+    })
+    List<AccountModel> findExceptXmfzr(@Param("uuid") String uuid, @Param("name") String name) throws SQLException;
 }

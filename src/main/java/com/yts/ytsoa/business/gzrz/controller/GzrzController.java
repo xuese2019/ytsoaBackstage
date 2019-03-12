@@ -55,6 +55,9 @@ public class GzrzController {
     @ApiOperation(value = "修改日志提交时间")
     @RequestMapping(value = "/updateTjsj", method = RequestMethod.PUT)
     public ResponseResult<RztjsjModel> updateTjsj(@RequestBody RztjsjModel model) throws Exception {
+    /*    if (model.getTjsj() == null) {
+            return gzrzService
+        }*/
         return gzrzService.updateTjsj(model);
     }
 

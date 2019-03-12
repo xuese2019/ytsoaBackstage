@@ -5,15 +5,40 @@ import com.yts.ytsoa.utils.ResponseResult;
 
 public interface BgflbhService {
 
-    /**
-     * 统计所有报告类型条数
-     */
-    /*ResponseResult<BgflbhModel> upd(BgflbhModel model) throws Exception;*/
-
-    /**
-     * 根据报告类型生成编号
-     */
-    /*ResponseResult<Integer> autoBh(BgflbhModel model) throws Exception;*/
-
     ResponseResult<BglxModel> find(BglxModel model) throws Exception;
+
+    /**
+     * 第一种报告编号归零
+     *
+     * @return
+     */
+    ResponseResult<BglxModel> updateFirstBglx();
+
+    /**
+     * 第二种报告编号归零
+     *
+     * @return
+     */
+    ResponseResult<BglxModel> updateSeccondBglx();
+
+    /**
+     * 第三种报告编号归零
+     *
+     * @return
+     */
+    ResponseResult<BglxModel> updateThirdBglx();
+
+    /**
+     * 第四种报告编号归零
+     *
+     * @return
+     */
+    ResponseResult<BglxModel> updateForthBglx();
+
+    /**
+     * 第五种报告编号归零
+     *
+     * @return
+     */
+    ResponseResult<BglxModel> updateFifthBglx();
 }

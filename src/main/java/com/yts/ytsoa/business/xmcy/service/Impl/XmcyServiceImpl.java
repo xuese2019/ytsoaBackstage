@@ -54,7 +54,8 @@ public class XmcyServiceImpl implements XmcyService {
         根据uuid查出项目负责人，如果是项目负责人的话，那么判断ywzt，如果业务状态==3 那么项目负责人已经复审完毕就不
         允许继续修改
          */
-        XmwpModel xmwpModel = xmwpMapper.findByUuid(model.getUuid());
+        XmcyModel byId = xmcyMapper.findById(model.getUuid());
+        XmwpModel xmwpModel = xmwpMapper.findByUuid(byId.getXmid());
         if (xmwpModel != null && xmwpModel.getXmfzr().equals(accid)) {
             if (xmwpModel.getYwzt() < 3) {
                 if (model != null) {

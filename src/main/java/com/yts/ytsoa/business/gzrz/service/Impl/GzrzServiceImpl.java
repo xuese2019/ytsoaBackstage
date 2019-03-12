@@ -49,9 +49,10 @@ public class GzrzServiceImpl implements GzrzService {
         SimpleDateFormat s1 = new SimpleDateFormat("HH:mm");
         String dqsj = s.format(date);
         RztjsjModel rztjsjModel = gzrzMapper.findTjsj();
-        String tjsj = s.format(rztjsjModel.getTjsj());
-        String tjsj1 = s1.format(rztjsjModel.getTjsj());
-        if (DateUtils.rztjsjqr(dqsj, tjsj)) {
+        String shi = rztjsjModel.getShi();
+        String fen = rztjsjModel.getFen();
+        String tjsj1 = shi + ":" + fen;
+        if (DateUtils.rztjsjqr(dqsj, shi + fen)) {
             List<XmcyModel> list = xmcyMapper.findYgidByXmid(model.getXmid());
             if (list.size() != 0) {
                 for (int i = 0; i < list.size(); i++) {

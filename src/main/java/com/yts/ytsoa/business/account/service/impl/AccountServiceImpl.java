@@ -6,6 +6,8 @@ import com.yts.ytsoa.business.account.mapper.AccountMapper;
 import com.yts.ytsoa.business.account.model.AccountModel;
 import com.yts.ytsoa.business.account.model.AdminModel;
 import com.yts.ytsoa.business.account.service.AccountService;
+import com.yts.ytsoa.business.xmwp.mapper.XmwpMapper;
+import com.yts.ytsoa.business.xmwp.model.XmwpModel;
 import com.yts.ytsoa.utils.ResponseResult;
 import com.yts.ytsoa.utils.poi.ExcelModelExportUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountMapper mapper;
+
+    @Autowired
+    private XmwpMapper xmwpMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -140,5 +145,28 @@ public class AccountServiceImpl implements AccountService {
         if (result > 0) {
             return new ResponseResult<>(true, "修改成功");
         } else return new ResponseResult<>(false, "修改失败");
+    }
+
+    @Override
+    public ResponseResult<List<AccountModel>> findExceptXmfzr(String uuid, String name) throws Exception {
+        if (uuid != null) {
+            XmwpModel xmwpModel = xmwpMapper.findXmwpByUuid(uuid);
+            if (xmwpModel != null && xmwpModel.getXmfzr() != null && !xmwpModel.getXmfzr().isEmpty()) {
+                List<AccountModel> list = mapper.findExceptXmfzr(xmwpModel.getXmfzr(), name);
+                if (list.size() != 0) {
+                    return new ResponseResult<>(true, "查询成功", list);
+                }
+                return new ResponseResult<>(false, "查无信息");
+            } else {
+                AccountModel model = new AccountModel();
+                model.setName(name);
+                List<AccountModel> list = mapper.findAll(model);
+                if (list.size() != 0) {
+                    return new ResponseResult<>(true, "查询成功", list);
+                }
+                return new ResponseResult<>(false, "查无信息");
+            }
+        }
+        return new ResponseResult<>(false, "未传项目id");
     }
 }

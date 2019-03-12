@@ -13,4 +13,5 @@ public interface JyjlMapper {
 
     @InsertProvider(type = JyjlSql.class, method = "insert")
     int insert(@Param("model") JyjlModel model) throws SQLException;
+
 }

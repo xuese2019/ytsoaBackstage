@@ -53,9 +53,8 @@ public interface BgglMapper {
     Integer limit(@Param("bglx") int bglx);
 
     @Select({
-            "select b.*,a.name as zbr from bggl_table b left join account_table a on a.uuid = b.bgzbr where b.uuid = #{uuid}"
+            "select b.uuid,x.xmmc,b.bgbh,b.shjg,b.sqf,b.bglx,b.bgcs,b.bgrq,a.name as bgzbr from bggl_table b left join account_table a on a.uuid = b.bgzbr join xmwp_table x on x.uuid=b.xmmc where b.uuid = #{uuid}"
     })
-    @ResultMap(value = "bgglMap")
     BgglModel findById(@Param("uuid") String uuid) throws SQLException;
 
     /**
@@ -96,7 +95,7 @@ public interface BgglMapper {
     List<BgglModel> findBgByXmid(@Param("xmid") String xmid) throws SQLException;
 
     @Select({
-            "select b.*,x.xmzmc as m from bggl_table b left join xmzmc_table x on x.uuid = b.xmid left join xmwp_table p on p.uuid = x.parentid where b.shjg = 1 and p.xmfzr = #{accid}"
+            "select b.uuid,b.bgbh,p.xmmc as xmmc,x.xmzmc as m,b.sqf,b.bglx,b.bgcs,b.bgrq,b.shjg from bggl_table b left join xmzmc_table x on x.uuid = b.xmid left join xmwp_table p on p.uuid = x.parentid where b.shjg = 1 and p.xmfzr = #{accid}"
     })
     @Results(id = "bgMap", value = {
             @Result(column = "m", property = "xmid")
@@ -109,13 +108,13 @@ public interface BgglMapper {
     AccountModel acc(@Param("accid") String accid);
 
     @Select({
-            "select b.*,x.xmzmc as m from bggl_table b left join xmzmc_table x on x.uuid = b.xmid left join xmwp_table p on p.uuid = x.parentid where b.shjg = 2 and p.cjbm = #{bmid}"
+            "select b.uuid,b.bgbh,p.xmmc as xmmc,x.xmzmc as m,b.sqf,b.bglx,b.bgcs,b.bgrq,b.shjg from bggl_table b left join xmzmc_table x on x.uuid = b.xmid left join xmwp_table p on p.uuid = x.parentid where p.cjbm = #{bmid} and b.shjg = 2"
     })
     @ResultMap(value = "bgMap")
     List<BgglModel> two(@Param("bmid") String bmid);
 
     @Select({
-            "select b.*,x.xmzmc as m from bggl_table b left join xmzmc_table x on x.uuid = b.xmid left join xmwp_table p on p.uuid = x.parentid where b.shjg = #{jg}"
+            "select b.uuid,b.bgbh,p.xmmc as xmmc,x.xmzmc as m,b.sqf,b.bglx,b.bgcs,b.bgrq,b.shjg from bggl_table b left join xmzmc_table x on x.uuid = b.xmid left join xmwp_table p on p.uuid = x.parentid where b.shjg = #{jg}"
     })
     @ResultMap(value = "bgMap")
     List<BgglModel> three(@Param("jg") int jg);
@@ -126,13 +125,12 @@ public interface BgglMapper {
     void updateShjgByUuid(@Param("uuid") String uuid, @Param("shjg") int shjg) throws Exception;
 
     @Select({
-            "select * from xmzmc_table m left join xmwp_table x on x.uuid = m.parentid where m.uuid = #{uuid}"
+            "select x.* from xmzmc_table xm join xmwp_table x on xm.parentid=x.uuid join bggl_table b on b.xmid=xm.uuid where b.uuid=#{uuid}"
     })
     XmwpModel getXm(@Param("uuid") String uuid) throws Exception;
 
     @Select({
-            "SELECT x.xmzmc,b.bgbh\n" +
-                    "FROM bggl_table b LEFT JOIN xmzmc_table x ON b.xmid=x.uuid where x.uuid=#{uuid}"
+            "SELECT x.xmzmc,b.bgbh,b.shjg  FROM bggl_table b LEFT JOIN xmzmc_table x ON b.xmid=x.uuid where x.uuid=#{uuid}"
     })
     BgglModel findByXmZmc(@Param("uuid") String uuid) throws SQLException;
 
@@ -143,7 +141,7 @@ public interface BgglMapper {
     XmwpModel findXmYwztByBgXmid(@Param("prentid") String prentid);
 
     @Select({
-            "select * from bggl_table"
+            "SELECT b.uuid,b.gdyxq,xm.xmmc as xmmc,b.xmid FROM bggl_table b join xmzmc_table x on b.xmid = x.uuid join xmwp_table xm on xm.uuid=x.parentid"
     })
     List<BgglModel> findAllBgs();
 }

@@ -165,7 +165,7 @@ public class BgglModel implements Serializable {
      * 归档有效期
      */
     @ApiModelProperty(value = "归档有效期", name = "gdyxq", dataType = "Integer")
-    @Min(value = 0, message = "最小值为0")
+    @Min(value = 0, message = "最小值为0", groups = {BgglModel.class})
     private Integer gdyxq;
 
     /**
@@ -188,4 +188,7 @@ public class BgglModel implements Serializable {
 
     @ApiModelProperty(value = "项目子名称", name = "xmzmc")
     private String xmzmc;
+
+    @ApiModelProperty(value = "归档状态1未归档2已归档", name = "gdzt", dataType = "int")
+    private int gdzt;
 }

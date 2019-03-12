@@ -5,4 +5,5 @@ import com.yts.ytsoa.utils.ResponseResult;
 
 public interface JyjlService {
     ResponseResult<JyjlModel> isnert(JyjlModel model) throws Exception;
+
 }

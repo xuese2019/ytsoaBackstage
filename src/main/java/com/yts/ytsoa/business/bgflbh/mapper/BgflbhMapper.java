@@ -1,10 +1,8 @@
 package com.yts.ytsoa.business.bgflbh.mapper;
 
 import com.yts.ytsoa.business.bgflbh.model.BglxModel;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.UpdateProvider;
+import com.yts.ytsoa.utils.Tables;
+import org.apache.ibatis.annotations.*;
 
 
 @Mapper
@@ -33,4 +31,107 @@ public interface BgflbhMapper {
                     "where b.bglx=#{model.bglx}"
     })
     BglxModel find(@Param("model") BglxModel model);
+
+
+    /**
+     * 查出第一种类别的报告编号
+     *
+     * @return
+     */
+    @Select({
+            "select * from " + Tables.BGLX_TABLE + " b where b.uuid=1"
+    })
+    BglxModel findFirstLb();
+
+    /**
+     * 报告编号归零
+     *
+     * @return
+     */
+    @Update({
+            "update " + Tables.BGLX_TABLE + " set bgbh_hz=1000 where uuid=1"
+    })
+    int updateFirstBgbh();
+
+
+    /**
+     * 查出第二种类别的报告编号
+     *
+     * @return
+     */
+    @Select({
+            "select * from " + Tables.BGLX_TABLE + " b where b.uuid=2"
+    })
+    BglxModel findSeccondLb();
+
+    /**
+     * 报告编号归零
+     *
+     * @return
+     */
+    @Update({
+            "update " + Tables.BGLX_TABLE + " set bgbh_hz=3000 where uuid=2"
+    })
+    int updateSeccondBgbh();
+
+
+    /**
+     * 查出第三种类别的报告编号
+     *
+     * @return
+     */
+    @Select({
+            "select * from " + Tables.BGLX_TABLE + " b where b.uuid=3"
+    })
+    BglxModel findThirdLb();
+
+    /**
+     * 报告编号归零
+     *
+     * @return
+     */
+    @Update({
+            "update " + Tables.BGLX_TABLE + " set bgbh_hz=5000 where uuid=3"
+    })
+    int updateThirdBgbh();
+
+    /**
+     * 查出第四种类别的报告编号
+     *
+     * @return
+     */
+    @Select({
+            "select * from " + Tables.BGLX_TABLE + " b where b.uuid=4"
+    })
+    BglxModel findForthLb();
+
+    /**
+     * 报告编号归零
+     *
+     * @return
+     */
+    @Update({
+            "update " + Tables.BGLX_TABLE + " set bgbh_hz=6000 where uuid=4"
+    })
+    int updateForthBgbh();
+
+    /**
+     * 查出第五种类别的报告编号
+     *
+     * @return
+     */
+    @Select({
+            "select * from " + Tables.BGLX_TABLE + " b where b.uuid=3"
+    })
+    BglxModel findFifthLb();
+
+    /**
+     * 报告编号归零
+     *
+     * @return
+     */
+    @Update({
+            "update " + Tables.BGLX_TABLE + " set bgbh_hz=5000 where uuid=3"
+    })
+    int updateFifthBgbh();
 }

@@ -39,7 +39,7 @@ public class XmwpModel implements Serializable {
     //委托方联系电话
     @ApiModelProperty(value = "委托方联系电话", name = "wtflxdh", dataType = "String")
     @NotBlank(message = "委托方联系电话不能为空")
-    @Length(min = 11, max = 11, message = "电话最少为11位")
+    @Length(min = 12, max = 12, message = "电话最少为11位")
     private String wtflxdh;
     //委托时间
     @ApiModelProperty(value = "委托时间", name = "wtsj", dataType = "Date")
@@ -101,6 +101,7 @@ public class XmwpModel implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date xmxcjssj;
     @ApiModelProperty(value = "项目标准工时", name = "xmbzgs", dataType = "String")
+    @Length(max = 5, message = "项目标准工时最大为4位")
     private String xmbzgs;
     @ApiModelProperty(value = "报告出具时间", name = "bgcjsj", dataType = "Date")
     private Date bgcjsj;
@@ -131,7 +132,6 @@ public class XmwpModel implements Serializable {
     private int hhrsh;
     @ApiModelProperty(value = "质控部审核1是2否", name = "zkbsh", dataType = "int")
     private int zkbsh;
-
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date xtsj;
 }

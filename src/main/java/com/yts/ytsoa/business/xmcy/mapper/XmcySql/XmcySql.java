@@ -58,13 +58,14 @@ public class XmcySql {
     public String find(@Param("model") XmcyModel model) {
         return new SQL() {
             {
-                /*SELECT("x.uuid,a.name as ygid,g.trgxmsj,x.zyjsnl,x.gzxl,x.gtnl,x.zrxjtdjs,x.py,a1.name as xmfzr");
-                FROM(Tables.XMCY_TABLE + " x LEFT JOIN gzrz_table g on x.ygid=g.tjr join account_table a on a.uuid=x.ygid join xmwp_table xm on xm.uuid=x.xmid join account_table a1 on a1.uuid=xm.xmfzr");
-                WHERE("x.xmid=#{model.xmid}");*/
                 SELECT("x.uuid,x.ygid,a.name as name,x.zyjsnl,x.gzxl,x.gtnl,x.zrxjtdjs,x.py,a1.name as xmfzr");
                 FROM(Tables.XMCY_TABLE + " x join account_table a on a.uuid=x.ygid join xmwp_table xm on xm.uuid=x.xmid join account_table a1 on a1.uuid=xm.xmfzr");
                 if (model.getXmid() != null && !model.getXmid().isEmpty()) {
                     WHERE("x.xmid=#{model.xmid}");
+                }
+                if (model.getName() != null && !model.getName().isEmpty()) {
+                    model.setName("%" + model.getName() + "%");
+                    WHERE("a.name like #{model.name}");
                 }
             }
         }.toString();

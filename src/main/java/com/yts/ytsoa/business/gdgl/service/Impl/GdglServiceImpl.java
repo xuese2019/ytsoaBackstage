@@ -124,6 +124,12 @@ public class GdglServiceImpl implements GdglService {
                 gdglModel.setShjg(model.getShjg());
                 gdglModel.setWczt(3);
                 gdglMapper.update(gdglModel);
+                BgglModel bgglModel = bgglMapper.findById(model.getPrentid());
+                if (bgglModel != null) {
+                    bgglModel.setGdzt(2);
+                    bgglModel.setUuid(model.getPrentid());
+                    bgglMapper.update(bgglModel);
+                }
             }
             //根据审核记录的主键查出项目的详情
             XmwpModel xmwpModel = gdglMapper.findXmwpByShjlUuid(model.getUuid());

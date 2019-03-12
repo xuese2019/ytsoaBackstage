@@ -69,6 +69,13 @@ public class XmwpController {
         return xmwpService.findxmsh(pageNow, model, accId);
     }
 
+    @ApiOperation(value = "承接查询项目名称，分页")
+    @RequestMapping(value = "/findCjByXmmc/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<PageInfo<XmwpModel>> findCjByXmmc(@PathVariable(value = "pageNow") int pageNow, @RequestBody XmwpModel model) throws Exception {
+        model.setYwzt(1);
+        return xmwpService.findCjByXmmc(pageNow, yamlPageUtils.getPageSize(), model);
+    }
+
 
     @ApiOperation(value = "项目管理条件查询，分页")
     @RequestMapping(value = "/findByXmyq/{pageNow}", method = RequestMethod.POST)
@@ -102,8 +109,9 @@ public class XmwpController {
 
     @ApiOperation(value = "委派管理页面，分页条件查询")
     @RequestMapping(value = "/find/{pageNow}", method = RequestMethod.POST)
-    public ResponseResult<PageInfo<XmwpModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model) throws Exception {
-        return xmwpService.find(pageNow, yamlPageUtils.getPageSize(), model);
+    public ResponseResult<PageInfo<XmwpModel>> find(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
+        return xmwpService.find(pageNow, yamlPageUtils.getPageSize(), model, accid);
     }
 
     /**
@@ -114,17 +122,18 @@ public class XmwpController {
      * @param model
      * @return
      */
-    @ApiOperation(value = "每个项目负责人只能查询自己的项目，并且是已经审核通过的")
-    @RequestMapping(value = "/findByXmfzr", method = RequestMethod.POST)
-    public ResponseResult<List<XmwpModel>> findByXmfzr(@RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
+    @ApiOperation(value = "报告申请页面，每个项目负责人只能查询自己的项目，并且是已经审核通过的")
+    @RequestMapping(value = "/findByXmfzr/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<PageInfo<XmwpModel>> findByXmfzr(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
         String accid = JWTUtils.getAccId(request);
-        return xmwpService.findByXmfzr(model, accid);
+        return xmwpService.findByXmfzr(pageNow, yamlPageUtils.getPageSize(), model, accid);
     }
 
     @ApiOperation(value = "项目管理页面，分页条件查询")
     @RequestMapping(value = "/xmgl/{pageNow}", method = RequestMethod.POST)
-    public ResponseResult<PageInfo<XmwpModel>> xmgl(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model) throws Exception {
-        return xmwpService.find(pageNow, yamlPageUtils.getPageSize(), model);
+    public ResponseResult<PageInfo<XmwpModel>> xmgl(@PathVariable("pageNow") int pageNow, @RequestBody XmwpModel model, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
+        return xmwpService.find(pageNow, yamlPageUtils.getPageSize(), model, accid);
     }
 
 
@@ -137,5 +146,12 @@ public class XmwpController {
         } else {
             return new ResponseResult<>(false, "没有审核记录");
         }
+    }
+
+    @ApiOperation(value = "根据当前登陆人查询所有项目，项目管理")
+    @RequestMapping(value = "findXmwpByXmfzr/{pageNow}", method = RequestMethod.POST)
+    public ResponseResult<PageInfo<XmwpModel>> findXmwpByXmfzr(@PathVariable(value = "pageNow") int pageNow, XmwpModel model, HttpServletRequest request) throws Exception {
+        String accid = JWTUtils.getAccId(request);
+        return xmwpService.findXmwpByXmfzr(pageNow, yamlPageUtils.getPageSize(), model, accid);
     }
 }

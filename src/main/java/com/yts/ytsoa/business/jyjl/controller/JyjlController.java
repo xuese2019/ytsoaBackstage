@@ -3,6 +3,7 @@ package com.yts.ytsoa.business.jyjl.controller;
 import com.yts.ytsoa.business.jyjl.model.JyjlModel;
 import com.yts.ytsoa.business.jyjl.service.JyjlService;
 import com.yts.ytsoa.utils.ResponseResult;
+import com.yts.ytsoa.utils.yamlutils.YamlPageUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +17,12 @@ public class JyjlController {
 
     @Autowired
     private JyjlService jyjlService;
+    @Autowired
+    private YamlPageUtils yamlPageUtils;
+
 
     public ResponseResult<JyjlModel> insert(@RequestBody JyjlModel model) throws Exception {
         return jyjlService.isnert(model);
     }
+
 }

@@ -37,21 +37,12 @@ public class XmyqServiceImpl implements XmyqService {
     @Override
     public ResponseResult<PageInfo<XmyqModel>> findAll(int pageNow, int pageSize, XmyqModel xmyqModel) throws Exception {
         PageHelper.startPage(pageNow, pageSize);
-        /*  XmwpModel xmwpModel = new XmwpModel();*/
-      /*  List<XmwpModel> result = xmwpMapper.findByXmmc(xmwpModel);
-        if (result.size() > 0) {
-            xmyqModel.setXmxcjssj(xmwpModel.getXmxcjssj());
-            xmyqModel.setXmmc(xmwpModel.getXmmc());
-            xmyqModel.setXmkssj(xmwpModel.getXmkssj());
-            xmyqModel.setXmcjr(xmwpModel.getShr());
-            xmyqModel.setXmzt();
-        }*/
         List<XmyqModel> list = xmyqMapper.findAll(xmyqModel);
         PageInfo<XmyqModel> page = new PageInfo<>(list);
         if (page.getSize() > 0) {
             return new ResponseResult<>(true, "查询成功", page);
         } else {
-            return new ResponseResult<>(false, "查询失败", null);
+            return new ResponseResult<>(false, "查询失败");
         }
     }
 }

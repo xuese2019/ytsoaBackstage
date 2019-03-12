@@ -23,7 +23,7 @@ public interface GzrzMapper {
     List<GzrzModel> rgtj(@Param("model") GzrzModel model);
 
     @Update({
-            "update rztjsj_table set tjsj=#{model.tjsj}"
+            "update rztjsj_table set shi=#{model.shi},fen=#{model.fen}"
     })
     int updateTjsj(@Param("model") RztjsjModel model) throws SQLException;
 

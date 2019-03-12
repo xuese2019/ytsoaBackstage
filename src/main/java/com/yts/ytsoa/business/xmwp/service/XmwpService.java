@@ -93,7 +93,7 @@ public interface XmwpService {
      * @return
      * @throws Exception
      */
-    ResponseResult<PageInfo<XmwpModel>> find(int pageNow, int pageSize, XmwpModel model) throws Exception;
+    ResponseResult<PageInfo<XmwpModel>> find(int pageNow, int pageSize, XmwpModel model, String accid) throws Exception;
 
     /**
      * 报告申请页面
@@ -103,7 +103,7 @@ public interface XmwpService {
      * @param model
      * @return
      */
-    ResponseResult<List<XmwpModel>> findByXmfzr(XmwpModel model, String accid) throws Exception;
+    ResponseResult<PageInfo<XmwpModel>> findByXmfzr(int pageNow, int pageSize, XmwpModel model, String accid) throws Exception;
 
     /**
      * 项目管理页面
@@ -118,4 +118,18 @@ public interface XmwpService {
     ResponseResult<PageInfo<XmwpModel>> xmgl(int pageNow, int pageSize, XmwpModel model) throws Exception;
 
     ResponseResult<List<XmwpShjlModel>> findByShjl(String prentid) throws Exception;
+
+    /**
+     * 项目管理，根据当前登陆人查询所有项目
+     *
+     * @param pageNow
+     * @param pageSize
+     * @param model
+     * @param accid
+     * @return
+     * @throws Exception
+     */
+    ResponseResult<PageInfo<XmwpModel>> findXmwpByXmfzr(int pageNow, int pageSize, XmwpModel model, String accid) throws Exception;
+
+    ResponseResult<PageInfo<XmwpModel>> findCjByXmmc(int pageNow, int pageSize, XmwpModel model) throws Exception;
 }

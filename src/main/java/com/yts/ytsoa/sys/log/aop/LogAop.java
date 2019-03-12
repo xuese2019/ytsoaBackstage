@@ -35,7 +35,8 @@ public class LogAop {
     private static LogModel model = new LogModel();
 
     //    指定切面哪些类
-    @Pointcut("execution(public * com.yts.ytsoa.business.*.controller.*.*(..))")
+    @Pointcut("execution(public * com.yts.ytsoa.business.*.*.*.*(..))")
+//    @Pointcut("execution(public * com.yts.ytsoa.business.*.controller.*.*(..))")
     public void log() {
     }
 
@@ -63,7 +64,7 @@ public class LogAop {
     public void doAfterReturning(JoinPoint joinPoint) throws Throwable {
         ServletRequestAttributes res = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         model.setResponeStr(joinPoint.toString());
-        log.info("RESPONE===>请求标识:{},返回:{}", res, model.toString());
+        log.info("RESPONE===>返回标识:{},返回:{}", res, model.toString());
     }
 
     @AfterThrowing(pointcut = "log()", throwing = "e")
